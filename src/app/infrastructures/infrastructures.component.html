@@ -1,0 +1,36 @@
+<header>
+  <app-navbar></app-navbar>
+</header>
+<div class="card card-body animated fadeIn ml-3 mr-3 text-justify" style="background-color: #f7f9ff;">
+	<div class="row">
+		<div class="col-3 test-border mb-3" *ngFor="let infrastructure of infrastructures;">
+			<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">		
+
+				
+				<div class="text-center mb-2" (click)="infrastructure.toggleState()" [ngClass]="{
+					'status-up':infrastructure.status === 'up',
+					'status-warning':infrastructure.status === 'warning',
+					'status-critical':infrastructure.status === 'critical',
+					'status-offline':infrastructure.status === 'offline'
+				}"> 
+					{{infrastructure.name}} - {{infrastructure.description}}
+				</div>
+
+				<div [@infrastructureState]="infrastructure.state">
+					<div *ngFor="let hostgroup of infrastructure.hostgroups;">
+						<div class="row">
+							<div class="text-center col-3"><i class="fa" [ngClass]="{
+								'fa-check-circle hostgroup-up':hostgroup.status === '0',
+								'fa-exclamation-circle hostgroup-warning':hostgroup.status === '1',
+								'fa-times-circle hostgroup-critical':hostgroup.status === '2'
+							}" aria-hidden="true"></i></div>
+							<div class="col" style="font-size: 0.8rem;">{{hostgroup.alias}}</div>
+						</div>				
+					</div>
+				</div>			
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-infrastructure-detail [infrastructure]="selectedInfrastructure"></app-infrastructure-detail>
