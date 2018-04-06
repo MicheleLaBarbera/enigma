@@ -45,15 +45,15 @@ import { AlertService, AuthenticationService, UserService, InfrastructureService
   providers: [
     AuthGuard,
     InfrastructureService,
-    AuthService,
-    AlertService,
-    AuthenticationService,
-    UserService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
-    }//,
+    },
+    AuthService,
+    AlertService,
+    AuthenticationService,
+    UserService
     //fakeBackendProvider
   ],
   bootstrap: [AppComponent]

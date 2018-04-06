@@ -9,7 +9,7 @@ export class AuthenticationService {
 
   public token: string;
 
-  constructor(private http: Http) { 
+  constructor(private http: Http) {
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = currentUser && currentUser.token;
   }
@@ -21,9 +21,9 @@ export class AuthenticationService {
       if (token) {
         this.token = token;
         let tokenPayload = decode(token);
-        localStorage.setItem('currentUser', JSON.stringify({ id: tokenPayload.data.id, username: username, token: token }));
+        localStorage.setItem('currentUser', JSON.stringify({ id: tokenPayload.data.id, username: username, firstname: tokenPayload.data.firstname, lastname: tokenPayload.data.lastname, token: token }));
         return true;
-      } 
+      }
       else {
         return false;
       }
