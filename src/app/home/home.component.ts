@@ -9,7 +9,7 @@ import {
 
 import { User } from '../_models/index';
 import { InfrastructureService } from '../_services/index';
-import { Infrastructure } from '../_models/index';
+import { Infrastructure, Service } from '../_models/index';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
 	//currentUser: User;
 	public token: string;
   infrastructures: Infrastructure[];
+  services: Service;
 
   constructor(private infrastructureService: InfrastructureService) {
   	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -36,6 +37,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
   	this.infrastructureService.getInfrastructures(this.token).subscribe(infrastructures => this.infrastructures = infrastructures);
+  }
+
+  getServices(ip:string, port: number, group: string) {
+    this.infrastructureService.getServices(ip, port, group).subscribe(services => this.services = services);
   }
 
 }

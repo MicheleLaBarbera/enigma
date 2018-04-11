@@ -21,5 +21,5 @@ export class Infrastructure {
 
   public toggleState(): void {
     this.state = this.state === 'active' ? 'inactive' : 'active';
-  }
+  }  
 }
