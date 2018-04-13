@@ -3,34 +3,127 @@
 </header>
 
 
-	<div class="card card-body animated fadeIn ml-3 mr-3 text-justify infra-panel" style="background-color: #f7f9ff;">
-		<div class="row">
-			<div class="col-3 test-border mb-3" *ngFor="let infrastructure of infrastructures;">
-				<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
+<div class="card card-body animated fadeIn ml-3 mr-3 text-justify infra-panel" style="background-color: #f7f9ff;">
+	<div class="row">
+		<div class="col-3 test-border mb-3" *ngFor="let infrastructure of infrastructures;">
+			<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
 
 
-					<div class="text-center mb-2" [ngClass]="{
-						'status-up':infrastructure.status === 'up',
-						'status-warning':infrastructure.status === 'warning',
-						'status-critical':infrastructure.status === 'critical',
-						'status-offline':infrastructure.status === 'offline'
-					}">
-						<p class="toggle-state hostgroup-title" (click)="infrastructure.toggleState()"> {{infrastructure.name}} - {{infrastructure.description}}</p>
-					</div>
+				<div class="text-center mb-2" [ngClass]="{
+					'status-up':infrastructure.status === 'up',
+					'status-warning':infrastructure.status === 'warning',
+					'status-critical':infrastructure.status === 'critical',
+					'status-offline':infrastructure.status === 'offline'
+				}">
+					<p class="toggle-state hostgroup-title" (click)="infrastructure.toggleState()"> {{infrastructure.name}} - {{infrastructure.description}}</p>
+				</div>
 
-					<div [@infrastructureState]="infrastructure.state">
-						<div *ngFor="let hostgroup of infrastructure.hostgroups;">
-							<div class="row">
-								<div class="text-center col-3"><i class="fa" [ngClass]="{
-									'fa-check-circle hostgroup-up':hostgroup.status === '0',
-									'fa-exclamation-circle hostgroup-warning':hostgroup.status === '1',
-									'fa-times-circle hostgroup-critical':hostgroup.status === '2'
-								}" aria-hidden="true"></i></div>
-								<div class="col toggle-state hostgroup-item" (click)="getServices(infrastructure.ip, infrastructure.port, hostgroup.name)">{{hostgroup.alias}}</div>
-							</div>
-						</div>
+				<div [@infrastructureState]="infrastructure.state">
+					<div *ngFor="let hostgroup of infrastructure.hostgroups;">
+						<div class="row">
+							<div class="text-center col-3"><i class="fa" [ngClass]="{
+								'fa-check-circle hostgroup-up':hostgroup.status === '0',
+								'fa-exclamation-circle hostgroup-warning':hostgroup.status === '1',
+								'fa-times-circle hostgroup-critical':hostgroup.status === '2'
+							}" aria-hidden="true"></i></div>
+							<div class="col toggle-state hostgroup-item" data-toggle="modal" data-target="#exampleModal" (click)="getServices(infrastructure.ip, infrastructure.port, hostgroup.name)">{{hostgroup.alias}}</div>
+            </div>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" *ngIf="services">{{services[0].groups}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm text-center">
+          <thead class="hostgroup-title">
+            <td scope="col" class="text-left"><i class="fa fa-podcast" aria-hidden="true"></i>
+ IP</td>
+            <td scope="col" class="text-left"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+ Nome</td>
+            <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
+            <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
+            <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
+            <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i>
+ Sconosciuti</td>
+          </thead>
+          <tbody>
+            <tr *ngFor="let service of services;" class="service-item" [ngClass]="{
+    					'status-up':service.crit == 0 && service.warn == 0 && service.unknown == 0,
+    					'status-warning':service.crit == 0 && service.warn > 0 && service.unknown == 0,
+    					'status-critical':service.crit > 0,
+    					'status-offline':service.crit == 0 && service.unknown > 0
+    				}">
+              <td class="text-left">{{service.address}}</td>
+              <td class="text-left toggle-state">{{service.alias}}</td>
+              <td>{{service.crit}}</td>
+              <td>{{service.warn}}</td>
+              <td>{{service.ok}}</td>
+              <td>{{service.unknown}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" *ngIf="services">{{services[0].groups}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm text-center">
+          <thead class="hostgroup-title">
+            <td scope="col" class="text-left"><i class="fa fa-podcast" aria-hidden="true"></i>
+ IP</td>
+            <td scope="col" class="text-left"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+ Nome</td>
+            <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
+            <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
+            <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
+            <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i>
+ Sconosciuti</td>
+          </thead>
+          <tbody>
+            <tr *ngFor="let service of services;" class="service-item" [ngClass]="{
+    					'status-up':service.crit == 0 && service.warn == 0 && service.unknown == 0,
+    					'status-warning':service.crit == 0 && service.warn > 0 && service.unknown == 0,
+    					'status-critical':service.crit > 0,
+    					'status-offline':service.crit == 0 && service.unknown > 0
+    				}">
+              <td class="text-left">{{service.address}}</td>
+              <td class="text-left toggle-state">{{service.alias}}</td>
+              <td>{{service.crit}}</td>
+              <td>{{service.warn}}</td>
+              <td>{{service.ok}}</td>
+              <td>{{service.unknown}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+	<div class="container">
+
+	</div>
+</footer>

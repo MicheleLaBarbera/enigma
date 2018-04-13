@@ -9,8 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { InfrastructuresComponent } from './infrastructures/infrastructures.component';
-import { InfrastructureDetailComponent } from './infrastructure-detail/infrastructure-detail.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { HostgroupsComponent } from './hostgroups/hostgroups.component';
 import { HomeComponent } from './home/home.component';
@@ -27,8 +25,6 @@ import { AlertService, AuthenticationService, UserService, InfrastructureService
   declarations: [
     AppComponent,
     NavbarComponent,
-    InfrastructuresComponent,
-    InfrastructureDetailComponent,
     HostgroupsComponent,
     HomeComponent,
     AlertComponent,

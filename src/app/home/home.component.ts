@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
 	//currentUser: User;
 	public token: string;
   infrastructures: Infrastructure[];
-  services: Service;
+  services: Service[];
 
   constructor(private infrastructureService: InfrastructureService) {
   	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
