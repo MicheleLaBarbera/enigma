@@ -4,7 +4,15 @@
 
 
 <div class="card card-body animated fadeIn ml-3 mr-3 text-justify infra-panel" style="background-color: #f7f9ff;">
-	<div class="row">
+  <div class="row mb-2" *ngIf="globalState">
+    <div class="col-12 text-right">
+      <i class="fa" [ngClass]="{
+        'fa-toggle-on':globalState === 'active',
+        'fa-toggle-off':globalState === 'inactive'
+      }" (click)="switchState(infrastructures)" style="font-size: 2em;" aria-hidden="true"></i>
+    </div>
+  </div>
+  <div class="row">
 		<div class="col-3 test-border mb-3" *ngFor="let infrastructure of infrastructures;">
 			<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
 
@@ -26,7 +34,7 @@
 								'fa-exclamation-circle hostgroup-warning':hostgroup.status === '1',
 								'fa-times-circle hostgroup-critical':hostgroup.status === '2'
 							}" aria-hidden="true"></i></div>
-							<div class="col toggle-state hostgroup-item" data-toggle="modal" data-target="#exampleModal" (click)="getServices(infrastructure.ip, infrastructure.port, hostgroup.name)">{{hostgroup.alias}}</div>
+							<div class="col toggle-state hostgroup-item" data-toggle="modal" data-target="#hostModal" (click)="getHosts(infrastructure.ip, infrastructure.port, hostgroup.name)">{{hostgroup.alias}}</div>
             </div>
 					</div>
 				</div>
@@ -36,11 +44,11 @@
 	</div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="hostModal" tabindex="-1" role="dialog" aria-labelledby="hostModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel" *ngIf="services">{{services[0].groups}}</h5>
+        <h5 class="modal-title" id="hostModalLabel" *ngIf="hosts">{{hosts[0].groups}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -48,10 +56,10 @@
       <div class="modal-body">
         <table class="table table-sm text-center">
           <thead class="hostgroup-title">
-            <td scope="col" class="text-left"><i class="fa fa-podcast" aria-hidden="true"></i>
+            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+            Nome</td>
+            <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i>
  IP</td>
-            <td scope="col" class="text-left"><i class="fa fa-address-card-o" aria-hidden="true"></i>
- Nome</td>
             <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
             <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
             <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
@@ -59,18 +67,18 @@
  Sconosciuti</td>
           </thead>
           <tbody>
-            <tr *ngFor="let service of services;" class="service-item" [ngClass]="{
-    					'status-up':service.crit == 0 && service.warn == 0 && service.unknown == 0,
-    					'status-warning':service.crit == 0 && service.warn > 0 && service.unknown == 0,
-    					'status-critical':service.crit > 0,
-    					'status-offline':service.crit == 0 && service.unknown > 0
+            <tr *ngFor="let host of hosts;" [ngClass]="{
+    					'status-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
+    					'status-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
+    					'status-critical':host.crit > 0,
+    					'status-unknown':host.crit == 0 && host.unknown > 0
     				}">
-              <td class="text-left">{{service.address}}</td>
-              <td class="text-left toggle-state">{{service.alias}}</td>
-              <td>{{service.crit}}</td>
-              <td>{{service.warn}}</td>
-              <td>{{service.ok}}</td>
-              <td>{{service.unknown}}</td>
+              <td class="text-left toggle-state" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name)">{{host.alias}}</td>
+              <td class="text-left">{{host.address}}</td>
+              <td>{{host.crit}}</td>
+              <td>{{host.warn}}</td>
+              <td>{{host.ok}}</td>
+              <td>{{host.unknown}}</td>
             </tr>
           </tbody>
         </table>
@@ -79,11 +87,11 @@
   </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel" *ngIf="services">{{services[0].groups}}</h5>
+        <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">{{services[0].h_name}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -91,29 +99,23 @@
       <div class="modal-body">
         <table class="table table-sm text-center">
           <thead class="hostgroup-title">
-            <td scope="col" class="text-left"><i class="fa fa-podcast" aria-hidden="true"></i>
- IP</td>
-            <td scope="col" class="text-left"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
  Nome</td>
-            <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
-            <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
-            <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
-            <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i>
- Sconosciuti</td>
+            <td scope="col"><i class="fa fa-list-alt"></i> Stato</td>
+            <td scope="col"><i class="fa fa-calendar-check-o"></i> Età</td>
+            <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
           </thead>
           <tbody>
             <tr *ngFor="let service of services;" class="service-item" [ngClass]="{
-    					'status-up':service.crit == 0 && service.warn == 0 && service.unknown == 0,
-    					'status-warning':service.crit == 0 && service.warn > 0 && service.unknown == 0,
-    					'status-critical':service.crit > 0,
-    					'status-offline':service.crit == 0 && service.unknown > 0
+    					'status-up':service.state == 0,
+    					'status-warning':service.state == 1,
+    					'status-critical':service.state == 2,
+              'status-unknown':service.state == 3
     				}">
-              <td class="text-left">{{service.address}}</td>
-              <td class="text-left toggle-state">{{service.alias}}</td>
-              <td>{{service.crit}}</td>
-              <td>{{service.warn}}</td>
-              <td>{{service.ok}}</td>
-              <td>{{service.unknown}}</td>
+              <td class="text-left">{{service.name}}</td>
+              <td class="text-left">{{service.status}}</td>
+              <td class="text-right">{{service.age}}</td>
+              <td><i class="fa fa-toggle-off"></i></td>
             </tr>
           </tbody>
         </table>
@@ -123,7 +125,7 @@
 </div>
 
 <footer class="footer">
-	<div class="container">
-
+	<div class="text-right mr-3">
+    <a href="http://www.posdata.it"><img src="/assets/images/logo-posdata.png" width="150px" height="30px" alt=""></a>
 	</div>
 </footer>

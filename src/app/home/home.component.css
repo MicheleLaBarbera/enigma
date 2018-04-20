@@ -56,6 +56,16 @@ i {
   color: white;
 }
 
+.status-unknown {
+	border-top: 1px solid rgba(0,0,0,.125);
+	border-right: 1px solid rgba(0,0,0,.125);
+	border-left: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  background-color: #0666f5;
+  color: white;
+}
+
 .status-offline {
 	border-top: 1px solid rgba(0,0,0,.125);
 	border-right: 1px solid rgba(0,0,0,.125);
@@ -111,4 +121,8 @@ i {
 .footer > .container {
   padding-right: 15px;
   padding-left: 15px;
+}
+
+.modal-xl {
+	max-width: 85%;
 }

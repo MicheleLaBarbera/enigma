@@ -10,9 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { HostgroupsComponent } from './hostgroups/hostgroups.component';
 import { HomeComponent } from './home/home.component';
-import { AuthService } from './auth.service';
 
 import { AuthGuard } from './_guards/index';
 import { JwtInterceptor } from './_helpers/index';
@@ -25,7 +23,6 @@ import { AlertService, AuthenticationService, UserService, InfrastructureService
   declarations: [
     AppComponent,
     NavbarComponent,
-    HostgroupsComponent,
     HomeComponent,
     AlertComponent,
     LoginComponent
@@ -46,11 +43,9 @@ import { AlertService, AuthenticationService, UserService, InfrastructureService
       useClass: JwtInterceptor,
       multi: true
     },
-    AuthService,
     AlertService,
     AuthenticationService,
     UserService
-    //fakeBackendProvider
   ],
   bootstrap: [AppComponent]
 })
