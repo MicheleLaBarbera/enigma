@@ -12,7 +12,9 @@ export class InfrastructureService {
 
   public getInfrastructures(token: string): Observable<Infrastructure[]> {
     return this.http.get<Infrastructure[]>('http://localhost/api/infrastructures/get').map(
-  		res => res.map(x => new Infrastructure(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.hostgroups)));
+  		res => res.map(x => new Infrastructure(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.hostgroups, x.hosts_down, x.hosts_pending,
+                                             x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
+                                             x.services_warn)));
   }
 
   public getHosts(ip:string, port: number, group: string) : Observable<Host[]> {

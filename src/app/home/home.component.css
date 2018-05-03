@@ -42,7 +42,7 @@ i {
 	border-left: 1px solid rgba(0,0,0,.125);
   border-radius: .25rem;
   border-bottom: 1px solid rgba(0,0,0,.125);
-  background-color: #ff902b;
+  background-color: rgb(247, 203, 5);
   color: white;
 }
 
@@ -73,6 +73,26 @@ i {
   border-radius: .25rem;
   border-bottom: 1px solid rgba(0,0,0,.125);
   background-color: #27c24c;
+  color: white;
+}
+
+.status-hosts {
+	border-top: 1px solid rgba(0,0,0,.125);
+	border-right: 1px solid rgba(0,0,0,.125);
+	border-left: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  background-color: rgb(240, 80, 80);
+  color: white;
+}
+
+.status-services {
+	border-top: 1px solid rgba(0,0,0,.125);
+	border-right: 1px solid rgba(0,0,0,.125);
+	border-left: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  background-color: rgb(240, 80, 80);
   color: white;
 }
 
@@ -125,4 +145,40 @@ i {
 
 .modal-xl {
 	max-width: 85%;
+}
+
+.host-up {
+	background-color: rgb(6, 170, 50);
+}
+
+.host-pending {
+	background-color: rgb(0, 170, 255);
+}
+
+.host-unreachable {
+	background-color: rgb(255, 136, 0);
+}
+
+.host-down {
+	background-color: rgb(240, 80, 80);
+}
+
+.service-ok {
+	background-color: rgb(6, 170, 50);
+}
+
+.service-pending {
+	background-color: rgb(0, 170, 255);
+}
+
+.service-warn {
+	background-color: rgb(247, 203, 5);
+}
+
+.service-unknown {
+	background-color: rgb(255, 136, 0);
+}
+
+.service-crit {
+	background-color: rgb(240, 80, 80);
 }

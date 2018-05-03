@@ -1,3 +1,41 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 body {
 	background: #eeeeff;
+}
+
+.ct-host-up {
+	fill: rgb(6, 170, 50);
+}
+
+.ct-host-pending {
+	fill: rgb(0, 170, 255);
+}
+
+.ct-host-unreachable {
+	fill: rgb(255, 136, 0);
+}
+
+.ct-host-down {
+	fill: rgb(240, 80, 80);
+}
+
+.ct-service-ok {
+	fill: rgb(6, 170, 50);
+}
+
+.ct-service-pending {
+	fill: rgb(0, 170, 255);
+}
+
+.ct-service-warn {
+	fill: rgb(247, 203, 5);
+}
+
+.ct-service-unknown {
+	fill: rgb(255, 136, 0);
+}
+
+.ct-service-crit {
+	fill: rgb(240, 80, 80);
 }

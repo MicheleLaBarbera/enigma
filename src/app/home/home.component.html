@@ -4,7 +4,104 @@
 
 
 <div class="card card-body animated fadeIn ml-3 mr-3 text-justify infra-panel" style="background-color: #f7f9ff;">
-  <div class="row mb-2" *ngIf="globalState">
+
+  <div class="row" *ngIf="host_chart">
+    <div class="col-md-6 col-sm-12 test-border mb-2">
+      <div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
+        <div class="text-center mb-2 status-hosts">
+          <p class="toggle-state hostgroup-title">Hosts</p>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <div class="hosts-chart">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <table class="table table-sm table-hover hostgroup-item">
+              <tbody>
+                <tr>
+                  <td>UP</td>
+                  <td class="host-up"></td>
+                  <td class="text-right">{{hosts_up}}</td>
+                </tr>
+                <tr>
+                  <td>In attesa</td>
+                  <td class="host-pending"></td>
+                  <td class="text-right">{{hosts_pending}}</td>
+                </tr>
+                <tr>
+                  <td>Irraggiungibili</td>
+                  <td class="host-unreachable"></td>
+                  <td class="text-right">{{hosts_unreachable}}</td>
+                </tr>
+                <tr>
+                  <td>Offline</td>
+                  <td class="host-down"></td>
+                  <td class="text-right">{{hosts_down}}</td>
+                </tr>
+                <tr>
+                  <td>Totale</td>
+                  <td></td>
+                  <td class="text-right">{{hosts_count}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12 test-border mb-2">
+      <div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
+        <div class="text-center mb-2 status-services">
+          <p class="toggle-state hostgroup-title">Servizi</p>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <div class="services-chart">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <table class="table table-sm table-hover hostgroup-item">
+              <tbody>
+                <tr>
+                  <td>OK</td>
+                  <td class="service-ok"></td>
+                  <td class="text-right">{{services_ok}}</td>
+                </tr>
+                <tr>
+                  <td>In attesa</td>
+                  <td class="service-pending"></td>
+                  <td class="text-right">{{services_pending}}</td>
+                </tr>
+                <tr>
+                  <td>Warning</td>
+                  <td class="service-warn"></td>
+                  <td class="text-right">{{services_warn}}</td>
+                </tr>
+                <tr>
+                  <td>Sconosciuti</td>
+                  <td class="service-unknown"></td>
+                  <td class="text-right">{{services_unknown}}</td>
+                </tr>
+                <tr>
+                  <td>Critici</td>
+                  <td class="service-crit"></td>
+                  <td class="text-right">{{services_crit}}</td>
+                </tr>
+                <tr>
+                  <td>Totale</td>
+                  <td></td>
+                  <td class="text-right">{{services_count}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="globalState">
     <div class="col-12 text-right">
       <i class="fa" [ngClass]="{
         'fa-toggle-on':globalState === 'active',
@@ -12,10 +109,10 @@
       }" (click)="switchState(infrastructures)" style="font-size: 2em;" aria-hidden="true"></i>
     </div>
   </div>
-  <div class="row">
-		<div class="col-3 test-border mb-3" *ngFor="let infrastructure of infrastructures;">
-			<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
 
+  <div class="row">
+		<div class="col-md-3 col-sm-12 test-border mb-3" *ngFor="let infrastructure of infrastructures;">
+			<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
 
 				<div class="text-center mb-2" [ngClass]="{
 					'status-up':infrastructure.status === 'up',
@@ -124,8 +221,8 @@
   </div>
 </div>
 
-<footer class="footer">
+<!--<footer class="footer">
 	<div class="text-right mr-3">
     <a href="http://www.posdata.it"><img src="/assets/images/logo-posdata.png" width="150px" height="30px" alt=""></a>
 	</div>
-</footer>
+</footer>-->
