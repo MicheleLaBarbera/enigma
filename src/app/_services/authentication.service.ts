@@ -18,10 +18,12 @@ export class AuthenticationService {
     return this.http.post('http://localhost/api/users/auth', JSON.stringify({ username: username, password: password }))
     .map((response: Response) => {
       let token = response.json() && response.json().token;
+      let logo = response.json() && response.json().logo;
       if (token) {
         this.token = token;
         let tokenPayload = decode(token);
-        localStorage.setItem('currentUser', JSON.stringify({ id: tokenPayload.data.id, username: username, firstname: tokenPayload.data.firstname, lastname: tokenPayload.data.lastname, token: token }));
+        console.log(logo);
+        localStorage.setItem('currentUser', JSON.stringify({ id: tokenPayload.data.id, username: username, firstname: tokenPayload.data.firstname, lastname: tokenPayload.data.lastname, token: token, logo: logo }));
         return true;
       }
       else {

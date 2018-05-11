@@ -17,7 +17,10 @@ import { JwtInterceptor } from './_helpers/index';
 
 import { AlertComponent } from './_directives/index';
 import { LoginComponent } from './login/login.component';
-import { AlertService, AuthenticationService, UserService, InfrastructureService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, HostgroupService } from './_services/index';
+import { HostgroupComponent } from './hostgroup/hostgroup.component';
+
+import { SanitizerPipe } from './sanitizer.pipe';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,9 @@ import { AlertService, AuthenticationService, UserService, InfrastructureService
     NavbarComponent,
     HomeComponent,
     AlertComponent,
-    LoginComponent
+    LoginComponent,
+    HostgroupComponent,
+    SanitizerPipe
   ],
   imports: [
     BrowserModule,
@@ -37,7 +42,7 @@ import { AlertService, AuthenticationService, UserService, InfrastructureService
   ],
   providers: [
     AuthGuard,
-    InfrastructureService,
+    HostgroupService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,

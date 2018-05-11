@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
-} from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { User } from '../_models/index';
 import { HostgroupService } from '../_services/index';
@@ -13,17 +8,11 @@ import { Hostgroup, Host, Service } from '../_models/index';
 import * as Chartist from 'chartist';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  selector: 'app-hostgroup',
+  templateUrl: './hostgroup.component.html',
+  styleUrls: ['./hostgroup.component.css'],
   animations: [
-    trigger('hostgroupState', [
-      state('inactive', style({ height: '0px', visibility: 'hidden' })),
-      state('active',   style({ height: '100%', visibility: 'visible' })),
-      transition('inactive => active', animate('1ms ease-in')),
-      transition('active => inactive', animate('1ms ease-out'))
-    ]),
-    trigger('globalState', [
+    trigger('groupState', [
       state('inactive', style({ height: '0px', visibility: 'hidden' })),
       state('active',   style({ height: '100%', visibility: 'visible' })),
       transition('inactive => active', animate('1ms ease-in')),
@@ -31,13 +20,13 @@ import * as Chartist from 'chartist';
     ])
   ]
 })
-export class HomeComponent implements OnInit {
+export class HostgroupComponent implements OnInit {
 
-	public token: string;
-  public hostgroups: Hostgroup[];
-  //public hosts: Host[];
-  //public services: Service[];
-  public globalState: string;
+  public token: string;
+  public hostgroup: Hostgroup[];
+  public hosts: Host[];
+  public services: Service[];
+
   public host_chart = [];
   public service_chart = [];
 
@@ -54,16 +43,18 @@ export class HomeComponent implements OnInit {
   public services_warn = 0;
   public services_count = 0;
 
-  constructor(private hostgroupService: HostgroupService) {
+  constructor(private route: ActivatedRoute, private hostgroupService: HostgroupService) {
   	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
   	this.token = currentUser && currentUser.token;
   }
 
   ngOnInit() {
-  	this.hostgroupService.getHostgroups(this.token).subscribe(hostgroups => {
-      this.hostgroups = hostgroups;
+    const id = +this.route.snapshot.paramMap.get('id');
 
-      for(let single of this.hostgroups) {
+  	this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
+      this.hostgroup = hostgroup;
+
+      for(let single of this.hostgroup) {
         this.hosts_down += single['hosts_down'];
         this.hosts_unreachable += single['hosts_unreachable'];
         this.hosts_pending += single['hosts_pending'];
@@ -74,6 +65,27 @@ export class HomeComponent implements OnInit {
         this.services_pending += single['services_pending'];
         this.services_unknown += single['services_unknown'];
         this.services_warn += single['services_warn'];
+
+        let found = false;
+
+        for(let group of single.groups) {
+          if(single['default_group'] == group['name'])
+          {
+            this.getHosts(single, group, single['ip'], single['port'], group['name']);
+            found = true;
+          }
+        }
+
+        if(!found) {
+          console.log(single);
+          console.log(single.groups[0]);
+          console.log(single['ip']);
+          console.log(single['port']);
+          console.log(single.groups[0]['name']);
+          console.log(single.default_group);
+          this.getHosts(single, single.groups[0], single['ip'], single['port'], single.groups[0]['name']);
+        }
+
       }
 
       this.host_chart = new Chartist.Pie('.hosts-chart', {
@@ -110,21 +122,39 @@ export class HomeComponent implements OnInit {
       this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
       this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
     });
-    this.globalState = 'active';
   }
 
-  /*public getHosts(ip:string, port: number, group: string) {
-    this.hostgroupService.getHosts(ip, port, group).subscribe(hosts => this.hosts = hosts);
+  public getHosts(hostgroup: Hostgroup, groupID: any, ip:string, port: number, group: string) {
+    this.hostgroupService.getHosts(ip, port, group).subscribe(hosts => {
+      this.hosts = hosts;
+
+      this.switchState(hostgroup);
+      hostgroup.toggleGroupState(groupID);
+    });
   }
 
   public getServices(ip:string, port: number, name: string) {
     this.hostgroupService.getServices(ip, port, name).subscribe(services => this.services = services);
-  }*/
+  }
 
-  public switchState(hostgroups: Hostgroup[]) {
-    this.globalState = (this.globalState == 'active') ? 'inactive' : 'active';
-    for(let hostgroup of hostgroups) {
-      hostgroup.state = (this.globalState == 'active') ? 'active' : 'inactive';
+  public switchState(hostgroup: Hostgroup) {
+    for(let group of hostgroup.groups) {
+      if(group['state'] === 'active')
+      group['state'] = 'inactive';
+      //hostgroup.state = (this.globalState == 'active') ? 'active' : 'inactive';
+    }
+  }
+
+  public setDefaultGroup(hostgroup: Hostgroup, groupID: any) {
+    const id = +this.route.snapshot.paramMap.get('id');
+    console.log(hostgroup.default_group + " - " + groupID['name']);
+    if(hostgroup.default_group != groupID['name']) {
+      this.hostgroupService.setDefaultGroup(this.token, id, groupID['name']).subscribe(result => {
+        if (result === true) {
+          hostgroup.default_group = groupID['name'];
+          console.log(hostgroup.default_group + " - " + groupID['name']);
+        }
+      });
     }
   }
 }

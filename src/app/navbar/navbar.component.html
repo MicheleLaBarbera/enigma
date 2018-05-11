@@ -1,29 +1,27 @@
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-faded">
-        <a class="navbar-brand" href="#">LOGO</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div id="navbarNavDropdown" class="navbar-collapse collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="">
-                      <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                      {{ currentUser.firstname }} {{ currentUser.lastname }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">
-                      <i class="fa fa-power-off" aria-hidden="true"></i>
-                      Logout
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-faded" style="padding-left: 1.50rem;">
+  <a class="text-left" href="#"><img [src]="'data:image;base64,'+currentUser.logo | safeHtml" style="height: 40px;"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div id="navbarNavDropdown" class="navbar-collapse collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"></a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="">
+          <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          {{ currentUser.firstname }} {{ currentUser.lastname }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+          Logout
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

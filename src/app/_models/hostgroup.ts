@@ -1,4 +1,6 @@
-export class Infrastructure {
+import { Host } from '../_models/index';
+
+export class Hostgroup {
   id: number;
   name: string;
   ip: string;
@@ -6,7 +8,8 @@ export class Infrastructure {
   status: string;
   state: string;
   description: string;
-  hostgroups: [string, number];
+  default_group: string;
+  groups: [string, number];
   hosts_down: number;
   hosts_pending: number;
   hosts_unreachable: number;
@@ -17,8 +20,7 @@ export class Infrastructure {
   services_unknown: number;
   services_warn: number;
 
-
-  constructor(id: number, name: string, ip: string, port: number, status:string, state: string, description: string, hostgroups: [string, number],
+  constructor(id: number, name: string, ip: string, port: number, status:string, state: string, description: string, default_group: string, groups: [string, number],
               hosts_down: number, hosts_pending: number, hosts_unreachable: number, hosts_up: number, services_crit: number, services_ok: number,
               services_pending: number, services_unknown: number, services_warn: number) {
   	this.id = id;
@@ -28,7 +30,8 @@ export class Infrastructure {
     this.status = status;
   	this.state = state;
     this.description = description;
-    this.hostgroups = hostgroups;
+    this.default_group = default_group;
+    this.groups = groups;
     this.hosts_down = hosts_down;
     this.hosts_pending = hosts_pending;
     this.hosts_unreachable = hosts_unreachable;
@@ -42,5 +45,14 @@ export class Infrastructure {
 
   public toggleState(): void {
     this.state = this.state === 'active' ? 'inactive' : 'active';
+  }
+
+  public toggleGroupState(id): void {
+    //this.groups[id] = this.state === 'active' ? 'inactive' : 'active';
+    //console.log(id.count);
+    //id.sta
+    //id.state === 'active' ? 'inactive' : 'active';
+    this.groups[id.count]['state'] = this.groups[id.count]['state'] === 'active' ? 'inactive' : 'active';
+    console.log(this.groups[id.count]['state']);
   }
 }

@@ -1,4 +1,4 @@
 export * from './user';
-export * from './infrastructure';
+export * from './hostgroup';
 export * from './host';
 export * from './service';
