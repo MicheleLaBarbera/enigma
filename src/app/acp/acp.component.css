@@ -1,0 +1,63 @@
+#main-card {
+	margin-top: 1rem;
+	background-color: #f7f9ff;
+}
+
+.card-body {
+	padding-right: 0.5rem;
+	padding-left: 0.5rem;
+	padding-top: 0;
+	padding-bottom: 0.4rem;
+}
+
+.full-height {
+	height: 100%;
+}
+
+.breadcrumb {
+  margin-bottom: 0;
+  font-weight: 600;
+  background-color: #f7f9ff;
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+}
+
+.status-hosts {
+	border-top: 1px solid rgba(0,0,0,.125);
+	border-right: 1px solid rgba(0,0,0,.125);
+	border-left: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+  border-bottom: 1px solid rgba(0,0,0,.125);
+  background-color: #0e71b4 !important;
+  color: white;
+}
+
+.card-item-title {
+	font-weight: 600;
+}
+
+.item-clickable:hover {
+  cursor: pointer;
+}
+
+.item-clickable {
+  margin-bottom: 0;
+}
+
+.item-text {
+	color: rgba(0,0,0,.5);
+	font-weight: 600;
+	font-size: 0.8rem;
+}
+
+.hostgroup-up {
+	color: #27c24c;
+}
+
+.hostgroup-warning {
+	color: #ff902b;
+}
+
+.hostgroup-critical {
+	color: #f05050;
+}

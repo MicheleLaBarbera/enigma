@@ -11,14 +11,14 @@ export class HostgroupService {
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {}
 
   public getHostgroups(token: string): Observable<Hostgroup[]> {
-    return this.http.get<Hostgroup[]>('http://localhost/api/hostgroups/get').map(
+    return this.http.post<Hostgroup[]>('http://localhost/api/hostgroups/get', JSON.stringify({ token: token })).map(
   		res => res.map(x => new Hostgroup(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
                                              x.services_warn)));
   }
 
   public getHostgroup(token: string, id: number): Observable<Hostgroup[]> {
-    return this.http.get<Hostgroup[]>('http://localhost/api/hostgroups/get/' + id).map(
+    return this.http.post<Hostgroup[]>('http://localhost/api/hostgroups/get/' + id, JSON.stringify({ token: token, id: id })).map(
   		res => res.map(x => new Hostgroup(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
                                              x.services_warn)));

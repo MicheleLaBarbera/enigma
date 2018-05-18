@@ -10,7 +10,7 @@
 
 
 <div class="container h-100 mt-5">
-	<div class="row h-100">	
+	<div class="row h-100">
 		<div class="col-3"></div>
 		<div class="col-6">
 			<div class="card">
@@ -24,10 +24,10 @@
 				        <div class="input-group-prepend">
 				          <div class="input-group-text"><i class="fa fa-user prefix grey-text"></i></div>
 				        </div>
-				        <input type="text" class="form-control" placeholder="JohnDoe" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />				
-				        <div *ngIf="f.submitted && !username.valid" class="help-block">				        
-						    	<i class="fa fa-times" aria-hidden="true"></i>		
-								</div>       
+				        <input type="text" class="form-control" placeholder="JohnDoe" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
+				        <div *ngIf="f.submitted && !username.valid" class="help-block">
+						    	<i class="fa fa-times" aria-hidden="true"></i>
+								</div>
 				      </div>
 						</div>
 
@@ -38,9 +38,9 @@
 				        <div class="input-group-prepend">
 				          <div class="input-group-text"><i class="fa fa-lock prefix grey-text"></i></div>
 				        </div>
-				        <input type="password" class="form-control" placeholder="*********" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />								        
+				        <input type="password" class="form-control" placeholder="*********" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
 				        <div *ngIf="f.submitted && !password.valid" class="help-block"><i class="fa fa-times" aria-hidden="true"></i>
-</div>      
+</div>
 				      </div>
 						</div>
 
@@ -72,8 +72,4 @@
 </div>
 
 
-<footer class="footer">
-	<div class="container">
-		
-	</div>
-</footer>
+<app-footer></app-footer>

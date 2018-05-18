@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-faded" style="padding-left: 1.50rem;">
-  <a class="text-left" href="#"><img [src]="'data:image;base64,'+currentUser.logo | safeHtml" style="height: 40px;"></a>
+  <a class="text-left pb-2" href="#"><img [src]="'data:image;base64,'+currentUser.logo | safeHtml" style="height: 40px;"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -10,6 +10,12 @@
       </li>
     </ul>
     <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/admin">
+          <i class="fa fa-wrench" aria-hidden="true"></i>
+          Admin Control Panel (ACP)
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="">
           <i class="fa fa-user-circle-o" aria-hidden="true"></i>

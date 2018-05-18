@@ -2,15 +2,28 @@
   <app-navbar></app-navbar>
 </header>
 
+
 <div id="main-card" class="card ml-3 mr-3 text-justify">
+
   <div class="card-body">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <nav aria-label="breadcrumb" class="mr-1 ml-1" *ngIf="hostgroup">
+          <ol class="breadcrumb mt-3">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{hostgroup[0].name}} - {{hostgroup[0].description}}</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
     <div class="row">
       <div id="left" class="col-md-3 col-sm-12 full-height">
         <div class="row" *ngIf="hostgroup">
           <div class="col col-sm-12 mb-2 mt-2">
             <div class="card hoverable ml-1 mr-1 mt-1 full-height">
               <div class="text-center mb-2 status-hosts">
-                <p class="item-clickable card-item-title">{{hostgroup[0].name}} - {{hostgroup[0].description}}</p>
+                <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup[0].name}} - {{hostgroup[0].description}}</p>
               </div>
 
       				<div *ngFor="let group of hostgroup[0].groups; let i = index" [attr.data-index]="i">
@@ -23,7 +36,7 @@
       						}" aria-hidden="true"></i></div>
       						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup[0], group, hostgroup[0].ip, hostgroup[0].port, group.name);">{{group.alias}}</div>
                   <div class="col-3">
-                    <i class="fa" [ngClass]="{
+                    <i class="custom-color fa" [ngClass]="{
         							'fa-toggle-off':(hostgroup[0].default_group === null  && i !== 0) || hostgroup[0].default_group !== group.name,
         							'fa-toggle-on':(hostgroup[0].default_group === null && i === 0) || hostgroup[0].default_group === group.name
         						}" aria-hidden="true" (click)="setDefaultGroup(hostgroup[0], group);"></i>
@@ -38,7 +51,7 @@
           <div class="col col-sm-12 mb-2">
             <div class="card hoverable ml-1 mr-1 mt-1 full-height">
               <div class="text-center mb-2 status-hosts">
-                <p class="item-clickable card-item-title">Hosts</p>
+                <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -87,7 +100,7 @@
           <div class="col col-sm-12 mb-2">
             <div class="card hoverable ml-1 mr-1 mt-1">
               <div class="text-center mb-2 status-services">
-                <p class="item-clickable card-item-title">Servizi</p>
+                <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -143,22 +156,20 @@
           <div class="col col-sm-12 mb-2 mt-2" *ngIf="hosts">
             <div class="card hoverable ml-1 mr-1 mt-1">
               <div class="pl-3 mb-2 status-hosts">
-                <p class="item-clickable card-item-title">Hosts: {{hosts[0].groups}}</p>
+                <p class="card-item-title" style="margin-bottom: 0;">Elenco degli Hosts: {{hosts[0].groups}}</p>
               </div>
 
               <div class="card-body ml-1 mr-1">
                 <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-                  <thead class="card-item-title">
-                    <td>#</td>
+                  <thead class="card-item-title" style="color: #172559;">
+                    <td></td>
                     <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
                     Nome</td>
-                    <td class="text-left" scope="col"><i class="fa fa-podcast" aria-hidden="true"></i>
-         IP</td>
+                    <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
                     <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
                     <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
                     <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
-                    <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i>
-         Sconosciuti</td>
+                    <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Sconosciuti</td>
                   </thead>
                   <tbody>
                     <tr *ngFor="let host of hosts;" class="item-text-big">
@@ -169,7 +180,7 @@
                         'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
         							}" aria-hidden="true"></i></td>
                       <td class="text-left item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name)">{{host.alias}}</td>
-                      <td class="text-left">{{host.address}}</td>
+                      <td>{{host.address}}</td>
                       <td>{{host.crit}}</td>
                       <td>{{host.warn}}</td>
                       <td>{{host.ok}}</td>
@@ -180,54 +191,6 @@
               </div>
             </div>
           </div>
-
-          <!--<div class="col col-sm-12 mb-2 mt-2" *ngFor="let group of hostgroup[0].groups;">
-            <div class="card hoverable ml-1 mr-1 mt-1">
-
-
-              <div class="pl-3 mb-2 status-hosts">
-                <p class="item-clickable card-item-title" (click)="getHosts(hostgroup[0], group, hostgroup[0].ip, hostgroup[0].port, group.name);">Hosts: {{group.alias}}</p>
-              </div>
-            -->
-              <!--<div [@groupState]="group.state">-->
-
-              <!--
-              <div class="card-body ml-1 mr-1" [@groupState]="group.state">
-                <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-                  <thead class="card-item-title">
-                    <td>#</td>
-                    <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
-                    Nome</td>
-                    <td class="text-left" scope="col"><i class="fa fa-podcast" aria-hidden="true"></i>
-         IP</td>
-                    <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
-                    <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
-                    <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
-                    <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i>
-         Sconosciuti</td>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let host of hosts;" class="item-text-big">
-                      <td><i class="fa" [ngClass]="{
-        								'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
-        								'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
-        								'fa-times-circle hostgroup-critical':host.crit > 0,
-                        'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
-        							}" aria-hidden="true"></i></td>
-                      <td class="text-left item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name)">{{host.alias}}</td>
-                      <td class="text-left">{{host.address}}</td>
-                      <td>{{host.crit}}</td>
-                      <td>{{host.warn}}</td>
-                      <td>{{host.ok}}</td>
-                      <td>{{host.unknown}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>-->
-            <!--</div>-->
-
-            <!--</div>
-          </div>-->
         </div>
       </div>
     </div>
@@ -237,7 +200,7 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">{{services[0].h_name}}</h5>
+          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">Dettagli dell'host {{services[0].h_name}}, {{hostgroup[0].name}} - {{hostgroup[0].description}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -245,25 +208,26 @@
         <div class="modal-body">
           <table class="table table-sm text-center">
             <thead class="card-item-title">
-              <td scope="col">#</td>
-              <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
-   Nome</td>
-              <td class="text-left" scope="col"><i class="fa fa-list-alt"></i> Stato</td>
-              <td scope="col"><i class="fa fa-calendar-check-o"></i> Età</td>
+              <td scope="col"></td>
+              <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
+              <td scope="col"><i class="fa fa-list-alt"></i> Stato</td>
+              <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo aggiornamento</td>
               <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
             </thead>
             <tbody>
-              <tr *ngFor="let service of services;" class="item-text">
+              <tr *ngFor="let service of services;" [ngClass]="{
+                'hostgroup-critical-service':service.state == 2
+              }" class="item-text">
                 <td><i class="fa" [ngClass]="{
                   'fa-check-circle hostgroup-up':service.state == 0,
                   'fa-exclamation-circle hostgroup-warning':service.state == 1,
-                  'fa-times-circle hostgroup-critical':service.state == 2,
+                  'fa-times-circle':service.state == 2,
                   'fa-question-circle hostgroup-unknown':service.state == 3
                 }" aria-hidden="true"></i></td>
                 <td class="text-left">{{service.name}}</td>
                 <td class="text-left">{{service.status}}</td>
                 <td class="">{{service.age}}</td>
-                <td><i class="fa fa-toggle-off"></i></td>
+                <td><i class="fa fa-toggle-off" onclick="alert('Funzione non disponibile.')"></i></td>
               </tr>
             </tbody>
           </table>
@@ -272,3 +236,5 @@
     </div>
   </div>
 </div>
+
+<app-footer></app-footer>
