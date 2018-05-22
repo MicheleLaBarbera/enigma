@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authenticationService.login(this.model.username, this.model.password).subscribe(result => {
       if (result === true) {
-        this.router.navigate([this.returnUrl]);
+        this.router.navigate([this.returnUrl], {queryParams: {message: 'Registrazione effettuata con successo.'}});
       } 
       else {
         this.alertService.error('Username o password errati');
