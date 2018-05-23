@@ -21,7 +21,8 @@ import { AlertService, AuthenticationService, UserService, HostgroupService } fr
 import { HostgroupComponent } from './hostgroup/hostgroup.component';
 
 import { SanitizerPipe } from './sanitizer.pipe';
-import { ProfileComponent } from './profile/profile.component';
+import { FooterComponent } from './footer/footer.component';
+import { AcpComponent } from './acp/acp.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ProfileComponent } from './profile/profile.component';
     LoginComponent,
     HostgroupComponent,
     SanitizerPipe,
-    ProfileComponent
+    FooterComponent,
+    AcpComponent
   ],
   imports: [
     BrowserModule,

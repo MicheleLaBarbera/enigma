@@ -1,0 +1,15 @@
+.card-footer {
+  background-color: white;
+}
+
+.item-text {
+	color: rgba(0,0,0,.5);
+	font-weight: 600;
+	font-size: 0.8rem;
+}
+
+.item-text-big {
+	color: rgba(0,0,0,.5);
+	font-weight: 700;
+	font-size: 0.9rem;  
+}

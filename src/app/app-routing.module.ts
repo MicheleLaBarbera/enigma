@@ -5,13 +5,13 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './_guards/index';
 import { LoginComponent } from './login/login.component';
 import { HostgroupComponent } from './hostgroup/hostgroup.component';
-import { ProfileComponent } from './profile/profile.component';
+import { AcpComponent } from './acp/acp.component';
 
 const routes: Routes = [
 	{ path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
 	{ path: 'hostgroup/:id', component: HostgroupComponent },
-	{ path: 'profile', component: ProfileComponent },
+	{ path: 'admin', component: AcpComponent},
   { path: '**', redirectTo: '' }
 ];
 

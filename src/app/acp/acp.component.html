@@ -1,0 +1,216 @@
+<app-navbar></app-navbar>
+
+<div id="main-card" class="card ml-3 mr-3 text-justify">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <nav aria-label="breadcrumb" class="mr-1 ml-1">
+          <ol class="breadcrumb mt-3">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Admin Control Panel (ACP)</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="left" class="col-md-3 col-sm-12 full-height">
+        <div class="row">
+          <div class="col col-sm-12 mb-2 mt-2">
+            <div class="card ml-1 mr-1 mt-1 full-height">
+              <div class="text-center mb-2 status-hosts">
+                <p class="card-item-title" style="margin-bottom: 0;">Amministrazione Utenti</p>
+              </div>
+    					<div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(0, 'Amministrazione Utenti - Aggiungi Utente');">Aggiungi Utente</div>
+              </div>
+
+              <div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-pencil-square hostgroup-warning" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(1, 'Amministrazione Utenti - Modifica Utente');">Modifica Utente</div>
+              </div>
+
+              <div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-minus-square hostgroup-critical" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(2, 'Amministrazione Utenti - Elimina Utente');">Elimina Utente</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-sm-12 mb-2 mt-2">
+            <div class="card ml-1 mr-1 mt-1 full-height">
+              <div class="text-center mb-2 status-hosts">
+                <p class="card-item-title" style="margin-bottom: 0;">Amministrazione Clienti</p>
+              </div>
+    					<div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text">Aggiungi Cliente</div>
+              </div>
+
+              <div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-pencil-square hostgroup-warning" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text">Modifica Cliente</div>
+              </div>
+
+              <div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-minus-square hostgroup-critical" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text">Elimina Cliente</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-sm-12 mb-2 mt-2">
+            <div class="card ml-1 mr-1 mt-1 full-height">
+              <div class="text-center mb-2 status-hosts">
+                <p class="card-item-title" style="margin-bottom: 0;">Amministrazione Servers</p>
+              </div>
+    					<div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text">Aggiungi Server</div>
+              </div>
+
+              <div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-pencil-square hostgroup-warning" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text">Modifica Server</div>
+              </div>
+
+              <div class="row">
+    						<div class="text-center col-3">
+                  <i class="fa fa-minus-square hostgroup-critical" aria-hidden="true"></i>
+                </div>
+    						<div class="col-6 item-clickable item-text">Elimina Server</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-9 col-sm-12">
+        <div class="row">
+          <div class="col col-sm-12 mb-2 mt-2">
+
+            <div class="card ml-1 mr-1 mt-1">
+              <div class="pl-3 mb-2 status-hosts">
+                <p class="card-item-title" style="margin-bottom: 0;">{{viewTitle}}</p>
+              </div>
+
+              <div class="card-body ml-1 mr-1">
+                <div class="row" *ngIf="viewPanel == 0">
+                  <div class="col-md-3 col-sm-12"></div>
+                  <div class="col-md-6 col-sm-12">
+                    <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
+                      <p class="login-label">Nome</p>
+          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
+          							<label class="sr-only" for="firstname">John</label>
+          				      <div class="input-group mb-2">
+          				        <div class="input-group-prepend">
+          				          <div class="input-group-text"><i class="fa fa-user prefix grey-text"></i></div>
+          				        </div>
+          				        <input type="text" class="form-control" placeholder="John" name="firstname" autocomplete="firstname" [(ngModel)]="model.firstname" #firstname="ngModel" required />
+          				        <div *ngIf="f.submitted && !firstname.valid" class="help-block">
+          						    	<i class="fa fa-times" aria-hidden="true"></i>
+          								</div>
+          				      </div>
+          						</div>
+
+                      <p class="login-label">Cognome</p>
+                      <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !lastname.valid }">
+                        <label class="sr-only" for="lastname">Doe</label>
+                        <div class="input-group mb-2">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa fa-user prefix grey-text"></i></div>
+                          </div>
+                          <input type="text" class="form-control" placeholder="Doe" name="lastname" autocomplete="lastname" [(ngModel)]="model.lastname" #lastname="ngModel" required />
+                          <div *ngIf="f.submitted && !lastname.valid" class="help-block">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p class="login-label">Username</p>
+          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+          							<label class="sr-only" for="username">JohnDoe</label>
+          				      <div class="input-group mb-2">
+          				        <div class="input-group-prepend">
+          				          <div class="input-group-text"><i class="fa fa-user prefix grey-text"></i></div>
+          				        </div>
+          				        <input type="text" class="form-control" placeholder="JohnDoe" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
+          				        <div *ngIf="f.submitted && !username.valid" class="help-block">
+          						    	<i class="fa fa-times" aria-hidden="true"></i>
+          								</div>
+          				      </div>
+          						</div>
+
+          						<p class="login-label">Password</p>
+          						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+          							<label class="sr-only" for="password">*********</label>
+          				      <div class="input-group mb-2">
+          				        <div class="input-group-prepend">
+          				          <div class="input-group-text"><i class="fa fa-lock prefix grey-text"></i></div>
+          				        </div>
+          				        <input type="password" class="form-control" placeholder="*********" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
+          				        <div *ngIf="f.submitted && !password.valid" class="help-block">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                          </div>
+          				      </div>
+          						</div>
+
+          						<alert></alert>
+
+          						<div class="text-center mt-4">
+          							<button [disabled]="loading" class="btn btn-primary card-item-title" type="submit">Registra</button>
+          							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+          					  </div>
+          					</form>
+                  </div>
+                </div>
+
+                <div class="row" *ngIf="viewPanel == 1">
+                  <div class="col-md-2 col-sm-12"></div>
+                  <div class="col-md-8 col-sm-12">
+                    <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
+
+                      <p class="login-label">Cerca Utente</p>
+          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+          	 				    <div class="input-group mb-2">
+          				        <input type="text" class="form-control" placeholder="Nome, Cognome, Username..." name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
+          				        <div class="help-block">
+          						    	<i class="fa fa-search" aria-hidden="true"></i>
+          								</div>
+          				      </div>
+          						</div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
