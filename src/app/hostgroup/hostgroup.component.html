@@ -10,7 +10,7 @@
       <div class="col-md-12 col-sm-12">
         <nav aria-label="breadcrumb" class="mr-1 ml-1" *ngIf="hostgroup">
           <ol class="breadcrumb mt-3">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="" routerLink="/home">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{hostgroup[0].name}} - {{hostgroup[0].description}}</li>
           </ol>
         </nav>
@@ -63,24 +63,19 @@
                     <table class="table table-sm table-hover item-text">
                       <tbody>
                         <tr>
-                          <td>UP</td>
+                          <td>In Linea</td>
                           <td class="host-up"></td>
                           <td class="text-right">{{hosts_up}}</td>
                         </tr>
                         <tr>
-                          <td>In attesa</td>
-                          <td class="host-pending"></td>
-                          <td class="text-right">{{hosts_pending}}</td>
-                        </tr>
-                        <tr>
-                          <td>Unreachable</td>
-                          <td class="host-unreachable"></td>
-                          <td class="text-right">{{hosts_unreachable}}</td>
-                        </tr>
-                        <tr>
                           <td>Offline</td>
                           <td class="host-down"></td>
-                          <td class="text-right">{{hosts_down}}</td>
+                          <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
+                        </tr>
+                        <tr>
+                          <td>In Manutenzione</td>
+                          <td class="host-pending"></td>
+                          <td class="text-right">{{hosts_pending}}</td>
                         </tr>
                         <tr>
                           <td>Totale</td>
@@ -112,29 +107,24 @@
                     <table class="table table-sm table-hover item-text">
                       <tbody>
                         <tr>
-                          <td>OK</td>
+                          <td>Ottimale</td>
                           <td class="service-ok"></td>
                           <td class="text-right">{{services_ok}}</td>
                         </tr>
                         <tr>
-                          <td>In attesa</td>
-                          <td class="service-pending"></td>
-                          <td class="text-right">{{services_pending}}</td>
-                        </tr>
-                        <tr>
                           <td>Warning</td>
                           <td class="service-warn"></td>
-                          <td class="text-right">{{services_warn}}</td>
-                        </tr>
-                        <tr>
-                          <td>Sconosciuti</td>
-                          <td class="service-unknown"></td>
-                          <td class="text-right">{{services_unknown}}</td>
+                          <td class="text-right">{{services_warn + services_unknown}}</td>
                         </tr>
                         <tr>
                           <td>Critici</td>
                           <td class="service-crit"></td>
                           <td class="text-right">{{services_crit}}</td>
+                        </tr>
+                        <tr>
+                          <td>In Manutenzione</td>
+                          <td class="service-pending"></td>
+                          <td class="text-right">{{services_pending}}</td>
                         </tr>
                         <tr>
                           <td>Totale</td>
@@ -156,7 +146,7 @@
           <div class="col col-sm-12 mb-2 mt-2" *ngIf="hosts">
             <div class="card hoverable ml-1 mr-1 mt-1">
               <div class="pl-3 mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">Elenco degli Hosts: {{hosts[0].groups}}</p>
+                <p class="card-item-title" style="margin-bottom: 0;">Elenco degli Hosts: {{viewMainTitle}}</p>
               </div>
 
               <div class="card-body ml-1 mr-1">
@@ -166,10 +156,10 @@
                     <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
                     Nome</td>
                     <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
-                    <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critici</td>
-                    <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
                     <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
-                    <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Sconosciuti</td>
+                    <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
+                    <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
+                    <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
                   </thead>
                   <tbody>
                     <tr *ngFor="let host of hosts;" class="item-text-big">
@@ -179,11 +169,11 @@
         								'fa-times-circle hostgroup-critical':host.crit > 0,
                         'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
         							}" aria-hidden="true"></i></td>
-                      <td class="text-left item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name)">{{host.alias}}</td>
+                      <td class="text-left item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name, host.alias)">{{host.alias}}</td>
                       <td>{{host.address}}</td>
-                      <td>{{host.crit}}</td>
-                      <td>{{host.warn}}</td>
                       <td>{{host.ok}}</td>
+                      <td>{{host.warn}}</td>
+                      <td>{{host.crit}}</td>
                       <td>{{host.unknown}}</td>
                     </tr>
                   </tbody>
@@ -200,13 +190,13 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">Dettagli dell'host {{services[0].h_name}}, {{hostgroup[0].name}} - {{hostgroup[0].description}}</h5>
+          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">Dettagli dell'host {{viewSecondaryTitle}}, {{viewMainTitle}}, {{hostgroup[0].name}} - {{hostgroup[0].description}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <table class="table table-sm text-center">
+          <table class="table table-sm text-center table-striped">
             <thead class="card-item-title">
               <td scope="col"></td>
               <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
@@ -215,19 +205,17 @@
               <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
             </thead>
             <tbody>
-              <tr *ngFor="let service of services;" [ngClass]="{
-                'hostgroup-critical-service':service.state == 2
-              }" class="item-text">
+              <tr *ngFor="let service of services;" class="item-text">
                 <td><i class="fa" [ngClass]="{
                   'fa-check-circle hostgroup-up':service.state == 0,
                   'fa-exclamation-circle hostgroup-warning':service.state == 1,
-                  'fa-times-circle':service.state == 2,
+                  'fa-times-circle hostgroup-critical':service.state == 2,
                   'fa-question-circle hostgroup-unknown':service.state == 3
                 }" aria-hidden="true"></i></td>
                 <td class="text-left">{{service.name}}</td>
                 <td class="text-left">{{service.status}}</td>
                 <td class="">{{service.age}}</td>
-                <td><i class="fa fa-toggle-off" onclick="alert('Funzione non disponibile.')"></i></td>
+                <td><i class="fa fa-toggle-off" onclick="alert('Attenzione: Funzione non ancora implementata.')"></i></td>
               </tr>
             </tbody>
           </table>

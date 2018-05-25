@@ -43,6 +43,9 @@ export class HostgroupComponent implements OnInit {
   public services_warn = 0;
   public services_count = 0;
 
+  public viewMainTitle: string;
+  public viewSecondaryTitle: string;
+
   constructor(private route: ActivatedRoute, private hostgroupService: HostgroupService) {
   	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
   	this.token = currentUser && currentUser.token;
@@ -50,6 +53,8 @@ export class HostgroupComponent implements OnInit {
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id');
+    const id2 = +this.route.snapshot.paramMap.get('id2');
+    console.log("ID: " + id + "- ID2: " + id2);
 
   	this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
       this.hostgroup = hostgroup;
@@ -66,24 +71,36 @@ export class HostgroupComponent implements OnInit {
         this.services_unknown += single['services_unknown'];
         this.services_warn += single['services_warn'];
 
-        let found = false;
+        if(id2 == 0) {
+          let found = false;
 
-        for(let group of single.groups) {
-          if(single['default_group'] == group['name'])
-          {
-            this.getHosts(single, group, single['ip'], single['port'], group['name']);
-            found = true;
+          for(let group of single.groups) {
+            if(single['default_group'] == group['name'])
+            {
+              this.getHosts(single, group, single['ip'], single['port'], group['name']);
+              found = true;
+            }
+          }
+
+          if(!found) {
+            console.log(single);
+            console.log(single.groups[0]);
+            console.log(single['ip']);
+            console.log(single['port']);
+            console.log(single.groups[0]['name']);
+            console.log(single.default_group);
+            this.getHosts(single, single.groups[0], single['ip'], single['port'], single.groups[0]['name']);
           }
         }
-
-        if(!found) {
-          console.log(single);
-          console.log(single.groups[0]);
-          console.log(single['ip']);
-          console.log(single['port']);
-          console.log(single.groups[0]['name']);
-          console.log(single.default_group);
-          this.getHosts(single, single.groups[0], single['ip'], single['port'], single.groups[0]['name']);
+        else {
+          let idx = 1;
+          for(let group of single.groups) {
+            if(id2 == idx)
+            {
+              this.getHosts(single, group, single['ip'], single['port'], group['name']);
+            }
+            idx++;
+          }
         }
 
       }
@@ -92,8 +109,8 @@ export class HostgroupComponent implements OnInit {
         series: [
           {value: this.hosts_up, className: 'ct-host-up'},
           {value: this.hosts_pending, className: 'ct-host-pending'},
-          {value: this.hosts_unreachable, className: 'ct-host-unreachable'},
-          {value: this.hosts_down, className: 'ct-host-down'}
+          //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
+          {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
         ],
       }, {
         donut: true,
@@ -107,8 +124,8 @@ export class HostgroupComponent implements OnInit {
         series: [
           {value: this.services_ok, className: 'ct-service-ok'},
           {value: this.services_pending, className: 'ct-service-pending'},
-          {value: this.services_warn, className: 'ct-service-warn'},
-          {value: this.services_unknown, className: 'ct-service-unknown'},
+          {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
+          //{value: this.services_unknown, className: 'ct-service-unknown'},
           {value: this.services_crit, className: 'ct-service-crit'}
         ],
       }, {
@@ -127,14 +144,15 @@ export class HostgroupComponent implements OnInit {
   public getHosts(hostgroup: Hostgroup, groupID: any, ip:string, port: number, group: string) {
     this.hostgroupService.getHosts(ip, port, group).subscribe(hosts => {
       this.hosts = hosts;
-
+      this.viewMainTitle = groupID.alias;
       this.switchState(hostgroup);
       hostgroup.toggleGroupState(groupID);
     });
   }
 
-  public getServices(ip:string, port: number, name: string) {
+  public getServices(ip:string, port: number, name: string, alias: string) {
     this.hostgroupService.getServices(ip, port, name).subscribe(services => this.services = services);
+    this.viewSecondaryTitle = alias;
   }
 
   public switchState(hostgroup: Hostgroup) {

@@ -11,6 +11,7 @@ const routes: Routes = [
 	{ path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
 	{ path: 'hostgroup/:id', component: HostgroupComponent },
+	{ path: 'hostgroup/:id/:id2', component: HostgroupComponent },
 	{ path: 'admin', component: AcpComponent},
   { path: '**', redirectTo: '' }
 ];

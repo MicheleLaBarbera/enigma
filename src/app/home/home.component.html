@@ -4,9 +4,9 @@
 
 <div id="main-card" class="card ml-3 mr-3 text-justify">
   <div class="card-body">
-    <div class="row" *ngIf="host_chart">
+    <div class="row mt-1" *ngIf="host_chart">
       <div class="col-md-6 col-sm-12 mb-2 mt-2">
-        <div class="card hoverable ml-1 mr-1 mt-1 full-height">
+        <div class="card hoverable ml-2 mr-2 mt-1 full-height">
           <div class="text-center mb-2 status-hosts">
             <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
           </div>
@@ -20,29 +20,24 @@
                 <table class="table table-sm table-hover item-text">
                   <tbody>
                     <tr>
-                      <td>UP</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'OK')">OK</td>
                       <td class="host-up"></td>
                       <td class="text-right">{{hosts_up}}</td>
                     </tr>
                     <tr>
-                      <td>In attesa</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">Offline</td>
+                      <td class="host-down"></td>
+                      <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
+                    </tr>
+                    <tr>
+                      <td class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Downtime')">Downtime</td>
                       <td class="host-pending"></td>
                       <td class="text-right">{{hosts_pending}}</td>
                     </tr>
                     <tr>
-                      <td>Irraggiungibili</td>
-                      <td class="host-unreachable"></td>
-                      <td class="text-right">{{hosts_unreachable}}</td>
-                    </tr>
-                    <tr>
-                      <td>Offline</td>
-                      <td class="host-down"></td>
-                      <td class="text-right">{{hosts_down}}</td>
-                    </tr>
-                    <tr>
-                      <td>Totale</td>
+                      <td class="item-strong">Totale</td>
                       <td></td>
-                      <td class="text-right">{{hosts_count}}</td>
+                      <td class="item-strong text-right">{{hosts_count}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -52,7 +47,7 @@
         </div>
       </div>
       <div class="col-md-6 col-sm-12 mb-2 mt-2">
-        <div class="card hoverable ml-1 mr-1 mt-1 full-height">
+        <div class="card hoverable ml-2 mr-2 mt-1 full-height">
           <div class="text-center mb-2 status-services">
             <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
           </div>
@@ -71,29 +66,24 @@
                       <td class="text-right">{{services_ok}}</td>
                     </tr>
                     <tr>
-                      <td>In attesa</td>
-                      <td class="service-pending"></td>
-                      <td class="text-right">{{services_pending}}</td>
-                    </tr>
-                    <tr>
                       <td>Warning</td>
                       <td class="service-warn"></td>
-                      <td class="text-right">{{services_warn}}</td>
+                      <td class="text-right">{{services_warn + services_unknown}}</td>
                     </tr>
                     <tr>
-                      <td>Sconosciuti</td>
-                      <td class="service-unknown"></td>
-                      <td class="text-right">{{services_unknown}}</td>
-                    </tr>
-                    <tr>
-                      <td>Critici</td>
+                      <td>Critical</td>
                       <td class="service-crit"></td>
                       <td class="text-right">{{services_crit}}</td>
                     </tr>
                     <tr>
-                      <td>Totale</td>
+                      <td>Downtime</td>
+                      <td class="service-pending"></td>
+                      <td class="text-right">{{services_pending}}</td>
+                    </tr>
+                    <tr>
+                      <td class="item-strong">Totale</td>
                       <td></td>
-                      <td class="text-right">{{services_count}}</td>
+                      <td class="item-strong text-right">{{services_count}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -104,7 +94,7 @@
       </div>
     </div>
 
-    <div class="row mt-2" *ngIf="globalState">
+    <!--<div class="row mt-2" *ngIf="globalState">
       <div class="col-md-12 ml-1">
         <button *ngIf="globalState === 'active'" (click)="switchState(hostgroups)" class="btn btn btn-secondary">Comprimi
           <i class="fa" [ngClass]="{
@@ -119,18 +109,18 @@
           }" aria-hidden="true"></i>
         </button>
       </div>
-    </div>
+    </div>-->
 
-    <div class="row">
+    <div class="row mt-2">
   		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of hostgroups;">
-  			<div style="height: 100%;" class="card hoverable ml-1 mr-1 mt-1">
+  			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
 
   				<div class="text-center mb-2 status-hosts">
             <p class="item-clickable card-item-title" routerLink="/hostgroup/{{hostgroup.id}}">{{hostgroup.name}} - {{hostgroup.description}}</p>
   				</div>
 
   				<div class="card-body" [@hostgroupState]="hostgroup.state">
-  					<div *ngFor="let group of hostgroup.groups;">
+  					<div *ngFor="let group of hostgroup.groups; let i = index">
   						<div class="row">
   							<div class="text-center col-3"><i class="fa" [ngClass]="{
   								'fa-check-circle hostgroup-up':group.status === '0',
@@ -139,7 +129,7 @@
                   'fa-question-circle hostgroup-unknown':group.status === '3'
   							}" aria-hidden="true"></i></div>
 
-  							<div class="col item-text">{{group.alias}}</div>
+  							<div class="col item-text item-clickable" routerLink="/hostgroup/{{hostgroup.id}}/{{i+1}}">{{group.alias}}</div>
               </div>
   					</div>
   				</div>
@@ -149,6 +139,49 @@
   	</div>
   </div>
 
+</div>
+
+<div class="modal fade" id="hostModal" tabindex="-1" role="dialog" aria-labelledby="hostModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="hostModalLabel" *ngIf="hosts">Lista Hosts: {{modalPanelTitle}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm text-center table-hover" *ngIf="hosts">
+          <thead class="card-item-title" style="color: #172559;">
+            <td></td>
+            <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+            Nome</td>
+            <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
+            <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
+            <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
+            <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
+            <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
+          </thead>
+          <tbody *ngIf="hosts[0].alias != 'undefined'">
+            <tr *ngFor="let host of hosts;" class="item-text">
+              <td><i class="fa" [ngClass]="{
+                'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
+                'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
+                'fa-times-circle hostgroup-critical':host.crit > 0,
+                'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
+              }" aria-hidden="true"></i></td>
+              <td class="text-left">{{host.alias}}</td>
+              <td>{{host.address}}</td>
+              <td>{{host.ok}}</td>
+              <td>{{host.warn}}</td>
+              <td>{{host.crit}}</td>
+              <td>{{host.unknown}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <app-footer></app-footer>

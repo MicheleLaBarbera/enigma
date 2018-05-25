@@ -174,3 +174,7 @@ i {
   background-color: #0e71b4 !important;
   font-weight: 600;
 }
+
+.item-strong {
+  font-weight: 700;
+}

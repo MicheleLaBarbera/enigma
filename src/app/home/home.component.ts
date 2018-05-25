@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit {
 
 	public token: string;
   public hostgroups: Hostgroup[];
+  public hosts: Host[];
   //public hosts: Host[];
   //public services: Service[];
   public globalState: string;
@@ -53,6 +54,8 @@ export class HomeComponent implements OnInit {
   public services_unknown = 0;
   public services_warn = 0;
   public services_count = 0;
+
+  public modalPanelTitle: string;
 
   constructor(private hostgroupService: HostgroupService) {
   	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -80,8 +83,8 @@ export class HomeComponent implements OnInit {
         series: [
           {value: this.hosts_up, className: 'ct-host-up'},
           {value: this.hosts_pending, className: 'ct-host-pending'},
-          {value: this.hosts_unreachable, className: 'ct-host-unreachable'},
-          {value: this.hosts_down, className: 'ct-host-down'}
+          //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
+          {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
         ],
       }, {
         donut: true,
@@ -95,8 +98,8 @@ export class HomeComponent implements OnInit {
         series: [
           {value: this.services_ok, className: 'ct-service-ok'},
           {value: this.services_pending, className: 'ct-service-pending'},
-          {value: this.services_warn, className: 'ct-service-warn'},
-          {value: this.services_unknown, className: 'ct-service-unknown'},
+          {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
+          //{value: this.services_unknown, className: 'ct-service-unknown'},
           {value: this.services_crit, className: 'ct-service-crit'}
         ],
       }, {
@@ -113,11 +116,15 @@ export class HomeComponent implements OnInit {
     this.globalState = 'active';
   }
 
-  /*public getHosts(ip:string, port: number, group: string) {
-    this.hostgroupService.getHosts(ip, port, group).subscribe(hosts => this.hosts = hosts);
+  public getHostsByState(state: number, title: string) {
+    this.hostgroupService.getHostsByState(state).subscribe(hosts => {
+      this.hosts = hosts;
+      console.log(this.hosts);
+    });
+    this.modalPanelTitle = title;
   }
 
-  public getServices(ip:string, port: number, name: string) {
+  /*public getServices(ip:string, port: number, name: string) {
     this.hostgroupService.getServices(ip, port, name).subscribe(services => this.services = services);
   }*/
 
