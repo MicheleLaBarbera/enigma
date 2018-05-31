@@ -32,7 +32,9 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authenticationService.login(this.model.username, this.model.password).subscribe(result => {
       if (result === true) {
-        this.router.navigate([this.returnUrl]);
+        setTimeout((router: Router) => {
+            this.router.navigate([this.returnUrl]);
+        }, 1500);        
       }
       else {
         this.alertService.error('Username o password errati');

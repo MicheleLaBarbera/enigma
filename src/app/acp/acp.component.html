@@ -6,8 +6,8 @@
       <div class="col-md-12 col-sm-12">
         <nav aria-label="breadcrumb" class="mr-1 ml-1">
           <ol class="breadcrumb mt-3">
-            <li class="breadcrumb-item"><a href="" routerLink="/home">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Admin Control Panel (ACP)</li>
+            <li class="breadcrumb-item"><a style="color:#6c757d;" href="" routerLink="/home">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Pannello di Controllo</li>
           </ol>
         </nav>
       </div>
@@ -17,11 +17,11 @@
       <div id="left" class="col-md-3 col-sm-12 full-height">
         <div class="row">
           <div class="col col-sm-12 mb-2 mt-2">
-            <div class="card ml-1 mr-1 mt-1 full-height">
-              <div class="text-center mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">Amministrazione Utenti</p>
+            <div class="card ml-1 mr-1 mt-1">
+              <div class="text-center status-hosts">
+                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(0, 'Amministrazione Utenti');">Amministrazione Utenti</p>
               </div>
-    					<div class="row">
+    					<!--<div class="row">
     						<div class="text-center col-3">
                   <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
                 </div>
@@ -41,17 +41,19 @@
                 </div>
     						<div class="col-6 item-clickable item-text" (click)="changeView(2, 'Amministrazione Utenti - Elimina Utente');">Elimina Utente</div>
               </div>
+            </div>-->
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="col col-sm-12 mb-2 mt-2">
-            <div class="card ml-1 mr-1 mt-1 full-height">
-              <div class="text-center mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">Amministrazione Clienti</p>
+            <div class="card ml-1 mr-1 mt-1">
+              <div class="text-center status-hosts">
+                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(1, 'Amministrazione Clienti');">Amministrazione Clienti</p>
               </div>
-    					<div class="row">
+
+    					<!--<div class="row">
     						<div class="text-center col-3">
                   <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
                 </div>
@@ -71,40 +73,12 @@
                 </div>
     						<div class="col-6 item-clickable item-text">Elimina Cliente</div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col col-sm-12 mb-2 mt-2">
-            <div class="card ml-1 mr-1 mt-1 full-height">
-              <div class="text-center mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">Amministrazione Servers</p>
-              </div>
-    					<div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text">Aggiungi Server</div>
-              </div>
-
-              <div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-pencil-square hostgroup-warning" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text">Modifica Server</div>
-              </div>
-
-              <div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-minus-square hostgroup-critical" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text">Elimina Server</div>
-              </div>
+            </div>-->
             </div>
           </div>
         </div>
       </div>
+
 
       <div class="col-md-9 col-sm-12">
         <div class="row">
@@ -116,108 +90,274 @@
               </div>
 
               <div class="card-body ml-1 mr-1">
+
                 <div class="row" *ngIf="viewPanel == 0">
-                  <div class="col-md-3 col-sm-12"></div>
-                  <div class="col-md-6 col-sm-12">
-                    <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
-                      <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                          <p class="login-label">Nome</p>
-              						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
-              				      <div class="input-group mb-2">
-              				        <div class="input-group-prepend">
-              				          <div class="input-group-text"><i class="fa fa-address-card prefix grey-text"></i></div>
-              				        </div>
-              				        <input type="text" class="form-control" name="firstname" autocomplete="firstname" [(ngModel)]="model.firstname" #firstname="ngModel" required />
-              				        <div *ngIf="f.submitted && !firstname.valid" class="help-block">
-              						    	<i class="fa fa-times" aria-hidden="true"></i>
-              								</div>
-              				      </div>
-              						</div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                          <p class="login-label">Cognome</p>
-                          <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !lastname.valid }">
-                            <div class="input-group mb-2">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="fa fa-address-card-o prefix grey-text"></i></div>
+                  <div class="col-md-12 col-sm-12">
+                    <div class="row">
+                      <div class="col-md-9 col-sm-12">
+                      </div>
+                      <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
+                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea utente</button>
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-md-12 col-sm-12">
+                        <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="users">
+                          <thead class="card-item-title" style="color: #172559;">
+                            <td scope="col"><i class="fa fa-building" aria-hidden="true"></i> Azienda</td>
+                            <td scope="col"><i class="fa fa-address-card" aria-hidden="true"></i> Nome</td>
+                            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Cognome</td>
+                            <td scope="col"><i class="fa fa-user" aria-hidden="true"></i> Username</td>
+                            <td></td>
+                            <td></td>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let user of users;" class="item-text-big">
+                              <td>{{user.companyname}}</td>
+                              <td>{{user.firstname}}</td>
+                              <td>{{user.lastname}}</td>
+                              <td>{{user.username}}</td>
+                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
+                              <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
+
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="createModalLabel">Crea utente</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
                               </div>
-                              <input type="text" class="form-control" name="lastname" autocomplete="lastname" [(ngModel)]="model.lastname" #lastname="ngModel" required />
-                              <div *ngIf="f.submitted && !lastname.valid" class="help-block">
-                                <i class="fa fa-times" aria-hidden="true"></i>
+                              <div class="modal-body">
+                                <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
+                                  <div class="row">
+                                    <div class="col-md-6 col-sm-12">
+                                      <p class="login-label">Nome</p>
+                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
+                          				      <div class="input-group mb-2">
+                          				        <div class="input-group-prepend">
+                          				          <div class="input-group-text"><i class="fa fa-address-card" aria-hidden="true"></i></div>
+                          				        </div>
+                          				        <input type="text" class="form-control" name="firstname" autocomplete="firstname" [(ngModel)]="model.firstname" #firstname="ngModel" required />
+                          				        <div *ngIf="f.submitted && !firstname.valid" class="help-block">
+                          						    	<i class="fa fa-times" aria-hidden="true"></i>
+                          								</div>
+                          				      </div>
+                          						</div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                      <p class="login-label">Cognome</p>
+                                      <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !lastname.valid }">
+                                        <div class="input-group mb-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                                          </div>
+                                          <input type="text" class="form-control" name="lastname" autocomplete="lastname" [(ngModel)]="model.lastname" #lastname="ngModel" required />
+                                          <div *ngIf="f.submitted && !lastname.valid" class="help-block">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <p class="login-label">Username</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="text" class="form-control" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
+                      				        <div *ngIf="f.submitted && !username.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
+                      						<p class="login-label">Password</p>
+                      						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
+                      				        <div *ngIf="f.submitted && !password.valid" class="help-block">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                      </div>
+                      				      </div>
+                      						</div>
+
+                                  <p class="login-label">Azienda</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-building" aria-hidden="true"></i></div>
+                      				        </div>
+                                      <select class="form-control" name="customer" [(ngModel)]="model.customer" #customer="ngModel" required>
+                                        <option *ngFor="let company of customers" value="{{company.id}}">{{company.name}}</option>
+                                      </select>
+                      				        <div *ngIf="f.submitted && !customer.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
+                      						<alert></alert>
+
+                      						<div class="text-center mt-4">
+                      							<button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Registra</button>
+                      							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      					  </div>
+                      					</form>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-
-                      <p class="login-label">Username</p>
-          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-          				      <div class="input-group mb-2">
-          				        <div class="input-group-prepend">
-          				          <div class="input-group-text"><i class="fa fa-user prefix grey-text"></i></div>
-          				        </div>
-          				        <input type="text" class="form-control" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
-          				        <div *ngIf="f.submitted && !username.valid" class="help-block">
-          						    	<i class="fa fa-times" aria-hidden="true"></i>
-          								</div>
-          				      </div>
-          						</div>
-
-          						<p class="login-label">Password</p>
-          						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-          				      <div class="input-group mb-2">
-          				        <div class="input-group-prepend">
-          				          <div class="input-group-text"><i class="fa fa-lock prefix grey-text"></i></div>
-          				        </div>
-          				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
-          				        <div *ngIf="f.submitted && !password.valid" class="help-block">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                          </div>
-          				      </div>
-          						</div>
-
-                      <p class="login-label">Azienda</p>
-          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer.valid }">
-          				      <div class="input-group mb-2">
-          				        <div class="input-group-prepend">
-          				          <div class="input-group-text"><i class="fa fa-building prefix grey-text"></i></div>
-          				        </div>
-                          <select class="form-control" name="customer" [(ngModel)]="model.customer" #customer="ngModel" required>
-                            <option *ngFor="let company of customers" value="{{company.id}}">{{company.name}}</option>
-                          </select>
-          				        <div *ngIf="f.submitted && !customer.valid" class="help-block">
-          						    	<i class="fa fa-times" aria-hidden="true"></i>
-          								</div>
-          				      </div>
-          						</div>
-
-          						<alert></alert>
-
-          						<div class="text-center mt-4">
-          							<button [disabled]="loading" class="btn btn-primary card-item-title" type="submit">Registra</button>
-          							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-          					  </div>
-          					</form>
+                    </div>
                   </div>
                 </div>
 
                 <div class="row" *ngIf="viewPanel == 1">
-                  <div class="col-md-2 col-sm-12"></div>
-                  <div class="col-md-8 col-sm-12">
-                    <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
+                  <div class="col-md-12 col-sm-12">
+                    <div class="row">
+                      <div class="col-md-9 col-sm-12">
+                      </div>
+                      <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
+                        <button type="button" class="btn btn-success card-item-title create-up" onclick="alert('Funzionalità non ancora sviluppata');"><i class="fa fa-plus" aria-hidden="true"></i> Crea cliente</button>
+                      </div>
+                    </div>
+                    <div class="row mt-1" *ngIf='customers'>
+                  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let company of customers;">
+                  			<div style="height: 100%;" class="card hoverable mt-1">
 
-                      <p class="login-label">Cerca Utente</p>
-          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-          	 				    <div class="input-group mb-2">
-          				        <input type="text" class="form-control" placeholder="Nome, Cognome, Username..." name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
-          				        <div class="help-block">
-          						    	<i class="fa fa-search" aria-hidden="true"></i>
-          								</div>
-          				      </div>
-          						</div>
+                  				<div class="text-center mb-2 status-hosts">
+                            <p class="item-clickable card-item-title" onclick="alert('Funzionalità non ancora sviluppata');">{{company.name}}</p>
+                  				</div>
 
-                    </form>
+                  				<div class="card-body text-center" *ngIf="company.logo != ''">
+                            <img [src]="'data:image;base64,'+company.logo | safeHtml" style="height: 40px;">
+                  				</div>
+                  			</div>
+                        <!--<table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="users">
+                          <thead class="card-item-title" style="color: #172559;">
+                            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Nome</td>
+                            <td scope="col"><i class="fa fa-picture-o" aria-hidden="true"></i> Logo</td>
+                            <td></td>
+                            <td></td>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let user of users;" class="item-text-big">
+                              <td>{{user.companyname}}</td>
+                              <td>{{user.firstname}}</td>
+                              <td>{{user.lastname}}</td>
+                              <td>{{user.username}}</td>
+                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning" aria-hidden="true"></i></td>
+                              <td><i class="fa fa-trash fa-lg hostgroup-critical" aria-hidden="true"></i></td>
+
+                            </tr>
+                          </tbody>
+                        </table>-->
+                        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="createModalLabel">Crea utente</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
+                                  <div class="row">
+                                    <div class="col-md-6 col-sm-12">
+                                      <p class="login-label">Nome</p>
+                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
+                          				      <div class="input-group mb-2">
+                          				        <div class="input-group-prepend">
+                          				          <div class="input-group-text"><i class="fa fa-address-card" aria-hidden="true"></i></div>
+                          				        </div>
+                          				        <input type="text" class="form-control" name="firstname" autocomplete="firstname" [(ngModel)]="model.firstname" #firstname="ngModel" required />
+                          				        <div *ngIf="f.submitted && !firstname.valid" class="help-block">
+                          						    	<i class="fa fa-times" aria-hidden="true"></i>
+                          								</div>
+                          				      </div>
+                          						</div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                      <p class="login-label">Cognome</p>
+                                      <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !lastname.valid }">
+                                        <div class="input-group mb-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                                          </div>
+                                          <input type="text" class="form-control" name="lastname" autocomplete="lastname" [(ngModel)]="model.lastname" #lastname="ngModel" required />
+                                          <div *ngIf="f.submitted && !lastname.valid" class="help-block">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <p class="login-label">Username</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="text" class="form-control" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
+                      				        <div *ngIf="f.submitted && !username.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
+                      						<p class="login-label">Password</p>
+                      						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
+                      				        <div *ngIf="f.submitted && !password.valid" class="help-block">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                      </div>
+                      				      </div>
+                      						</div>
+
+                                  <p class="login-label">Azienda</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-building" aria-hidden="true"></i></div>
+                      				        </div>
+                                      <select class="form-control" name="customer" [(ngModel)]="model.customer" #customer="ngModel" required>
+                                        <option *ngFor="let company of customers" value="{{company.id}}">{{company.name}}</option>
+                                      </select>
+                      				        <div *ngIf="f.submitted && !customer.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
+                      						<alert></alert>
+
+                      						<div class="text-center mt-4">
+                      							<button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Registra</button>
+                      							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      					  </div>
+                      					</form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -50,8 +50,22 @@
 	font-size: 0.8rem;
 }
 
+.item-text-big {
+	color: rgba(0,0,0,.5);
+	font-weight: 500;
+	font-size: 0.9rem;
+}
+
 .hostgroup-up {
 	color: #27c24c;
+}
+
+.create-up {
+	background-color: #27c24c;
+}
+
+.create-down {
+	background-color: #0e71b4 !important;
 }
 
 .hostgroup-warning {

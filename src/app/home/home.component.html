@@ -19,18 +19,18 @@
               <div class="col-md-6 col-sm-12">
                 <table class="table table-sm table-hover item-text">
                   <tbody>
-                    <tr>
-                      <td class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'OK')">OK</td>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'OK')">
+                      <td>OK</td>
                       <td class="host-up"></td>
                       <td class="text-right">{{hosts_up}}</td>
                     </tr>
-                    <tr>
-                      <td class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">Offline</td>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">
+                      <td>Offline</td>
                       <td class="host-down"></td>
                       <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
                     </tr>
-                    <tr>
-                      <td class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Downtime')">Downtime</td>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Downtime')">
+                      <td>Downtime</td>
                       <td class="host-pending"></td>
                       <td class="text-right">{{hosts_pending}}</td>
                     </tr>
@@ -135,8 +135,8 @@
   				</div>
   			</div>
   		</div>
-
   	</div>
+
   </div>
 
 </div>
@@ -145,7 +145,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="hostModalLabel" *ngIf="hosts">Lista Hosts: {{modalPanelTitle}}</h5>
+        <h5 class="modal-title" id="hostModalLabel" *ngIf="hosts">Elenco Host, Stato: {{modalPanelTitle}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

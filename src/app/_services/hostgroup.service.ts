@@ -47,6 +47,6 @@ export class HostgroupService {
 
   public getCustomers() : Observable<Customer[]> {
     return this.http.get<Customer[]>('http://localhost/enigma-api/customers/get').map(
-    res => res.map(x => new Customer(x.id, x.name)));
+    res => res.map(x => new Customer(x.id, x.name, x.logo)));
   }
 }

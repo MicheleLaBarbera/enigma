@@ -1,4 +1,4 @@
-<nav class="navbar bg-white">
+<!--<nav class="navbar bg-white">
 	<ul class="nav navbar-nav navbar-logo mx-auto">
 		<li class="nav-item">
 		  <a class="navbar-brand" href="#">
@@ -6,10 +6,9 @@
 		  </a>
 		</li>
 	</ul>
-</nav>
+</nav>-->
 
-
-<div class="container h-100 mt-5">
+<div class="container h-100" style="margin-top:175px;">
 	<div class="row h-100">
 		<div class="col-3"></div>
 		<div class="col-6">
@@ -19,12 +18,11 @@
 
 						<p class="login-label">Username</p>
 						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-							<label class="sr-only" for="username">JohnDoe</label>
 				      <div class="input-group mb-2">
 				        <div class="input-group-prepend">
 				          <div class="input-group-text"><i class="fa fa-user prefix grey-text"></i></div>
 				        </div>
-				        <input type="text" class="form-control" placeholder="JohnDoe" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
+				        <input type="text" class="form-control" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
 				        <div *ngIf="f.submitted && !username.valid" class="help-block">
 						    	<i class="fa fa-times" aria-hidden="true"></i>
 								</div>
@@ -33,12 +31,11 @@
 
 						<p class="login-label">Password</p>
 						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-							<label class="sr-only" for="password">*********</label>
 				      <div class="input-group mb-2">
 				        <div class="input-group-prepend">
 				          <div class="input-group-text"><i class="fa fa-lock prefix grey-text"></i></div>
 				        </div>
-				        <input type="password" class="form-control" placeholder="*********" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
+				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
 				        <div *ngIf="f.submitted && !password.valid" class="help-block"><i class="fa fa-times" aria-hidden="true"></i>
 </div>
 				      </div>
