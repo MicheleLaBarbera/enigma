@@ -16,7 +16,7 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post('http://localhost/enigma-api/users/auth', JSON.stringify({ username: username, password: password }))
+    return this.http.post('http://192.168.5.86/enigma-api/users/auth', JSON.stringify({ username: username, password: password }))
     .map((response: HttpResponse<any>) => {
       //let token = response.json() && response.json().token;
       //let logo = response.json() && response.json().logo;
@@ -35,7 +35,7 @@ export class AuthenticationService {
   }
 
   signup(firstname: string, lastname: string, username: string, password: string, customer: number): Observable<any> {
-    return this.http.post<any>('http://localhost/enigma-api/users/create', JSON.stringify({ firstname: firstname, lastname: lastname, username: username, password: password, customer: customer}))
+    return this.http.post<any>('http://192.168.5.86/enigma-api/users/create', JSON.stringify({ firstname: firstname, lastname: lastname, username: username, password: password, customer: customer}))
     .map((response: HttpResponse<any>) => {
       return response;
     });
