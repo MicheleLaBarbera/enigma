@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 
 import { AlertService, AuthenticationService, HostgroupService, UserService } from '../_services/index';
 
-import { Customer, User } from '../_models/index';
+import { Customer, User, Server } from '../_models/index';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -21,10 +21,13 @@ export class AcpComponent implements OnInit {
   public viewTitle:  string;
   public customers: Customer[];
   public users: User[];
+  public servers: Server[];
   public files: any[];
   key: string = 'companyname';
   reverse: boolean = false;
   p: number = 1;
+  public companyedit: string;
+  public companyeditid: number;
 
   constructor(private authenticationService: AuthenticationService, private alertService: AlertService, private hostgroupService: HostgroupService,
               private userService: UserService) {
@@ -36,7 +39,7 @@ export class AcpComponent implements OnInit {
   ngOnInit() {
     this.hostgroupService.getCustomers().subscribe(response => {
       this.customers = response;
-      this.changeView(0, "Amministrazione Utenti");
+      this.changeView(0, "Amministrazione Utenti", '', '');
     });
 
   }
@@ -61,11 +64,20 @@ export class AcpComponent implements OnInit {
     });
   }
 
-  changeView(value: number, title: string) {
+  changeView(value: number, title: string, extra: any, extra_id: any) {
     switch(value) {
       case 0: {
         this.userService.getUsers().subscribe(response => {
           this.users = response;
+        });
+        break;
+      }
+      case 2: {
+        this.companyedit = extra;
+        this.companyeditid = extra_id;
+        this.hostgroupService.getCustomer(extra_id).subscribe(response => {
+          this.servers = response;
+          console.log(this.servers);
         });
         break;
       }
@@ -84,14 +96,6 @@ export class AcpComponent implements OnInit {
   }
 
   createCompany(form: NgForm) {
-    //const formData = new FormData();
-    console.log(this.files[0]);
-    //for (const file of this.files) {
-        //console.log(file);
-        //formData.append(name, file, file.name);
-    //}
-    //console.log(formData);
-
     var fileNameArray = this.files[0].name.split(".");
     var fileExtension = fileNameArray[fileNameArray.length - 1];
 
@@ -100,10 +104,7 @@ export class AcpComponent implements OnInit {
     }
     else {
       this.fileReaderObs(this.files[0]).subscribe(fileContent => {
-        console.log("Content: ", fileContent);
-        var blob = b64toBlob(fileContent, 'img');
-        console.log("Content Blob: ", blob);
-        /*this.hostgroupService.createCustomer(this.model.companyname, fileContent).subscribe(response => {
+        this.hostgroupService.createCustomer(this.model.companyname, fileContent).subscribe(response => {
           if(response.status == 201) {
             this.alertService.success('Cliente registrato con successo.');
             this.loading = false;
@@ -115,15 +116,26 @@ export class AcpComponent implements OnInit {
             this.alertService.error(response.body.message);
             this.loading = false;
           }
-          /*if(result.status === 200) {
-            this.modalService.success("Upload Completato", "http://localhost:4200/download/" + result.id);
-          }
-          else {
-            console.log("Failed");
-          }
-        });*/
+        });
       });
     }
+  }
+
+  createServer(form: NgForm, customer_id: number) {
+    this.loading = true;
+    this.hostgroupService.createServer(this.model.description, this.model.address, this.model.port, customer_id).subscribe(response => {
+      if(response.status == 201) {
+        this.alertService.success('Sito registrato con successo.');
+        this.loading = false;
+        if(form.valid) {
+          form.reset();
+        }
+      }
+      else {
+        this.alertService.error(response.body.message);
+        this.loading = false;
+      }
+    });
   }
 
   private fileReaderObs(file : File)  {
@@ -138,28 +150,6 @@ export class AcpComponent implements OnInit {
     return fileReaderObs;
   }
 
-  function b64toBlob(b64Data, contentType, sliceSize) {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
 
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-      var byteNumbers = new Array(slice.length);
-      for (var i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      var byteArray = new Uint8Array(byteNumbers);
-
-      byteArrays.push(byteArray);
-    }
-
-    var blob = new Blob(byteArrays, {type: contentType});
-    return blob;
-  }
 
 }

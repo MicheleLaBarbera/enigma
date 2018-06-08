@@ -120,3 +120,7 @@
 .my-pagination /deep/ .ngx-pagination {
 	margin-bottom: 0;
 }
+
+.underline:hover {
+    text-decoration: underline;
+}

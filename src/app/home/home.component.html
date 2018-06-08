@@ -116,7 +116,8 @@
   			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
 
   				<div class="text-center mb-2 status-hosts">
-            <p class="item-clickable card-item-title" routerLink="/hostgroup/{{hostgroup.id}}">{{hostgroup.name}} - {{hostgroup.description}}</p>
+            <!--<p class="item-clickable card-item-title" routerLink="/hostgroup/{{hostgroup.id}}">{{hostgroup.name}} - {{hostgroup.description}}</p>-->
+            <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
   				</div>
 
   				<div class="card-body" [@hostgroupState]="hostgroup.state">

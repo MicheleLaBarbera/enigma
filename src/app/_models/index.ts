@@ -3,3 +3,4 @@ export * from './hostgroup';
 export * from './host';
 export * from './service';
 export * from './customer';
+export * from './server';

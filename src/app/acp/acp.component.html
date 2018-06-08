@@ -7,7 +7,9 @@
         <nav aria-label="breadcrumb" class="mr-1 ml-1">
           <ol class="breadcrumb mt-3">
             <li class="breadcrumb-item"><a style="color:#6c757d;" href="" routerLink="/home">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Pannello di Controllo</li>
+            <li class="breadcrumb-item active" aria-current="page" *ngIf="viewPanel != 2">Pannello di Controllo</li>
+            <li class="breadcrumb-item underline item-clickable" *ngIf="viewPanel == 2" style="color:#6c757d;" (click)="changeView(1, 'Amministrazione Clienti', '', '');">Pannello di Controllo</li>
+            <li class="breadcrumb-item active" aria-current="page" *ngIf="viewPanel == 2">{{companyedit}}</li>
           </ol>
         </nav>
       </div>
@@ -19,64 +21,33 @@
           <div class="col col-sm-12 mb-2 mt-2">
             <div class="card ml-1 mr-1 mt-1">
               <div class="text-center status-hosts">
-                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(0, 'Amministrazione Utenti');">Amministrazione Utenti</p>
+                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(0, 'Amministrazione Utenti', '', '');">Menù</p>
               </div>
-    					<!--<div class="row">
+              <div class="row mt-2">
     						<div class="text-center col-3">
-                  <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
+                  <i class="fa fa-user" aria-hidden="true"></i>
                 </div>
-    						<div class="col-6 item-clickable item-text" (click)="changeView(0, 'Amministrazione Utenti - Aggiungi Utente');">Aggiungi Utente</div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(0, 'Amministrazione Utenti', '', '');">Amministrazione Utenti</div>
               </div>
-
               <div class="row">
     						<div class="text-center col-3">
-                  <i class="fa fa-pencil-square hostgroup-warning" aria-hidden="true"></i>
+                  <i class="fa fa-building" aria-hidden="true"></i>
                 </div>
-    						<div class="col-6 item-clickable item-text" (click)="changeView(1, 'Amministrazione Utenti - Modifica Utente');">Modifica Utente</div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(1, 'Amministrazione Clienti', '');">Amministrazione Clienti</div>
               </div>
-
-              <div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-minus-square hostgroup-critical" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text" (click)="changeView(2, 'Amministrazione Utenti - Elimina Utente');">Elimina Utente</div>
-              </div>
-            </div>-->
             </div>
           </div>
         </div>
 
-        <div class="row">
+        <!--<div class="row">
           <div class="col col-sm-12 mb-2 mt-2">
             <div class="card ml-1 mr-1 mt-1">
               <div class="text-center status-hosts">
-                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(1, 'Amministrazione Clienti');">Amministrazione Clienti</p>
+                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(1, 'Amministrazione Clienti', '');">Amministrazione Clienti</p>
               </div>
-
-    					<!--<div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-plus-square hostgroup-up" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text">Aggiungi Cliente</div>
-              </div>
-
-              <div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-pencil-square hostgroup-warning" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text">Modifica Cliente</div>
-              </div>
-
-              <div class="row">
-    						<div class="text-center col-3">
-                  <i class="fa fa-minus-square hostgroup-critical" aria-hidden="true"></i>
-                </div>
-    						<div class="col-6 item-clickable item-text">Elimina Cliente</div>
-              </div>
-            </div>-->
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
 
 
@@ -301,7 +272,7 @@
                   			<div style="height: 100%;" class="card hoverable mt-1">
 
                   				<div class="text-center mb-2 status-hosts">
-                            <p class="item-clickable card-item-title" onclick="alert('Funzionalità non ancora sviluppata');">{{company.name}}</p>
+                            <p class="item-clickable card-item-title" (click)="changeView(2, 'Amministrazione Cliente: ' + company.name, company.name, company.id);">{{company.name}}</p>
                   				</div>
 
                   				<div class="card-body text-center" *ngIf="company.logo != ''">
@@ -358,6 +329,144 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row" *ngIf="viewPanel == 2">
+                  <div class="col-md-12 col-sm-12">
+                    <div class="row">
+                      <div class="col-md-9 col-sm-12 mb-2 mt-1">
+                        <nav class="navbar" style="padding: 0;">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text"><i class='fa fa-search' aria-hidden='true'></i></div>
+                            </div>
+                            <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="Cerca...">
+                          </div>
+                        </nav>
+                      </div>
+                      <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
+                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createServerModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea sito</button>
+                      </div>
+                    </div>
+                    <div class="row mt-1">
+                      <div class="col-md-12 col-sm-12">
+                        <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="servers">
+                          <thead class="card-item-title" style="color: #172559;">
+                            <td (click)="sort('companyname')" scope="col" class="item-clickable">
+                              <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                              Descrizione
+                              <i class="fa" *ngIf="key =='companyname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='companyname'" aria-hidden="true"></i>
+                            </td>
+                            <td (click)="sort('firstname')" scope="col" class="item-clickable">
+                              <i class="fa fa-podcast" aria-hidden="true"></i>
+                              Indirizzo IP
+                              <i class="fa" *ngIf="key =='firstname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='firstname'" aria-hidden="true"></i>
+                            </td>
+                            <td (click)="sort('lastname')" scope="col" class="item-clickable">
+                              <i class="fa fa-sign-in" aria-hidden="true"></i>
+                              Porta
+                              <i class="fa" *ngIf="key =='lastname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='lastname'" aria-hidden="true"></i>
+                            </td>
+                            <!--<td (click)="sort('username')" scope="col" class="item-clickable">
+                              <i class="fa fa-user" aria-hidden="true"></i>
+                              Username
+                              <i class="fa" *ngIf="key =='username'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='username'" aria-hidden="true"></i>
+                            </td>-->
+                            <td></td>
+                            <td></td>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let server of servers | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
+                              <td>{{server.description}}</td>
+                              <td>{{server.ip_address}}</td>
+                              <td>{{server.port_number}}</td>
+                              <!--<td>{{server.username}}</td>-->
+                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
+                              <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="modal fade" id="createServerModal" tabindex="-1" role="dialog" aria-labelledby="createServerModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="createServerModalLabel">Crea sito</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form name="form" (ngSubmit)="f.form.valid && createServer(f, companyeditid)" #f="ngForm" novalidate>
+                                  <p class="login-label">Descrizione</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !description.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="text" class="form-control" name="description" autocomplete="description" [(ngModel)]="model.description" #description="ngModel" required />
+                      				        <div *ngIf="f.submitted && !description.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
+                                  <p class="login-label">Indirizzo IP</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-podcast" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="text" class="form-control" name="address" autocomplete="address" [(ngModel)]="model.address" #address="ngModel" required />
+                      				        <div *ngIf="f.submitted && !address.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
+                      						<p class="login-label">Porta</p>
+                      						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !port.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-sign-in" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="text" class="form-control" name="port" autocomplete="current-port" [(ngModel)]="model.port" #port="ngModel" required />
+                      				        <div *ngIf="f.submitted && !port.valid" class="help-block">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                      </div>
+                      				      </div>
+                      						</div>
+
+                      						<alert></alert>
+
+                      						<div class="text-center mt-4">
+                      							<button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Registra</button>
+                      							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      					  </div>
+                      					</form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 mt-1 text-right">
+                        <pagination-controls class="my-pagination" (pageChange)="p = $event"
+                                             autoHide="true"
+                                             previousLabel="Indietro"
+                                             nextLabel="Avanti"
+                                             directionLinks="false"
+                        >
+                        </pagination-controls>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

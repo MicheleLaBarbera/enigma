@@ -35,12 +35,12 @@
                     'fa-question-circle hostgroup-unknown':group.status === '3'
       						}" aria-hidden="true"></i></div>
       						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup[0], group, hostgroup[0].ip, hostgroup[0].port, group.name);">{{group.alias}}</div>
-                  <div class="col-3">
+                  <!--<div class="col-3">
                     <i class="custom-color fa" [ngClass]="{
         							'fa-toggle-off':(hostgroup[0].default_group === null  && i !== 0) || hostgroup[0].default_group !== group.name,
         							'fa-toggle-on':(hostgroup[0].default_group === null && i === 0) || hostgroup[0].default_group === group.name
         						}" aria-hidden="true" (click)="setDefaultGroup(hostgroup[0], group);"></i>
-                  </div>
+                  </div>-->
                 </div>
       				</div>
             </div>
@@ -153,6 +153,7 @@
                 <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
                   <thead class="card-item-title" style="color: #172559;">
                     <td></td>
+                    <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato</td>
                     <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
                     Nome</td>
                     <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
@@ -169,6 +170,8 @@
         								'fa-times-circle hostgroup-critical':host.crit > 0,
                         'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
         							}" aria-hidden="true"></i></td>
+                      <td *ngIf="host.hard_state == 0">UP</td>
+                      <td *ngIf="host.hard_state == 1">DOWN</td>
                       <td class="text-left item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name, host.alias)">{{host.alias}}</td>
                       <td>{{host.address}}</td>
                       <td>{{host.ok}}</td>
@@ -202,6 +205,7 @@
               <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
               <td scope="col"><i class="fa fa-list-alt"></i> Stato</td>
               <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo cambiamento di Stato</td>
+              <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo check</td>
               <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
             </thead>
             <tbody>
@@ -215,6 +219,7 @@
                 <td class="text-left">{{service.name}}</td>
                 <td class="text-left">{{service.status}}</td>
                 <td class="">{{service.age}}</td>
+                <td class="">{{service.last_check}}</td>
                 <td><i class="fa fa-toggle-off" onclick="alert('Attenzione: Funzione non ancora implementata.')"></i></td>
               </tr>
             </tbody>
