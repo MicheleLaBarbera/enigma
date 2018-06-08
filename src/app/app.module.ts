@@ -14,6 +14,7 @@ import { HomeComponent } from './home/home.component';
 
 import { AuthGuard } from './_guards/index';
 import { JwtInterceptor } from './_helpers/index';
+import { EqualValidator } from './_helpers/equal-validator.directive';
 
 import { AlertComponent } from './_directives/index';
 import { LoginComponent } from './login/login.component';
@@ -24,6 +25,10 @@ import { SanitizerPipe } from './sanitizer.pipe';
 import { FooterComponent } from './footer/footer.component';
 import { AcpComponent } from './acp/acp.component';
 import { ProfileComponent } from './profile/profile.component';
+
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -36,7 +41,8 @@ import { ProfileComponent } from './profile/profile.component';
     SanitizerPipe,
     FooterComponent,
     AcpComponent,
-    ProfileComponent
+    ProfileComponent,
+    EqualValidator
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,10 @@ import { ProfileComponent } from './profile/profile.component';
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
-    HttpModule
+    HttpModule,
+    Ng2SearchPipeModule,
+    Ng2OrderModule,
+    NgxPaginationModule
   ],
   providers: [
     AuthGuard,

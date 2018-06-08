@@ -11,6 +11,6 @@ export class UserService {
 
   public getUsers() : Observable<User[]>  {
     return this.http.get<User[]>('http://localhost/enigma-api/users/get').map(
-    res => res.map(x => new User(x.id, x.username, x.firstname, x.lastname, '', x.companyname)));
+    res => res.map(x => new User(x.id, x.username, x.firstname, x.lastname, '', x.companyname, x.email)));
   }
 }

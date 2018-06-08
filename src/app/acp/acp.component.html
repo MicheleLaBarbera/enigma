@@ -94,7 +94,15 @@
                 <div class="row" *ngIf="viewPanel == 0">
                   <div class="col-md-12 col-sm-12">
                     <div class="row">
-                      <div class="col-md-9 col-sm-12">
+                      <div class="col-md-9 col-sm-12 mb-2 mt-1">
+                        <nav class="navbar" style="padding: 0;">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text"><i class='fa fa-search' aria-hidden='true'></i></div>
+                            </div>
+                            <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="Cerca...">
+                          </div>
+                        </nav>
                       </div>
                       <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
                         <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea utente</button>
@@ -104,22 +112,41 @@
                       <div class="col-md-12 col-sm-12">
                         <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="users">
                           <thead class="card-item-title" style="color: #172559;">
-                            <td scope="col"><i class="fa fa-building" aria-hidden="true"></i> Azienda</td>
-                            <td scope="col"><i class="fa fa-address-card" aria-hidden="true"></i> Nome</td>
-                            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Cognome</td>
-                            <td scope="col"><i class="fa fa-user" aria-hidden="true"></i> Username</td>
+                            <td (click)="sort('companyname')" scope="col" class="item-clickable">
+                              <i class="fa fa-building" aria-hidden="true"></i>
+                              Azienda
+                              <i class="fa" *ngIf="key =='companyname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='companyname'" aria-hidden="true"></i>
+                            </td>
+                            <td (click)="sort('firstname')" scope="col" class="item-clickable">
+                              <i class="fa fa-address-card" aria-hidden="true"></i>
+                              Nome
+                              <i class="fa" *ngIf="key =='firstname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='firstname'" aria-hidden="true"></i>
+                            </td>
+                            <td (click)="sort('lastname')" scope="col" class="item-clickable">
+                              <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                              Cognome
+                              <i class="fa" *ngIf="key =='lastname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='lastname'" aria-hidden="true"></i>
+                            </td>
+                            <td (click)="sort('username')" scope="col" class="item-clickable">
+                              <i class="fa fa-user" aria-hidden="true"></i>
+                              Username
+                              <i class="fa" *ngIf="key =='username'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
+                              <i class="fa fa-sort" *ngIf="key !='username'" aria-hidden="true"></i>
+                            </td>
                             <td></td>
                             <td></td>
                           </thead>
                           <tbody>
-                            <tr *ngFor="let user of users;" class="item-text-big">
+                            <tr *ngFor="let user of users | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
                               <td>{{user.companyname}}</td>
                               <td>{{user.firstname}}</td>
                               <td>{{user.lastname}}</td>
                               <td>{{user.username}}</td>
                               <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
                               <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
-
                             </tr>
                           </tbody>
                         </table>
@@ -178,6 +205,19 @@
                       				      </div>
                       						</div>
 
+                                  <p class="login-label">E-Mail</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="model.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required />
+                      				        <div *ngIf="f.submitted && !email.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
+                      						</div>
+
                       						<p class="login-label">Password</p>
                       						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
                       				      <div class="input-group mb-2">
@@ -186,6 +226,19 @@
                       				        </div>
                       				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
                       				        <div *ngIf="f.submitted && !password.valid" class="help-block">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                      </div>
+                      				      </div>
+                      						</div>
+
+                                  <p class="login-label">Conferma Password</p>
+                      						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !confirmPassword.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                      				        </div>
+                      				        <input type="password" class="form-control" name="confirmPassword" autocomplete="current-confirmPassword" [(ngModel)]="model.confirmPassword" #confirmPassword="ngModel" validateEqual="password" required />
+                      				        <div *ngIf="f.submitted && !confirmPassword.valid" class="help-block">
                                         <i class="fa fa-times" aria-hidden="true"></i>
                                       </div>
                       				      </div>
@@ -219,6 +272,18 @@
                         </div>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 mt-1 text-right">
+                        <pagination-controls class="my-pagination" (pageChange)="p = $event"
+                                             autoHide="true"
+                                             previousLabel="Indietro"
+                                             nextLabel="Avanti"
+                                             directionLinks="false"
+                        >
+                        </pagination-controls>
+                      </div>
+
+                    </div>
                   </div>
                 </div>
 
@@ -228,7 +293,7 @@
                       <div class="col-md-9 col-sm-12">
                       </div>
                       <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
-                        <button type="button" class="btn btn-success card-item-title create-up" onclick="alert('Funzionalità non ancora sviluppata');"><i class="fa fa-plus" aria-hidden="true"></i> Crea cliente</button>
+                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createCompanyModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea cliente</button>
                       </div>
                     </div>
                     <div class="row mt-1" *ngIf='customers'>
@@ -243,107 +308,40 @@
                             <img [src]="'data:image;base64,'+company.logo | safeHtml" style="height: 40px;">
                   				</div>
                   			</div>
-                        <!--<table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="users">
-                          <thead class="card-item-title" style="color: #172559;">
-                            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Nome</td>
-                            <td scope="col"><i class="fa fa-picture-o" aria-hidden="true"></i> Logo</td>
-                            <td></td>
-                            <td></td>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let user of users;" class="item-text-big">
-                              <td>{{user.companyname}}</td>
-                              <td>{{user.firstname}}</td>
-                              <td>{{user.lastname}}</td>
-                              <td>{{user.username}}</td>
-                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning" aria-hidden="true"></i></td>
-                              <td><i class="fa fa-trash fa-lg hostgroup-critical" aria-hidden="true"></i></td>
-
-                            </tr>
-                          </tbody>
-                        </table>-->
-                        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="createCompanyModal" tabindex="-1" role="dialog" aria-labelledby="createCompanyLabel" aria-hidden="true">
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title" id="createModalLabel">Crea utente</h5>
+                                <h5 class="modal-title" id="createCompanyLabel">Crea cliente</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <form name="form" (ngSubmit)="f.form.valid && signup(f)" #f="ngForm" novalidate>
+                                <form name="form" (ngSubmit)="f.form.valid && createCompany(f)" #f="ngForm" novalidate>
                                   <div class="row">
-                                    <div class="col-md-6 col-sm-12">
+                                    <div class="col-md-12 col-sm-12">
                                       <p class="login-label">Nome</p>
-                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !firstname.valid }">
+                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !companyname.valid }">
                           				      <div class="input-group mb-2">
                           				        <div class="input-group-prepend">
                           				          <div class="input-group-text"><i class="fa fa-address-card" aria-hidden="true"></i></div>
                           				        </div>
-                          				        <input type="text" class="form-control" name="firstname" autocomplete="firstname" [(ngModel)]="model.firstname" #firstname="ngModel" required />
-                          				        <div *ngIf="f.submitted && !firstname.valid" class="help-block">
+                          				        <input type="text" class="form-control" name="companyname" autocomplete="companyname" [(ngModel)]="model.companyname" #companyname="ngModel" required />
+                          				        <div *ngIf="f.submitted && !companyname.valid" class="help-block">
                           						    	<i class="fa fa-times" aria-hidden="true"></i>
                           								</div>
                           				      </div>
                           						</div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-12">
-                                      <p class="login-label">Cognome</p>
-                                      <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !lastname.valid }">
-                                        <div class="input-group mb-2">
-                                          <div class="input-group-prepend">
-                                            <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
-                                          </div>
-                                          <input type="text" class="form-control" name="lastname" autocomplete="lastname" [(ngModel)]="model.lastname" #lastname="ngModel" required />
-                                          <div *ngIf="f.submitted && !lastname.valid" class="help-block">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                          </div>
-                                        </div>
-                                      </div>
+
+                                      <p class="login-label">Logo</p>
+                          						<div class="mt-2 mb-3">
+
+                                          <input type="file" name="file" id="file" (change)="onFileChanged($event)" />
+
+                          						</div>
                                     </div>
                                   </div>
-
-                                  <p class="login-label">Username</p>
-                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-                      				      <div class="input-group mb-2">
-                      				        <div class="input-group-prepend">
-                      				          <div class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></div>
-                      				        </div>
-                      				        <input type="text" class="form-control" name="username" autocomplete="username" [(ngModel)]="model.username" #username="ngModel" required />
-                      				        <div *ngIf="f.submitted && !username.valid" class="help-block">
-                      						    	<i class="fa fa-times" aria-hidden="true"></i>
-                      								</div>
-                      				      </div>
-                      						</div>
-
-                      						<p class="login-label">Password</p>
-                      						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-                      				      <div class="input-group mb-2">
-                      				        <div class="input-group-prepend">
-                      				          <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
-                      				        </div>
-                      				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="model.password" #password="ngModel" required />
-                      				        <div *ngIf="f.submitted && !password.valid" class="help-block">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                      </div>
-                      				      </div>
-                      						</div>
-
-                                  <p class="login-label">Azienda</p>
-                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer.valid }">
-                      				      <div class="input-group mb-2">
-                      				        <div class="input-group-prepend">
-                      				          <div class="input-group-text"><i class="fa fa-building" aria-hidden="true"></i></div>
-                      				        </div>
-                                      <select class="form-control" name="customer" [(ngModel)]="model.customer" #customer="ngModel" required>
-                                        <option *ngFor="let company of customers" value="{{company.id}}">{{company.name}}</option>
-                                      </select>
-                      				        <div *ngIf="f.submitted && !customer.valid" class="help-block">
-                      						    	<i class="fa fa-times" aria-hidden="true"></i>
-                      								</div>
-                      				      </div>
-                      						</div>
 
                       						<alert></alert>
 
