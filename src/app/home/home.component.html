@@ -155,6 +155,10 @@
         <table class="table table-sm text-center table-hover" *ngIf="hosts">
           <thead class="card-item-title" style="color: #172559;">
             <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+            Cliente</td>
+            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+            Sito</td>
+            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
             Nome</td>
             <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
             <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Servizi</td>
@@ -166,6 +170,8 @@
           <tbody *ngIf="hosts[0].alias != 'undefined'">
             <tr *ngFor="let host of hosts | paginate: { itemsPerPage: 20, currentPage: p };" class="item-text">
               <td>{{host.name_ex}}</td>
+              <td>{{host.site}}</td>
+              <td>{{host.alias}}</td>
               <td>{{host.address}}</td>
               <td><i class="fa" [ngClass]="{
                 'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,

@@ -26,7 +26,7 @@ export class HostgroupService {
 
   public getHosts(ip:string, port: number, group: string) : Observable<Host[]> {
     return this.http.post<Host[]>('http://192.168.5.86/enigma-api/hosts/get', JSON.stringify({ ip: ip, port: port, group: group })).map(
-    res => res.map(x => new Host(x.address, x.alias, x.groups, x.crit, x.ok, x.unknown, x.warn, x.name, ip, port, x.hard_state, '')));
+    res => res.map(x => new Host(x.address, x.alias, x.groups, x.crit, x.ok, x.unknown, x.warn, x.name, ip, port, x.hard_state, '', '')));
   }
 
   public getServices(ip:string, port: number, name: string) : Observable<Service[]> {
@@ -42,7 +42,7 @@ export class HostgroupService {
 
   public getHostsByState(state: number) : Observable<Host[]> {
     return this.http.post<Host[]>('http://192.168.5.86/enigma-api/hosts/state', JSON.stringify({ state: state })).map(
-    res => res.map(x => new Host(x.address, x.alias, '', x.crit, x.ok, x.unknown, x.warn, '', '', 0, 0, x.name)));
+    res => res.map(x => new Host(x.address, x.alias, '', x.crit, x.ok, x.unknown, x.warn, '', '', 0, 0, x.name, x.site)));
   }
 
   public getCustomers() : Observable<Customer[]> {
