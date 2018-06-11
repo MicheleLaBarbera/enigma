@@ -165,7 +165,7 @@
           </thead>
           <tbody *ngIf="hosts[0].alias != 'undefined'">
             <tr *ngFor="let host of hosts | paginate: { itemsPerPage: 20, currentPage: p };" class="item-text">
-              <td>{{host.alias}}</td>
+              <td>{{host.name_ex}}</td>
               <td>{{host.address}}</td>
               <td><i class="fa" [ngClass]="{
                 'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
