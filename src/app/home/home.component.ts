@@ -57,6 +57,8 @@ export class HomeComponent implements OnInit {
 
   public modalPanelTitle: string;
 
+  p: number = 1;
+
   constructor(private hostgroupService: HostgroupService) {
   	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
   	this.token = currentUser && currentUser.token;

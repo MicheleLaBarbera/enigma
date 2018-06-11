@@ -31,7 +31,7 @@ export class HostgroupService {
 
   public getServices(ip:string, port: number, name: string) : Observable<Service[]> {
     return this.http.post<Service[]>('http://192.168.5.86/enigma-api/services/get', JSON.stringify({ ip: ip, port: port, name: name })).map(
-    res => res.map(x => new Service(x.name, x.status, x.age, x.age_min, x.state, x.h_name, x.last_check)));
+    res => res.map(x => new Service(x.name, x.status, x.age, x.age_min, x.state, x.h_name, x.last_check, x.last_check_min)));
   }
 
   public setDefaultGroup(token: string, id: number, groupName: string): Observable<boolean> {

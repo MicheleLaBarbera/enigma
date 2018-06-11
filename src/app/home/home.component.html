@@ -154,25 +154,25 @@
       <div class="modal-body">
         <table class="table table-sm text-center table-hover" *ngIf="hosts">
           <thead class="card-item-title" style="color: #172559;">
-            <td></td>
-            <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
             Nome</td>
             <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
+            <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Servizi</td>
             <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
             <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
             <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
             <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
           </thead>
           <tbody *ngIf="hosts[0].alias != 'undefined'">
-            <tr *ngFor="let host of hosts;" class="item-text">
+            <tr *ngFor="let host of hosts | paginate: { itemsPerPage: 20, currentPage: p };" class="item-text">
+              <td>{{host.alias}}</td>
+              <td>{{host.address}}</td>
               <td><i class="fa" [ngClass]="{
                 'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
                 'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
                 'fa-times-circle hostgroup-critical':host.crit > 0,
                 'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
               }" aria-hidden="true"></i></td>
-              <td class="text-left">{{host.alias}}</td>
-              <td>{{host.address}}</td>
               <td>{{host.ok}}</td>
               <td>{{host.warn}}</td>
               <td>{{host.crit}}</td>
@@ -180,6 +180,17 @@
             </tr>
           </tbody>
         </table>
+        <div class="row">
+          <div class="col-md-12 col-sm-12 mt-1 text-right">
+            <pagination-controls class="my-pagination" (pageChange)="p = $event"
+                                 autoHide="true"
+                                 previousLabel="Indietro"
+                                 nextLabel="Avanti"
+                                 directionLinks="false"
+            >
+            </pagination-controls>
+          </div>
+        </div>
       </div>
     </div>
   </div>
