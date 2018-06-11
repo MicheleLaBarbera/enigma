@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
+  public currentTime: any;
+
   constructor() { }
 
   ngOnInit() {
+    this.currentTime = setInterval( () => {
+      //let todayDate = new Date();
+      this.currentTime = new Date();
+    }, 1000);
   }
 
 }

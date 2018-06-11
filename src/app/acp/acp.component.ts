@@ -39,7 +39,7 @@ export class AcpComponent implements OnInit {
   ngOnInit() {
     this.hostgroupService.getCustomers().subscribe(response => {
       this.customers = response;
-      this.changeView(0, "Amministrazione Utenti", '', '');
+      this.changeView(1, "Gestione Clienti", '', '');
     });
 
   }

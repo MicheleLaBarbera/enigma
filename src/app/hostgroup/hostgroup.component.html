@@ -152,11 +152,11 @@
               <div class="card-body ml-1 mr-1">
                 <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
                   <thead class="card-item-title" style="color: #172559;">
-                    <td></td>
-                    <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato</td>
-                    <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
+                    <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Host</td>
+                    <td class="" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
                     Nome</td>
                     <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
+                    <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Servizi</td>
                     <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
                     <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
                     <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
@@ -164,16 +164,16 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let host of hosts;" class="item-text-big">
+                      <td class="up-status" *ngIf="host.hard_state == 0">UP</td>
+                      <td class="down-status" *ngIf="host.hard_state == 1">DOWN</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name, host.alias)">{{host.alias}}</td>
+                      <td>{{host.address}}</td>
                       <td><i class="fa" [ngClass]="{
         								'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
         								'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
         								'fa-times-circle hostgroup-critical':host.crit > 0,
                         'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
         							}" aria-hidden="true"></i></td>
-                      <td *ngIf="host.hard_state == 0">UP</td>
-                      <td *ngIf="host.hard_state == 1">DOWN</td>
-                      <td class="text-left item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name, host.alias)">{{host.alias}}</td>
-                      <td>{{host.address}}</td>
                       <td>{{host.ok}}</td>
                       <td>{{host.warn}}</td>
                       <td>{{host.crit}}</td>

@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-  	this.hostgroupService.getHostgroups(this.token).subscribe(hostgroups => {
+    this.hostgroupService.getHostgroups(this.token).subscribe(hostgroups => {
       this.hostgroups = hostgroups;
 
       for(let single of this.hostgroups) {
@@ -133,5 +133,16 @@ export class HomeComponent implements OnInit {
     for(let hostgroup of hostgroups) {
       hostgroup.state = (this.globalState == 'active') ? 'active' : 'inactive';
     }
+  }
+
+  public filter(itemList: Hostgroup[]): Hostgroup[] {
+    let result: Hostgroup[] = [];
+
+    for(let item of itemList) {
+      if(item.status != 'offline' && item.groups != undefined) {
+        result.push(item);
+      }
+    }
+    return result;
   }
 }

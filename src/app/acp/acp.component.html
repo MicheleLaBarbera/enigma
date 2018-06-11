@@ -8,7 +8,7 @@
           <ol class="breadcrumb mt-3">
             <li class="breadcrumb-item"><a style="color:#6c757d;" href="" routerLink="/home">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page" *ngIf="viewPanel != 2">Pannello di Controllo</li>
-            <li class="breadcrumb-item underline item-clickable" *ngIf="viewPanel == 2" style="color:#6c757d;" (click)="changeView(1, 'Amministrazione Clienti', '', '');">Pannello di Controllo</li>
+            <li class="breadcrumb-item underline item-clickable" *ngIf="viewPanel == 2" style="color:#6c757d;" (click)="changeView(1, 'Gestione Clienti', '', '');">Pannello di Controllo</li>
             <li class="breadcrumb-item active" aria-current="page" *ngIf="viewPanel == 2">{{companyedit}}</li>
           </ol>
         </nav>
@@ -21,19 +21,19 @@
           <div class="col col-sm-12 mb-2 mt-2">
             <div class="card ml-1 mr-1 mt-1">
               <div class="text-center status-hosts">
-                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(0, 'Amministrazione Utenti', '', '');">Menù</p>
+                <p class="card-item-title" style="margin-bottom: 0;">Menù Amministrazione</p>
               </div>
               <div class="row mt-2">
     						<div class="text-center col-3">
-                  <i class="fa fa-user" aria-hidden="true"></i>
+                  <i class="fa fa-building" aria-hidden="true"></i>
                 </div>
-    						<div class="col-6 item-clickable item-text" (click)="changeView(0, 'Amministrazione Utenti', '', '');">Amministrazione Utenti</div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(1, 'Gestione Clienti', '', '');">Gestione Clienti</div>
               </div>
               <div class="row">
     						<div class="text-center col-3">
-                  <i class="fa fa-building" aria-hidden="true"></i>
+                  <i class="fa fa-user" aria-hidden="true"></i>
                 </div>
-    						<div class="col-6 item-clickable item-text" (click)="changeView(1, 'Amministrazione Clienti', '');">Amministrazione Clienti</div>
+    						<div class="col-6 item-clickable item-text" (click)="changeView(0, 'Gestione Utenti', '', '');">Gestione Utenti</div>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
           <div class="col col-sm-12 mb-2 mt-2">
             <div class="card ml-1 mr-1 mt-1">
               <div class="text-center status-hosts">
-                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(1, 'Amministrazione Clienti', '');">Amministrazione Clienti</p>
+                <p class="card-item-title item-clickable" style="margin-bottom: 0;" (click)="changeView(1, 'Gestione Clienti', '');">Gestione Clienti</p>
               </div>
             </div>
           </div>

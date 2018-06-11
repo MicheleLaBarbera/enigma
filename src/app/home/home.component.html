@@ -111,8 +111,8 @@
       </div>
     </div>-->
 
-    <div class="row mt-2">
-  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of hostgroups;">
+    <div class="row mt-2" *ngIf="hostgroups">
+  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of filter(hostgroups);">
   			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
 
   				<div class="text-center mb-2 status-hosts">
