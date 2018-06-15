@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 
 import { AlertService, AuthenticationService, HostgroupService, UserService } from '../_services/index';
 
-import { Customer, User, Server } from '../_models/index';
+import { Customer, User, Server, Hostgroup } from '../_models/index';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -28,6 +28,12 @@ export class AcpComponent implements OnInit {
   p: number = 1;
   public companyedit: string;
   public companyeditid: number;
+
+  public user_hostgroups: Hostgroup[];
+  public eu_id: number;
+  public eu_username: string;
+  public eu_firstname: string;
+  public eu_lastname: string;
 
   constructor(private authenticationService: AuthenticationService, private alertService: AlertService, private hostgroupService: HostgroupService,
               private userService: UserService) {
@@ -150,6 +156,19 @@ export class AcpComponent implements OnInit {
     return fileReaderObs;
   }
 
+  editUser(id: number) {
+    this.eu_id = id;
+    for(let user of this.users) {
+      if(user.id == id) {
+        this.eu_username = user.username;
+        this.eu_firstname = user.firstname;
+        this.eu_lastname = user.lastname;
+      }
+    }
 
+    this.hostgroupService.getHostgroupsByUser(id).subscribe(response => {
+      this.user_hostgroups = response;
+    });
+  }
 
 }

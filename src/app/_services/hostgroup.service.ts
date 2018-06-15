@@ -68,4 +68,11 @@ export class HostgroupService {
       return response;
     });
   }
+
+  public getHostgroupsByUser(id: number): Observable<Hostgroup[]> {
+    return this.http.get<Hostgroup[]>('http://192.168.5.86/enigma-api/hostgroups/getUser/' + id).map(
+  		res => res.map(x => new Hostgroup(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
+                                             x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
+                                             x.services_warn)));
+  }
 }
