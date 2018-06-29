@@ -58,10 +58,11 @@ export class HomeComponent implements OnInit {
   public modalPanelTitle: string;
 
   p: number = 1;
+  public currentUser: User;
 
   constructor(private hostgroupService: HostgroupService) {
-  	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  	this.token = currentUser && currentUser.token;
+  	this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  	this.token = this.currentUser && this.currentUser.token;
   }
 
   ngOnInit() {
@@ -142,6 +143,17 @@ export class HomeComponent implements OnInit {
 
     for(let item of itemList) {
       if(item.status != 'offline' && item.groups != undefined) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
+
+  public filter_ex(itemList: Host[]): Host[] {
+    let result: Host[] = [];
+
+    for(let item of itemList) {
+      if(item.alias != 'undefined') {
         result.push(item);
       }
     }

@@ -46,9 +46,11 @@ export class HostgroupComponent implements OnInit {
   public viewMainTitle: string;
   public viewSecondaryTitle: string;
 
+  public currentUser: User;
+
   constructor(private route: ActivatedRoute, private hostgroupService: HostgroupService) {
-  	var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  	this.token = currentUser && currentUser.token;
+  	this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  	this.token = this.currentUser && this.currentUser.token;
   }
 
   ngOnInit() {

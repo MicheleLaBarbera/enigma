@@ -112,13 +112,13 @@
     </div>-->
 
     <div class="row mt-2" *ngIf="hostgroups">
-  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of filter(hostgroups);">
+  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of filter(hostgroups); let j = index">
   			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
 
   				<div class="text-center mb-2 status-hosts">
             <!--<p class="item-clickable card-item-title" routerLink="/hostgroup/{{hostgroup.id}}">{{hostgroup.name}} - {{hostgroup.description}}</p>-->
             <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
-  				</div>
+    			</div>
 
   				<div class="card-body" [@hostgroupState]="hostgroup.state">
   					<div *ngFor="let group of hostgroup.groups; let i = index">
@@ -168,7 +168,7 @@
             <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
           </thead>
           <tbody *ngIf="hosts[0].alias != 'undefined'">
-            <tr *ngFor="let host of hosts | paginate: { itemsPerPage: 20, currentPage: p };" class="item-text">
+            <tr *ngFor="let host of filter_ex(hosts) | paginate: { itemsPerPage: 20, currentPage: p };" class="item-text">
               <td>{{host.name_ex}}</td>
               <td>{{host.site}}</td>
               <td>{{host.alias}}</td>
