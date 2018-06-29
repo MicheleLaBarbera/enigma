@@ -11,66 +11,66 @@ export class HostgroupService {
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {}
 
   public getHostgroups(token: string): Observable<Hostgroup[]> {
-    return this.http.post<Hostgroup[]>('http://192.168.5.86:8085/enigma-api/hostgroups/get', JSON.stringify({ token: token })).map(
+    return this.http.post<Hostgroup[]>('http://enigma.posdata.it:8085/enigma-api/hostgroups/get', JSON.stringify({ token: token })).map(
   		res => res.map(x => new Hostgroup(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
                                              x.services_warn)));
   }
 
   public getHostgroup(token: string, id: number): Observable<Hostgroup[]> {
-    return this.http.post<Hostgroup[]>('http://192.168.5.86:8085/enigma-api/hostgroups/get/' + id, JSON.stringify({ token: token, id: id })).map(
+    return this.http.post<Hostgroup[]>('http://enigma.posdata.it:8085/enigma-api/hostgroups/get/' + id, JSON.stringify({ token: token, id: id })).map(
   		res => res.map(x => new Hostgroup(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
                                              x.services_warn)));
   }
 
   public getHosts(ip:string, port: number, group: string) : Observable<Host[]> {
-    return this.http.post<Host[]>('http://192.168.5.86:8085/enigma-api/hosts/get', JSON.stringify({ ip: ip, port: port, group: group })).map(
+    return this.http.post<Host[]>('http://enigma.posdata.it:8085/enigma-api/hosts/get', JSON.stringify({ ip: ip, port: port, group: group })).map(
     res => res.map(x => new Host(x.address, x.alias, x.groups, x.crit, x.ok, x.unknown, x.warn, x.name, ip, port, x.hard_state, '', '')));
   }
 
   public getServices(ip:string, port: number, name: string) : Observable<Service[]> {
-    return this.http.post<Service[]>('http://192.168.5.86:8085/enigma-api/services/get', JSON.stringify({ ip: ip, port: port, name: name })).map(
+    return this.http.post<Service[]>('http://enigma.posdata.it:8085/enigma-api/services/get', JSON.stringify({ ip: ip, port: port, name: name })).map(
     res => res.map(x => new Service(x.name, x.status, x.age, x.age_min, x.state, x.h_name, x.last_check, x.last_check_min)));
   }
 
   public setDefaultGroup(token: string, id: number, groupName: string): Observable<boolean> {
-    return this.http.put('http://192.168.5.86:8085/enigma-api/hostgroups/set/' + id, JSON.stringify({ value: groupName })).map((response: Response) => {
+    return this.http.put('http://enigma.posdata.it:8085/enigma-api/hostgroups/set/' + id, JSON.stringify({ value: groupName })).map((response: Response) => {
       return true;
     });
   }
 
   public getHostsByState(state: number) : Observable<Host[]> {
-    return this.http.post<Host[]>('http://192.168.5.86:8085/enigma-api/hosts/state', JSON.stringify({ state: state })).map(
+    return this.http.post<Host[]>('http://enigma.posdata.it:8085/enigma-api/hosts/state', JSON.stringify({ state: state })).map(
     res => res.map(x => new Host(x.address, x.alias, '', x.crit, x.ok, x.unknown, x.warn, '', '', 0, 0, x.name, x.site)));
   }
 
   public getCustomers() : Observable<Customer[]> {
-    return this.http.get<Customer[]>('http://192.168.5.86:8085/enigma-api/customers/get').map(
+    return this.http.get<Customer[]>('http://enigma.posdata.it:8085/enigma-api/customers/get').map(
     res => res.map(x => new Customer(x.id, x.name, x.logo)));
   }
 
   public getCustomer(id: number) : Observable<Server[]> {
-    return this.http.get<Server[]>('http://192.168.5.86:8085/enigma-api/customers/get/' + id).map(
+    return this.http.get<Server[]>('http://enigma.posdata.it:8085/enigma-api/customers/get/' + id).map(
     res => res.map(x => new Server(x.id, x.description, x.ip_address, x.port_number)));
   }
 
   public createCustomer(name: string, logo: any): Observable<any> {
-    return this.http.post<any>('http://192.168.5.86:8085/enigma-api/customers/create', JSON.stringify({ name: name, logo: logo}))
+    return this.http.post<any>('http://enigma.posdata.it:8085/enigma-api/customers/create', JSON.stringify({ name: name, logo: logo}))
     .map((response: HttpResponse<any>) => {
       return response;
     });
   }
 
   public createServer(description: string, address: string, port: number, customer_id: number): Observable<any> {
-    return this.http.post<any>('http://192.168.5.86:8085/enigma-api/hostgroups/create', JSON.stringify({ description: description, address: address, port: port, customer_id: customer_id}))
+    return this.http.post<any>('http://enigma.posdata.it:8085/enigma-api/hostgroups/create', JSON.stringify({ description: description, address: address, port: port, customer_id: customer_id}))
     .map((response: HttpResponse<any>) => {
       return response;
     });
   }
 
   public getHostgroupsByUser(id: number): Observable<Hostgroup[]> {
-    return this.http.get<Hostgroup[]>('http://192.168.5.86:8085/enigma-api/hostgroups/getUser/' + id).map(
+    return this.http.get<Hostgroup[]>('http://enigma.posdata.it:8085/enigma-api/hostgroups/getUser/' + id).map(
   		res => res.map(x => new Hostgroup(x.id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
                                              x.services_warn)));
