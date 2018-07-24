@@ -11,7 +11,7 @@
         <nav aria-label="breadcrumb" class="mr-1 ml-1" *ngIf="hostgroup">
           <ol class="breadcrumb mt-3">
             <li class="breadcrumb-item"><a style="color:#6c757d;" href="" routerLink="/home">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{hostgroup[0].name}} - {{hostgroup[0].description}}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{hostgroup.name}} - {{hostgroup.description}}</li>
           </ol>
         </nav>
       </div>
@@ -23,23 +23,23 @@
           <div class="col col-sm-12 mb-2 mt-2">
             <div class="card hoverable ml-1 mr-1 mt-1 full-height">
               <div class="text-center mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup[0].name}} - {{hostgroup[0].description}}</p>
+                <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
               </div>
 
-      				<div *ngFor="let group of hostgroup[0].groups; let i = index" [attr.data-index]="i">
+      				<div *ngFor="let group of hostgroup.groups; let i = index" [attr.data-index]="i">
       					<div class="row">
       						<div class="text-center col-3"><i class="fa" [ngClass]="{
-      							'fa-check-circle hostgroup-up':group.status === '0',
-      							'fa-exclamation-circle hostgroup-warning':group.status === '1',
-      							'fa-times-circle hostgroup-critical':group.status === '2',
-                    'fa-question-circle hostgroup-unknown':group.status === '3'
+      							'fa-check-circle hostgroup-up':group.worst_service_state == 0,
+      							'fa-exclamation-circle hostgroup-warning':group.worst_service_state == 1,
+      							'fa-times-circle hostgroup-critical':group.worst_service_state == 2,
+                    'fa-question-circle hostgroup-unknown':group.worst_service_state == 3
       						}" aria-hidden="true"></i></div>
-      						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup[0], group, hostgroup[0].ip, hostgroup[0].port, group.name);">{{group.alias}}</div>
+      						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group.name);">{{group.alias}}</div>
                   <!--<div class="col-3">
                     <i class="custom-color fa" [ngClass]="{
-        							'fa-toggle-off':(hostgroup[0].default_group === null  && i !== 0) || hostgroup[0].default_group !== group.name,
-        							'fa-toggle-on':(hostgroup[0].default_group === null && i === 0) || hostgroup[0].default_group === group.name
-        						}" aria-hidden="true" (click)="setDefaultGroup(hostgroup[0], group);"></i>
+        							'fa-toggle-off':(hostgroup.default_group === null  && i !== 0) || hostgroup.default_group !== group.name,
+        							'fa-toggle-on':(hostgroup.default_group === null && i === 0) || hostgroup.default_group === group.name
+        						}" aria-hidden="true" (click)="setDefaultGroup(hostgroup, group);"></i>
                   </div>-->
                 </div>
       				</div>
@@ -193,7 +193,7 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">Dettagli dell'host {{viewSecondaryTitle}}, {{viewMainTitle}}, {{hostgroup[0].name}} - {{hostgroup[0].description}}</h5>
+          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">Dettagli dell'host {{viewSecondaryTitle}}, {{viewMainTitle}}, {{hostgroup.name}} - {{hostgroup.description}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

@@ -10,7 +10,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   public getUsers() : Observable<User[]>  {
-    return this.http.get<User[]>('http://enigma.posdata.it:8085/enigma-api/users/get').map(
-    res => res.map(x => new User(x.id, x.username, x.firstname, x.lastname, '', x.companyname, x.email, '', 0)));
+    return this.http.get<User[]>('http://localhost:3000/users').map(
+    res => res.map(x => new User(x._id, x.username, x.firstname, x.lastname, '', x.customer_name, x.email, '', x.role)));
   }
 }

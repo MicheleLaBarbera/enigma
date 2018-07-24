@@ -16,8 +16,8 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post('http://enigma.posdata.it:8085/enigma-api/users/auth', JSON.stringify({ username: username, password: password }))
-    .map((response: HttpResponse<any>) => {
+    return this.http.post('http://localhost:3000/users/auth', { username: username, password: password })
+    .map((response: HttpResponse<any>) => {  
       if(response.status == 200) {
         let token = response.body.token;
         let logo = response.body.logo;
@@ -31,8 +31,8 @@ export class AuthenticationService {
     });
   }
 
-  signup(firstname: string, lastname: string, username: string, password: string, customer: number, email: string): Observable<any> {
-    return this.http.post<any>('http://enigma.posdata.it:8085/enigma-api/users/create', JSON.stringify({ firstname: firstname, lastname: lastname, username: username, password: password, customer: customer, email: email}))
+  signup(firstname: string, lastname: string, username: string, password: string, customer_id: string, email: string): Observable<any> {
+    return this.http.post<any>('http://localhost:3000/users', { username: username, password: password, firstname: firstname, lastname: lastname, email: email, role: 0, telegram_id: 'undefined', customer_id: customer_id})
     .map((response: HttpResponse<any>) => {
       return response;
     });

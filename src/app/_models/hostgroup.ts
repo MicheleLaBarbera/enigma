@@ -1,7 +1,7 @@
 import { Host } from '../_models/index';
 
 export class Hostgroup {
-  id: number;
+  _id: string;
   name: string;
   ip: string;
   port: number;
@@ -20,10 +20,10 @@ export class Hostgroup {
   services_unknown: number;
   services_warn: number;
 
-  constructor(id: number, name: string, ip: string, port: number, status:string, state: string, description: string, default_group: string, groups: [string, number],
+  constructor(_id: string, name: string, ip: string, port: number, status:string, state: string, description: string, default_group: string, groups: [string, number],
               hosts_down: number, hosts_pending: number, hosts_unreachable: number, hosts_up: number, services_crit: number, services_ok: number,
               services_pending: number, services_unknown: number, services_warn: number) {
-  	this.id = id;
+  	this._id = _id;
   	this.name = name;
   	this.ip = ip;
   	this.port = port;

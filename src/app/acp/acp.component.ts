@@ -30,7 +30,7 @@ export class AcpComponent implements OnInit {
   public companyeditid: number;
 
   public user_hostgroups: Hostgroup[];
-  public eu_id: number;
+  public eu_id: string;
   public eu_username: string;
   public eu_firstname: string;
   public eu_lastname: string;
@@ -44,7 +44,7 @@ export class AcpComponent implements OnInit {
 
   ngOnInit() {
     this.hostgroupService.getCustomers().subscribe(response => {
-      this.customers = response;
+      this.customers = response;      
       this.changeView(1, "Gestione Clienti", '', '');
     });
 
@@ -156,10 +156,10 @@ export class AcpComponent implements OnInit {
     return fileReaderObs;
   }
 
-  editUser(id: number) {
+  editUser(id: string) {
     this.eu_id = id;
     for(let user of this.users) {
-      if(user.id == id) {
+      if(user._id == id) {
         this.eu_username = user.username;
         this.eu_firstname = user.firstname;
         this.eu_lastname = user.lastname;

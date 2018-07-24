@@ -1,10 +1,10 @@
 export class Customer {
-  id: number;
+  _id: string;
   name: string;
   logo: any;
 
-  constructor(id: number, name: string, logo:any) {
-  	this.id = id;
+  constructor(_id: string, name: string, logo:any) {
+  	this._id = _id;
     this.name = name;
     this.logo = logo;
   }

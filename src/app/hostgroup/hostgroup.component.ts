@@ -23,7 +23,7 @@ import * as Chartist from 'chartist';
 export class HostgroupComponent implements OnInit {
 
   public token: string;
-  public hostgroup: Hostgroup[];
+  public hostgroup: Hostgroup;
   public hosts: Host[];
   public services: Service[];
 
@@ -54,58 +54,59 @@ export class HostgroupComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = +this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
+
     const id2 = +this.route.snapshot.paramMap.get('id2');
     console.log("ID: " + id + "- ID2: " + id2);
 
   	this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
       this.hostgroup = hostgroup;
 
-      for(let single of this.hostgroup) {
-        this.hosts_down += single['hosts_down'];
-        this.hosts_unreachable += single['hosts_unreachable'];
-        this.hosts_pending += single['hosts_pending'];
-        this.hosts_up += single['hosts_up'];
+      //for(let this.hostgroup of this.hostgroup) {
+        this.hosts_down += this.hostgroup['hosts_down'];
+        this.hosts_unreachable += this.hostgroup['hosts_unreachable'];
+        this.hosts_pending += this.hostgroup['hosts_pending'];
+        this.hosts_up += this.hostgroup['hosts_up'];
 
-        this.services_crit += single['services_crit'];
-        this.services_ok += single['services_ok'];
-        this.services_pending += single['services_pending'];
-        this.services_unknown += single['services_unknown'];
-        this.services_warn += single['services_warn'];
+        this.services_crit += this.hostgroup['services_crit'];
+        this.services_ok += this.hostgroup['services_ok'];
+        this.services_pending += this.hostgroup['services_pending'];
+        this.services_unknown += this.hostgroup['services_unknown'];
+        this.services_warn += this.hostgroup['services_warn'];
 
         if(id2 == 0) {
           let found = false;
 
-          for(let group of single.groups) {
-            if(single['default_group'] == group['name'])
+          for(let group of this.hostgroup.groups) {
+            if(this.hostgroup['default_group'] == group['name'])
             {
-              this.getHosts(single, group, single['ip'], single['port'], group['name']);
+              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['name']);
               found = true;
             }
           }
 
           if(!found) {
-            console.log(single);
-            console.log(single.groups[0]);
-            console.log(single['ip']);
-            console.log(single['port']);
-            console.log(single.groups[0]['name']);
-            console.log(single.default_group);
-            this.getHosts(single, single.groups[0], single['ip'], single['port'], single.groups[0]['name']);
+            console.log(this.hostgroup);
+            console.log(this.hostgroup.groups[0]);
+            console.log(this.hostgroup['ip']);
+            console.log(this.hostgroup['port']);
+            console.log(this.hostgroup.groups[0]['name']);
+            console.log(this.hostgroup.default_group);
+            this.getHosts(this.hostgroup, this.hostgroup.groups[0], this.hostgroup['ip'], this.hostgroup['port'], this.hostgroup.groups[0]['name']);
           }
         }
         else {
           let idx = 1;
-          for(let group of single.groups) {
+          for(let group of this.hostgroup.groups) {
             if(id2 == idx)
             {
-              this.getHosts(single, group, single['ip'], single['port'], group['name']);
+              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['name']);
             }
             idx++;
           }
         }
 
-      }
+      //}
 
       this.host_chart = new Chartist.Pie('.hosts-chart', {
         series: [
