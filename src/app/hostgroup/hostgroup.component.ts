@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { NgForm } from '@angular/forms';
 
 import { User } from '../_models/index';
-import { HostgroupService } from '../_services/index';
-import { Hostgroup, Host, Service } from '../_models/index';
+import { AlertService, HostgroupService } from '../_services/index';
+import { Hostgroup, Host, Service, ServiceAck } from '../_models/index';
+
+import {IMyDpOptions} from 'mydatepicker';
 import * as Chartist from 'chartist';
+import { AmazingTimePickerService } from 'amazing-time-picker';
 
 @Component({
   selector: 'app-hostgroup',
@@ -21,11 +25,14 @@ import * as Chartist from 'chartist';
   ]
 })
 export class HostgroupComponent implements OnInit {
-
+  @ViewChild('f') form: any;
+  model: any = {};
+  loading = false;
   public token: string;
   public hostgroup: Hostgroup;
   public hosts: Host[];
   public services: Service[];
+  public service_ack: ServiceAck;
 
   public host_chart = [];
   public service_chart = [];
@@ -48,15 +55,53 @@ export class HostgroupComponent implements OnInit {
 
   public currentUser: User;
 
-  constructor(private route: ActivatedRoute, private hostgroupService: HostgroupService) {
+  public refreshedACK: Service;
+
+  p: number = 1;
+
+  public today = new Date();
+  public selectedTime = this.today.getHours() + ':' + this.today.getMinutes();
+
+  public myDatePickerOptions: IMyDpOptions = {
+    dateFormat: 'yyyy-mm-dd',
+    inline: false,
+    dayLabels: {su: 'Dom', mo: 'Lun', tu: 'Mar', we: 'Mer', th: 'Gio', fr: 'Ven', sa: 'Sab'},
+    monthLabels: { 1: 'Gen', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'Mag', 6: 'Giu', 7: 'Lug', 8: 'Ago', 9: 'Set', 10: 'Ott', 11: 'Nov', 12: 'Dic' },    
+    disableUntil: { year: this.today.getFullYear(), month: this.today.getMonth(), day: this.today.getDate() },
+    todayBtnTxt: 'Oggi'
+  };
+  
+  public today_year = this.today.getFullYear();
+  public today_month = (this.today.getMonth() + 1);
+  public today_day = (this.today.getDate());
+
+  public date_model: any = {     
+    date: { year: this.today_year, month: this.today_month, day: this.today_day },
+  };
+
+  constructor(private atp: AmazingTimePickerService, private route: ActivatedRoute, private alertService: AlertService, private hostgroupService: HostgroupService) {
   	this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   	this.token = this.currentUser && this.currentUser.token;
+  }
+
+  open() {
+    const amazingTimePicker = this.atp.open({
+      time:  this.selectedTime,
+      theme: 'dark',
+      arrowStyle: {
+          background: 'red',
+          color: 'white'
+      }
+    });
+    amazingTimePicker.afterClose().subscribe(time => {
+        this.selectedTime = time;
+    });
   }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    const id2 = +this.route.snapshot.paramMap.get('id2');
+    const id2 = this.route.snapshot.paramMap.get('id2');
     console.log("ID: " + id + "- ID2: " + id2);
 
   	this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
@@ -74,13 +119,18 @@ export class HostgroupComponent implements OnInit {
         this.services_unknown += this.hostgroup['services_unknown'];
         this.services_warn += this.hostgroup['services_warn'];
 
-        if(id2 == 0) {
+        for(let group of this.hostgroup.groups) {
+          if(id2 == group['_id']) {
+            this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
+          }
+        }
+        /*if(id2 == 0) {
           let found = false;
 
           for(let group of this.hostgroup.groups) {
             if(this.hostgroup['default_group'] == group['name'])
             {
-              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['name']);
+              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
               found = true;
             }
           }
@@ -92,7 +142,7 @@ export class HostgroupComponent implements OnInit {
             console.log(this.hostgroup['port']);
             console.log(this.hostgroup.groups[0]['name']);
             console.log(this.hostgroup.default_group);
-            this.getHosts(this.hostgroup, this.hostgroup.groups[0], this.hostgroup['ip'], this.hostgroup['port'], this.hostgroup.groups[0]['name']);
+            this.getHosts(this.hostgroup, this.hostgroup.groups[0], this.hostgroup['ip'], this.hostgroup['port'], id2);
           }
         }
         else {
@@ -100,11 +150,11 @@ export class HostgroupComponent implements OnInit {
           for(let group of this.hostgroup.groups) {
             if(id2 == idx)
             {
-              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['name']);
+              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
             }
             idx++;
           }
-        }
+        }*/
 
       //}
 
@@ -144,19 +194,69 @@ export class HostgroupComponent implements OnInit {
     });
   }
 
-  public getHosts(hostgroup: Hostgroup, groupID: any, ip:string, port: number, group: string) {
-    this.hostgroupService.getHosts(ip, port, group).subscribe(hosts => {
+  public getHosts(hostgroup: Hostgroup, groupID: any, ip:string, port: number, id: string) {
+    this.hostgroupService.getHosts(ip, port, id).subscribe(hosts => {
       this.hosts = hosts;
       this.viewMainTitle = groupID.alias;
       this.switchState(hostgroup);
-      hostgroup.toggleGroupState(groupID);
+      //hostgroup.toggleGroupState(groupID);
     });
   }
 
-  public getServices(ip:string, port: number, name: string, alias: string) {
-    this.hostgroupService.getServices(ip, port, name).subscribe(services => this.services = services);
+  public refreshACK(ack: Service) {
+    this.refreshedACK = ack;
+  }
+
+  public createACK(ack: Service, user_id: string, form: NgForm) {    
+    let d = new Date();
+    let check_year = d.getFullYear();
+    let check_month: any;
+    check_month = d.getMonth() + 1;
+    check_month = (check_month <= 9) ? "0" + check_month : check_month;
+    let check_day: any;
+    check_day = d.getDate();
+    check_day = (check_day <= 9) ? "0" + check_day : check_day;
+    let check_hours = "0" + d.getHours();
+    let check_minutes = "0" + d.getMinutes();
+    let check_seconds = "0" + d.getSeconds();
+    let check_formattedTime = check_year + '-' + check_day + '-' + check_month;
+    let check_formattedTime_ex = check_hours.substr(-2) + ':' + check_minutes.substr(-2) + ':' + check_seconds.substr(-2);
+    
+    let final = check_formattedTime + ' ' + check_formattedTime_ex;
+
+    this.hostgroupService.createACK(ack._id, user_id, this.model.message, final).subscribe(response => {
+      console.log(this.date_model);
+      if(response.status == 201) {
+        this.alertService.success('ACK modificato con successo.');
+        this.loading = false;
+
+        this.refreshedACK.ack = response.body.message;
+        if(form.valid) {
+          form.reset();
+        }
+      }
+      else {
+        this.alertService.error(response.body.message);
+        this.loading = false;
+      }
+    });       
+  }
+
+  public getServices(ip:string, port: number, host_id: string, alias: string) {
+    this.hostgroupService.getServices(ip, port, host_id).subscribe(services => {
+      this.services = services;
+
+      /*for(let service of this.services) {
+        this.getServiceAcks(service);
+      }*/
+    });
     this.viewSecondaryTitle = alias;
   }
+
+  //public getServiceAcks(service: Service) {
+    //console.log(service.ack.)
+    //this.hostgroupService.getServiceAck(service._id).subscribe(service.ack => this.service_ack = service.ack);
+  //}
 
   public switchState(hostgroup: Hostgroup) {
     for(let group of hostgroup.groups) {
@@ -166,7 +266,7 @@ export class HostgroupComponent implements OnInit {
     }
   }
 
-  public setDefaultGroup(hostgroup: Hostgroup, groupID: any) {
+  /*public setDefaultGroup(hostgroup: Hostgroup, groupID: any) {
     const id = +this.route.snapshot.paramMap.get('id');
     console.log(hostgroup.default_group + " - " + groupID['name']);
     if(hostgroup.default_group != groupID['name']) {
@@ -177,5 +277,5 @@ export class HostgroupComponent implements OnInit {
         }
       });
     }
-  }
+  }*/
 }

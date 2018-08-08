@@ -4,3 +4,4 @@ export * from './host';
 export * from './service';
 export * from './customer';
 export * from './server';
+export * from './service_ack';

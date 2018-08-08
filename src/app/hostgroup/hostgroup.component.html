@@ -34,7 +34,7 @@
       							'fa-times-circle hostgroup-critical':group.worst_service_state == 2,
                     'fa-question-circle hostgroup-unknown':group.worst_service_state == 3
       						}" aria-hidden="true"></i></div>
-      						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group.name);">{{group.alias}}</div>
+      						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group._id);">{{group.alias}}</div>
                   <!--<div class="col-3">
                     <i class="custom-color fa" [ngClass]="{
         							'fa-toggle-off':(hostgroup.default_group === null  && i !== 0) || hostgroup.default_group !== group.name,
@@ -166,7 +166,7 @@
                     <tr *ngFor="let host of hosts;" class="item-text-big">
                       <td class="up-status" *ngIf="host.hard_state == 0">UP</td>
                       <td class="down-status" *ngIf="host.hard_state == 1">DOWN</td>
-                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host.name, host.alias)">{{host.alias}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host._id, host.alias)">{{host.alias}}</td>
                       <td>{{host.address}}</td>
                       <td><i class="fa" [ngClass]="{
         								'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
@@ -201,15 +201,15 @@
         <div class="modal-body">
           <table class="table table-sm text-center table-striped">
             <thead class="card-item-title">
-              <td scope="col"></td>
-              <td class="text-left" scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
-              <td scope="col"><i class="fa fa-list-alt"></i> Stato</td>
-              <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo cambiamento di Stato</td>
+              <td scope="col">Stato</td>
+              <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
+              <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>
+              <!--<td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo cambiamento di Stato</td>-->
               <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo check</td>
               <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
             </thead>
             <tbody>
-              <tr *ngFor="let service of services;" class="item-text">
+              <tr *ngFor="let service of services | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text">
                 <td><i class="fa" [ngClass]="{
                   'fa-check-circle hostgroup-up':service.state == 0,
                   'fa-exclamation-circle hostgroup-warning':service.state == 1,
@@ -218,12 +218,87 @@
                 }" aria-hidden="true"></i></td>
                 <td class="text-left">{{service.name}}</td>
                 <td class="text-left">{{service.status}}</td>
-                <td class="">{{service.age}} <br> {{service.age_min}}</td>
-                <td class="">{{service.last_check}} <br> {{service.last_check_min}}</td>
-                <td><i class="fa fa-toggle-off" onclick="alert('Attenzione: Funzione non ancora implementata.')"></i></td>
+                <!--<td class="">{{service.age}} <br> {{service.age_min}}</td>-->
+                <td class="">{{service.last_check}} {{service.last_check_min}}</td>                   
+                <td *ngIf="(service.ack | json) != '{}'">
+                    <h5><span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-primary item-clickable"><i class="fa fa-file-text" aria-hidden="true"></i>
+                      Visualizza</span></h5> 
+                </td>                
+                <td *ngIf="(service.ack | json) == '{}'">
+                    <h5><span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-success item-clickable"><i class="fa fa-plus-circle" aria-hidden="true"></i>
+                      Crea</span></h5>                    
+                </td>
               </tr>
             </tbody>
           </table>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 mt-1 text-right">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event"
+                                    autoHide="true"
+                                    previousLabel="Indietro"
+                                    nextLabel="Avanti"
+                                    directionLinks="false"
+              >
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="showACKModal" tabindex="-1" role="dialog" aria-labelledby="showACKModalLabel" aria-hidden="true" *ngIf="refreshedACK">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="showACKModalLabel" *ngIf="refreshedACK">ACK del servizio {{refreshedACK.name}}, {{viewSecondaryTitle}}, {{viewMainTitle}}, {{hostgroup.name}} - {{hostgroup.description}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">        
+          <table class="table table-sm text-center" *ngIf="(refreshedACK.ack | json) != '{}'">
+            <thead class="card-item-title">          
+              <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Autore</td>
+              <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>                
+              <td scope="col"><i class="fa fa-calendar-check-o"></i> Creazione</td>                
+            </thead>
+            <tbody>
+              <tr class="item-text">                  
+                <td>{{refreshedACK.ack.creator_name}}</td>
+                <td>{{refreshedACK.ack.message}}</td>               
+                <td>{{refreshedACK.ack.created_at}}</td>                 
+              </tr>
+            </tbody>
+          </table>
+          <form name="form" (ngSubmit)="f.form.valid && createACK(refreshedACK, currentUser.id, f)" #f="ngForm" novalidate>                         
+            <h4 *ngIf="(refreshedACK.ack | json) != '{}'"><span class="badge badge-warning"><i class="fa fa-pencil-square" aria-hidden="true"></i>
+                Modifica ACKnowledge</span>
+            </h4>    
+            <h4 *ngIf="(refreshedACK.ack | json) == '{}'"><span class="badge badge-success"><i class="fa fa-plus-circle" aria-hidden="true"></i>
+                  Crea ACKnowledge</span>
+            </h4>  
+            <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !message.valid }">
+              <div class="input-group mb-2">                                
+                <input type="text" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required />    
+              </div>
+              <div class="input-group mb-2">
+                <div class="row">
+                  <div class="col-md-6">
+                    <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="date_model" [locale]="it" required></my-date-picker>  
+                  </div>
+                  <div class="col-md-6">
+                      <input type="time" value="{{selectedTime}}"> 
+                  </div>
+                </div>
+              </div>               
+              <div class="text-center">
+                <button [disabled]="loading" class="btn btn-primary" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                </button>
+                <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+              </div>
+            </div>          
+          </form>                
         </div>
       </div>
     </div>

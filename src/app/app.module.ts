@@ -29,6 +29,8 @@ import { ProfileComponent } from './profile/profile.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MyDatePickerModule } from 'mydatepicker';
+import { AmazingTimePickerService } from 'amazing-time-picker';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     HttpModule,
     Ng2SearchPipeModule,
     Ng2OrderModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MyDatePickerModule 
   ],
   providers: [
     AuthGuard,
@@ -65,7 +68,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     },
     AlertService,
     AuthenticationService,
-    UserService
+    UserService,
+    AmazingTimePickerService
   ],
   bootstrap: [AppComponent]
 })

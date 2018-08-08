@@ -19,17 +19,20 @@
               <div class="col-md-6 col-sm-12">
                 <table class="table table-sm table-hover item-text">
                   <tbody>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'OK')">
+                    <!--<tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'OK')">-->
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>OK</td>
                       <td class="host-up"></td>
                       <td class="text-right">{{hosts_up}}</td>
                     </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">
+                    <!--<tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">-->
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>Offline</td>
                       <td class="host-down"></td>
                       <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
                     </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Downtime')">
+                    <!--<tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Downtime')">-->
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>Downtime</td>
                       <td class="host-pending"></td>
                       <td class="text-right">{{hosts_pending}}</td>
@@ -60,22 +63,22 @@
               <div class="col-md-6 col-sm-12">
                 <table class="table table-sm table-hover item-text">
                   <tbody>
-                    <tr>
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>OK</td>
                       <td class="service-ok"></td>
                       <td class="text-right">{{services_ok}}</td>
                     </tr>
-                    <tr>
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>Warning</td>
                       <td class="service-warn"></td>
                       <td class="text-right">{{services_warn + services_unknown}}</td>
                     </tr>
-                    <tr>
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>Critical</td>
                       <td class="service-crit"></td>
                       <td class="text-right">{{services_crit}}</td>
                     </tr>
-                    <tr>
+                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
                       <td>Downtime</td>
                       <td class="service-pending"></td>
                       <td class="text-right">{{services_pending}}</td>

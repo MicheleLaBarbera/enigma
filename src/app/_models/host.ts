@@ -1,4 +1,5 @@
 export class Host {
+  _id: string;
   address: string;
   alias: string;
   groups: string;
@@ -13,8 +14,9 @@ export class Host {
   name_ex: string;
   site: string;
 
-  constructor(address: string, alias: string, groups: string, crit: string, ok:string, unknown: string, warn: string, name: string, ip:string, port: number, hard_state: number, name_ex: string, site: string) {
-  	this.address = address;
+  constructor(_id: string, address: string, alias: string, groups: string, crit: string, ok:string, unknown: string, warn: string, name: string, ip:string, port: number, hard_state: number, name_ex: string, site: string) {
+    this._id = _id;
+    this.address = address;
   	this.alias = alias;
   	this.groups = groups;
   	this.crit = crit;

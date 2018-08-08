@@ -30,8 +30,8 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loading = true;
-    this.authenticationService.login(this.model.username, this.model.password).subscribe(result => {
-      if (result === true) {
+    this.authenticationService.login(this.model.username, this.model.password).subscribe(response => {
+      if (response == true) {
         setTimeout((router: Router) => {
             this.router.navigate([this.returnUrl]);
         }, 1500);        

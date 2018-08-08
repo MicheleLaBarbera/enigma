@@ -47,12 +47,12 @@ export class Hostgroup {
     this.state = this.state === 'active' ? 'inactive' : 'active';
   }
 
-  public toggleGroupState(id): void {
+  /*public toggleGroupState(id): void {
     //this.groups[id] = this.state === 'active' ? 'inactive' : 'active';
     //console.log(id.count);
     //id.sta
     //id.state === 'active' ? 'inactive' : 'active';
     this.groups[id.count]['state'] = this.groups[id.count]['state'] === 'active' ? 'inactive' : 'active';
     console.log(this.groups[id.count]['state']);
-  }
+  }*/
 }

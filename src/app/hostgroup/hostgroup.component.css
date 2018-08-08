@@ -197,3 +197,42 @@ i {
   background-color: #f05050;
   color: white;
 }
+
+.my-pagination /deep/ .ngx-pagination a, .ngx-pagination button {
+	color: rgba(0,0,0,.5);
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.my-pagination /deep/ .ngx-pagination .current {
+	color: white;
+	font-weight: 600;
+	font-size: 0.9rem;
+	background-color: #0e71b4 !important;
+}
+
+.my-pagination /deep/ .ngx-pagination {
+	margin-bottom: 0;
+}
+
+.badge-success {
+	font-size: 0.8rem; 
+	font-weight: 600;
+	background-color: #27c24c;
+}
+
+.badge-warning {
+	font-size: 0.8rem; 
+	font-weight: 600;
+	background-color: rgb(247, 203, 5);
+}
+
+.badge-primary {
+	font-size: 0.8rem; 
+	font-weight: 600;
+	background-color: #0e71b4 !important;
+}
+
+.btn-primary {
+	background-color: #0e71b4 !important;
+}

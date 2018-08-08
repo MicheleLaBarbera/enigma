@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 import { AuthenticationService } from '../_services/authentication.service';
-import { Hostgroup, Host, Service, Customer, Server } from '../_models/index';
+import { Hostgroup, Host, Service, Customer, Server, ServiceAck } from '../_models/index';
 import * as decode from 'jwt-decode';
 
 @Injectable()
@@ -27,25 +27,30 @@ export class HostgroupService {
                                              res.services_warn));
   }
 
-  public getHosts(ip:string, port: number, group: string) : Observable<Host[]> {
-    return this.http.post<Host[]>('http://enigma.posdata.it:8085/enigma-api/hosts/get', JSON.stringify({ ip: ip, port: port, group: group })).map(
-    res => res.map(x => new Host(x.address, x.alias, x.groups, x.crit, x.ok, x.unknown, x.warn, x.name, ip, port, x.hard_state, '', '')));
+  public getHosts(ip:string, port: number, host_group_id: string) : Observable<Host[]> {
+    return this.http.get<Host[]>('http://localhost:3000/hosts/' + host_group_id).map(
+    res => res.map(x => new Host(x._id, x.address, x.alias, x.groups, x.crit, x.ok, x.unknown, x.warn, x.name, ip, port, x.hard_state, '', '')));
   }
 
-  public getServices(ip:string, port: number, name: string) : Observable<Service[]> {
-    return this.http.post<Service[]>('http://enigma.posdata.it:8085/enigma-api/services/get', JSON.stringify({ ip: ip, port: port, name: name })).map(
-    res => res.map(x => new Service(x.name, x.status, x.age, x.age_min, x.state, x.h_name, x.last_check, x.last_check_min)));
+  public getServices(ip:string, port: number, host_id: string) : Observable<Service[]> {
+    return this.http.get<Service[]>('http://localhost:3000/services/' + host_id).map(
+    res => res.map(x => new Service(x._id, x.name, x.status, x.age, x.age_min, x.state, x.h_name, x.last_check, x.last_check_min, x.ack)));
   }
 
-  public setDefaultGroup(token: string, id: number, groupName: string): Observable<boolean> {
-    return this.http.put('http://enigma.posdata.it:8085/enigma-api/hostgroups/set/' + id, JSON.stringify({ value: groupName })).map((response: Response) => {
+  public getServiceAck(service_id: string) : Observable<ServiceAck> {
+    return this.http.get<ServiceAck>('http://localhost:3000/services/' + service_id + '/ack').map(
+    res => new ServiceAck(res.service_id, res.creator_name, res.message, res.created_at, res.expire_at));
+  }
+
+  /*public setDefaultGroup(token: string, id: number, groupName: string): Observable<boolean> {
+    return this.http.put('http://localhost:8085/enigma-api/hostgroups/set/' + id, JSON.stringify({ value: groupName })).map((response: Response) => {
       return true;
     });
-  }
+  }*/
 
   public getHostsByState(state: number) : Observable<Host[]> {
-    return this.http.post<Host[]>('http://enigma.posdata.it:8085/enigma-api/hosts/state', JSON.stringify({ state: state })).map(
-    res => res.map(x => new Host(x.address, x.alias, '', x.crit, x.ok, x.unknown, x.warn, '', '', 0, 0, x.name, x.site)));
+    return this.http.get<Host[]>('http://localhost:3000/hosts/state/' + state).map(
+    res => res.map(x => new Host(x._id, x.address, x.alias, '', x.crit, x.ok, x.unknown, x.warn, '', '', 0, 0, x.name, x.site)));
   }
 
   public getCustomers() : Observable<Customer[]> {
@@ -65,6 +70,13 @@ export class HostgroupService {
     });
   }
 
+  public createACK(service_id: string, user_id: string, message: string, created_at: string): Observable<any> {
+    return this.http.post<any>('http://localhost:3000/services/' + service_id + '/ack', { service_id: service_id, user_id: user_id, message: message, created_at: created_at })
+    .map((response: HttpResponse<any>) => {
+      return response;
+    });
+  }
+
   public createServer(description: string, ip_address: string, port_number: number, customer_id: number): Observable<any> {
     return this.http.post<any>('http://localhost:3000/customers/' + customer_id + '/sites', { description: description, ip_address: ip_address, port_number: port_number, customer_id: customer_id})
     .map((response: HttpResponse<any>) => {
@@ -73,7 +85,7 @@ export class HostgroupService {
   }
 
   public getHostgroupsByUser(id: string): Observable<Hostgroup[]> {
-    return this.http.get<Hostgroup[]>('http://enigma.posdata.it:8085/enigma-api/hostgroups/getUser/' + id).map(
+    return this.http.get<Hostgroup[]>('http://localhost:8085/enigma-api/hostgroups/getUser/' + id).map(
   		res => res.map(x => new Hostgroup(x._id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
                                              x.services_warn)));

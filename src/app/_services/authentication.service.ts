@@ -17,7 +17,8 @@ export class AuthenticationService {
 
   login(username: string, password: string): Observable<boolean> {
     return this.http.post('http://localhost:3000/users/auth', { username: username, password: password })
-    .map((response: HttpResponse<any>) => {  
+    .map((response: HttpResponse<any>) => { 
+      //console.log(response.status) 
       if(response.status == 200) {
         let token = response.body.token;
         let logo = response.body.logo;
