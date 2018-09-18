@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { AlertService, AuthenticationService, HostgroupService, UserService } from '../_services/index';
@@ -22,6 +22,8 @@ export class AcpComponent implements OnInit {
   public customers: Customer[];
   public users: User[];
   public servers: Server[];
+  public user_sites: Server[];
+  public sites: Server[];
   public files: any[];
   key: string = 'companyname';
   reverse: boolean = false;
@@ -30,11 +32,18 @@ export class AcpComponent implements OnInit {
   public companyeditid: number;
 
   public user_hostgroups: Hostgroup[];
-  public eu_id: string;
-  public eu_username: string;
-  public eu_firstname: string;
-  public eu_lastname: string;
+ 
 
+  public use_customer: Customer;
+  public use_user: User;
+
+  @ViewChild('btnCustomerClose') btnCustomerClose : ElementRef;
+  @ViewChild('btnCustomerSiteClose') btnCustomerSiteClose : ElementRef;
+  @ViewChild('btnCustomerCreate') btnCustomerCreate : ElementRef;
+  @ViewChild('btnUserCreate') btnUserCreate : ElementRef;
+  @ViewChild('btnUserSiteClose') btnUserSiteClose : ElementRef;
+
+  
   constructor(private authenticationService: AuthenticationService, private alertService: AlertService, private hostgroupService: HostgroupService,
               private userService: UserService) {
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -50,14 +59,56 @@ export class AcpComponent implements OnInit {
 
   }
 
+  public useCustomer(customer: Customer) {
+    this.use_customer = customer;
+    this.alertService.resetMessage();
+  }
+
+  public useCustomerEdit(customer: Customer) {
+    this.use_customer = customer;
+    this.alertService.resetMessage();
+
+    this.hostgroupService.getCustomer(customer._id).subscribe(response => {
+      this.servers = response;          
+    });
+  }
+
+  public resetAlertMessage() {
+    this.alertService.resetMessage();
+  }
+
+  public deleteCustomer(customer_id: string) {   
+    this.hostgroupService.deleteCustomer(customer_id).subscribe(response => {
+      if(response) {
+        this.hostgroupService.getCustomers().subscribe(response => {
+          this.customers = response;      
+          this.btnCustomerClose.nativeElement.click();
+        }); 
+      }
+      else {
+        this.alertService.error("Impossibile eliminare un cliente con siti associati.");
+      }
+    });
+  }
+
+  public deleteCustomerSite(customer_id: string, site_id: string) {   
+    this.hostgroupService.deleteCustomerSite(customer_id, site_id).subscribe(response => {
+      if(response) {
+        this.hostgroupService.getCustomer(customer_id).subscribe(response => {
+          this.servers = response;          
+        });    
+      }   
+    });
+  }
+
   signup(form: NgForm) {
     this.loading = true;
-    this.authenticationService.signup(this.model.firstname, this.model.lastname, this.model.username, this.model.password, this.model.customer, this.model.email).subscribe(response => {
-      if(response.status == 201) {
+    this.authenticationService.signup(this.model.firstname, this.model.lastname, this.model.username, this.model.password, this.model.customer, this.model.email, this.model.role).subscribe(response => {
+      if(response.status == 201) {        
         this.userService.getUsers().subscribe(response => {
-          this.users = response;
-        });
-        this.alertService.success('Utente registrato con successo.');
+          this.users = response;          
+          this.btnUserCreate.nativeElement.click();
+        });                
         this.loading = false;
         if(form.valid) {
           form.reset();
@@ -82,8 +133,7 @@ export class AcpComponent implements OnInit {
         this.companyedit = extra;
         this.companyeditid = extra_id;
         this.hostgroupService.getCustomer(extra_id).subscribe(response => {
-          this.servers = response;
-          console.log(this.servers);
+          this.servers = response;          
         });
         break;
       }
@@ -102,45 +152,122 @@ export class AcpComponent implements OnInit {
   }
 
   createCompany(form: NgForm) {
-    var fileNameArray = this.files[0].name.split(".");
-    var fileExtension = fileNameArray[fileNameArray.length - 1];
+    if(this.files[0] != undefined) {
+      var fileNameArray = this.files[0].name.split(".");
+      var fileExtension = fileNameArray[fileNameArray.length - 1];
 
-    if(fileExtension != 'jpg' && fileExtension != 'png' && fileExtension != 'gif') {
-      this.alertService.error("Inserisci un'immagine con estensione JPG, PNG o GIF.");
+      if(fileExtension != 'jpg' && fileExtension != 'png' && fileExtension != 'gif') {
+        this.alertService.error("Inserisci un'immagine con estensione JPG, PNG o GIF.");
+      }
+      else {
+        this.fileReaderObs(this.files[0]).subscribe(fileContent => {
+          this.hostgroupService.createCustomer(this.model.companyname, this.model.customer_code, this.model.referent_name, this.model.phone_number, this.model.email, fileContent).subscribe(response => {
+            if(response.status == 201) {
+              this.hostgroupService.getCustomers().subscribe(response => {
+                this.btnCustomerCreate.nativeElement.click();
+                this.customers = response;                   
+              });
+              this.alertService.success('Cliente registrato con successo.');
+              this.loading = false;
+              if(form.valid) {
+                form.reset();
+              }            
+            }
+            else {
+              this.alertService.error(response.body.message);
+              this.loading = false;
+            }
+          });
+        });
+      }
     }
     else {
-      this.fileReaderObs(this.files[0]).subscribe(fileContent => {
-        this.hostgroupService.createCustomer(this.model.companyname, fileContent).subscribe(response => {
-          if(response.status == 201) {
-            this.alertService.success('Cliente registrato con successo.');
-            this.loading = false;
-            if(form.valid) {
-              form.reset();
+      this.alertService.error("Inserisci un'immagine come logo.");
+    }
+  }
+
+  updateCustomer(form: NgForm, customer: Customer) {
+    if(this.files[0] != undefined) {
+      var fileNameArray = this.files[0].name.split(".");
+      var fileExtension = fileNameArray[fileNameArray.length - 1];
+
+      if(fileExtension != 'jpg' && fileExtension != 'png' && fileExtension != 'gif') {
+        this.alertService.error("Inserisci un'immagine con estensione JPG, PNG o GIF.");
+      }
+      else {
+        this.fileReaderObs(this.files[0]).subscribe(fileContent => {
+          this.hostgroupService.updateCustomer(customer._id, this.model.companyname, this.model.customer_code, this.model.referent_name, this.model.phone_number, this.model.email, fileContent).subscribe(response => {
+            if(response.status == 200) {
+              this.hostgroupService.getCustomers().subscribe(response => {                
+                this.customers = response;                   
+              });
+              this.alertService.success('Cliente modificato con successo.');
+              this.loading = false;               
             }
-          }
-          else {
-            this.alertService.error(response.body.message);
-            this.loading = false;
-          }
+            else {
+              this.alertService.error(response.body.message);
+              this.loading = false;
+            }
+          });
         });
+      }
+    }
+    else {
+      this.hostgroupService.updateCustomer(customer._id, this.model.companyname, this.model.customer_code, this.model.referent_name, this.model.phone_number, this.model.email, 'invalid').subscribe(response => {
+        if(response.status == 200) {
+          this.hostgroupService.getCustomers().subscribe(response => {                
+            this.customers = response;                   
+          });
+          this.alertService.success('Cliente modificato con successo.');
+          this.loading = false;               
+        }
+        else {
+          this.alertService.error(response.body.message);
+          this.loading = false;
+        }
       });
     }
   }
 
-  createServer(form: NgForm, customer_id: number) {
+  createServer(form: NgForm, customer_id: string) {
     this.loading = true;
     this.hostgroupService.createServer(this.model.description, this.model.address, this.model.port, customer_id).subscribe(response => {
       if(response.status == 201) {
-        this.alertService.success('Sito registrato con successo.');
+        this.btnCustomerSiteClose.nativeElement.click();
+        this.hostgroupService.getCustomer(customer_id).subscribe(response => {
+          this.servers = response;          
+        });       
         this.loading = false;
         if(form.valid) {
           form.reset();
         }
+        
       }
       else {
         this.alertService.error(response.body.message);
         this.loading = false;
       }
+    });
+  }
+
+  createUserSite(form: NgForm, user_id: string) {
+    console.log(this.model.customer_site + " - " + user_id);
+    this.loading = true;
+    this.hostgroupService.createUserSite(user_id, this.model.customer_site, 0, 0, 0, 0).subscribe(response => {    
+      if(response.status == 201) {
+        this.btnUserSiteClose.nativeElement.click();
+        this.hostgroupService.getUserSites(user_id).subscribe(response => {
+          this.user_sites = response;
+        });   
+        this.loading = false;
+        if(form.valid) {
+          form.reset();
+        }        
+      }
+      else {
+        this.alertService.error(response.body.message);
+        this.loading = false;
+      }    
     });
   }
 
@@ -156,8 +283,19 @@ export class AcpComponent implements OnInit {
     return fileReaderObs;
   }
 
-  editUser(id: string) {
-    this.eu_id = id;
+  public editUser(user: User) {
+    this.use_user = user;
+
+    this.hostgroupService.getUserSites(user._id).subscribe(response => {
+      this.user_sites = response;
+    });
+  }
+
+  public loadSites() {   
+    this.hostgroupService.getCustomerSites().subscribe(response => {
+      this.sites = response;
+  });
+    /*this.eu_id = id;
     for(let user of this.users) {
       if(user._id == id) {
         this.eu_username = user.username;
@@ -168,7 +306,7 @@ export class AcpComponent implements OnInit {
 
     this.hostgroupService.getHostgroupsByUser(id).subscribe(response => {
       this.user_hostgroups = response;
-    });
+    });*/
   }
 
 }

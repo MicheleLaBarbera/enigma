@@ -34,7 +34,7 @@
       							'fa-times-circle hostgroup-critical':group.worst_service_state == 2,
                     'fa-question-circle hostgroup-unknown':group.worst_service_state == 3
       						}" aria-hidden="true"></i></div>
-      						<div class="col-6 item-clickable item-text" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group._id);">{{group.alias}}</div>
+      						<div class="col-6 item-clickable item-text" routerLink="/site/{{hostgroup._id}}/hostgroup/{{group._id}}" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group._id);">{{group.alias}}</div>
                   <!--<div class="col-3">
                     <i class="custom-color fa" [ngClass]="{
         							'fa-toggle-off':(hostgroup.default_group === null  && i !== 0) || hostgroup.default_group !== group.name,
@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <div class="row" *ngIf="host_chart">
+        <div class="row d-none d-sm-block" *ngIf="host_chart">
           <div class="col col-sm-12 mb-2">
             <div class="card hoverable ml-1 mr-1 mt-1 full-height">
               <div class="text-center mb-2 status-hosts">
@@ -55,15 +55,15 @@
               </div>
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-6 col-sm-12">
+                  <!--<div class="col-md-6 col-sm-12">
                     <div class="hosts-chart">
                     </div>
-                  </div>
-                  <div class="col-md-6 col-sm-12">
+                  </div>-->
+                  <div class="col-md-12 col-sm-12">
                     <table class="table table-sm table-hover item-text">
                       <tbody>
                         <tr>
-                          <td>In Linea</td>
+                          <td>Online</td>
                           <td class="host-up"></td>
                           <td class="text-right">{{hosts_up}}</td>
                         </tr>
@@ -73,7 +73,7 @@
                           <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
                         </tr>
                         <tr>
-                          <td>In Manutenzione</td>
+                          <td>Manteinance</td>
                           <td class="host-pending"></td>
                           <td class="text-right">{{hosts_pending}}</td>
                         </tr>
@@ -91,7 +91,7 @@
           </div>
         </div>
 
-        <div class="row" *ngIf="service_chart">
+        <div class="row d-none d-sm-block" *ngIf="service_chart">
           <div class="col col-sm-12 mb-2">
             <div class="card hoverable ml-1 mr-1 mt-1">
               <div class="text-center mb-2 status-services">
@@ -99,32 +99,37 @@
               </div>
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-6 col-sm-12">
+                  <!--<div class="col-md-6 col-sm-12">
                     <div class="services-chart">
                     </div>
-                  </div>
-                  <div class="col-md-6 col-sm-12">
+                  </div>-->
+                  <div class="col-md-12 col-sm-12">
                     <table class="table table-sm table-hover item-text">
                       <tbody>
                         <tr>
-                          <td>Ottimale</td>
+                          <td>OK</td>
                           <td class="service-ok"></td>
-                          <td class="text-right">{{services_ok}}</td>
+                          <td class="text-right">{{tservices_ok}}</td>
                         </tr>
                         <tr>
                           <td>Warning</td>
                           <td class="service-warn"></td>
-                          <td class="text-right">{{services_warn + services_unknown}}</td>
+                          <td class="text-right">{{tservices_warn}}</td>
                         </tr>
                         <tr>
-                          <td>Critici</td>
+                          <td>Critical</td>
                           <td class="service-crit"></td>
-                          <td class="text-right">{{services_crit}}</td>
+                          <td class="text-right">{{tservices_crit}}</td>
                         </tr>
                         <tr>
-                          <td>In Manutenzione</td>
+                          <td>Unknown</td>
                           <td class="service-pending"></td>
-                          <td class="text-right">{{services_pending}}</td>
+                          <td class="text-right">{{tservices_unknown}}</td>
+                        </tr>
+                        <tr>
+                          <td>ACK</td>
+                          <td></td>
+                          <td class="text-right">{{tservices_ack}}</td>
                         </tr>
                         <tr>
                           <td>Totale</td>
@@ -161,12 +166,13 @@
                     <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
                     <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
                     <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
+                    <td scope="col"><i class="fa fa-wrench hostgroup-ack" aria-hidden="true"></i> Ack</td>
                   </thead>
                   <tbody>
                     <tr *ngFor="let host of hosts;" class="item-text-big">
-                      <td class="up-status" *ngIf="host.hard_state == 0">UP</td>
-                      <td class="down-status" *ngIf="host.hard_state == 1">DOWN</td>
-                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host._id, host.alias)">{{host.alias}}</td>
+                      <td class="up-status item-clickable item" *ngIf="host.hard_state == 0" data-toggle="modal" data-target="#hostLogsModal" (click)="getHostLogs(host)" title="Visualizza storico">ONLINE</td>
+                      <td class="down-status item-clickable item" *ngIf="host.hard_state == 1" data-toggle="modal" data-target="#hostLogsModal" (click)="getHostLogs(host)" title="Visualizza storico">OFFLINE</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host._id, host.alias)" title="Visualizza stato servizi">{{host.alias}}</td>
                       <td>{{host.address}}</td>
                       <td><i class="fa" [ngClass]="{
         								'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
@@ -178,6 +184,7 @@
                       <td>{{host.warn}}</td>
                       <td>{{host.crit}}</td>
                       <td>{{host.unknown}}</td>
+                      <td>{{host.acks}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -193,15 +200,15 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">Dettagli dell'host {{viewSecondaryTitle}}, {{viewMainTitle}}, {{hostgroup.name}} - {{hostgroup.description}}</h5>
+          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}<br> Dettagli dell'host {{viewSecondaryTitle}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <table class="table table-sm text-center table-striped">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
             <thead class="card-item-title">
-              <td scope="col">Stato</td>
+              <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato</td>
               <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
               <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>
               <!--<td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo cambiamento di Stato</td>-->
@@ -209,31 +216,42 @@
               <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
             </thead>
             <tbody>
-              <tr *ngFor="let service of services | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text">
-                <td><i class="fa" [ngClass]="{
+              <tr *ngFor="let service of services | paginate: { id: 'service', itemsPerPage: 10, currentPage: page_service };" class="item-text">
+                <!--<td><i class="fa" [ngClass]="{
                   'fa-check-circle hostgroup-up':service.state == 0,
                   'fa-exclamation-circle hostgroup-warning':service.state == 1,
                   'fa-times-circle hostgroup-critical':service.state == 2,
                   'fa-question-circle hostgroup-unknown':service.state == 3
-                }" aria-hidden="true"></i></td>
+                }" aria-hidden="true"></i></td>-->
+
+                <td class="up-status item-clickable item_ex" *ngIf="service.state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">OK</td>
+                <td class="warn-status item-clickable item_ex" *ngIf="service.state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">WARN</td>
+                <td class="down-status item-clickable item_ex" *ngIf="service.state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">CRIT</td>
+                <td class="unknown-status item-clickable item_ex" *ngIf="service.state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">UNKN</td>
                 <td class="text-left">{{service.name}}</td>
                 <td class="text-left">{{service.status}}</td>
                 <!--<td class="">{{service.age}} <br> {{service.age_min}}</td>-->
                 <td class="">{{service.last_check}} {{service.last_check_min}}</td>                   
                 <td *ngIf="(service.ack | json) != '{}'">
-                    <h5><span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-primary item-clickable"><i class="fa fa-file-text" aria-hidden="true"></i>
-                      Visualizza</span></h5> 
+                  <h5>
+                    <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-primary item-clickable">
+                      <i class="fa fa-file-text" aria-hidden="true"></i> Visualizza
+                    </span>
+                  </h5> 
                 </td>                
                 <td *ngIf="(service.ack | json) == '{}'">
-                    <h5><span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-success item-clickable"><i class="fa fa-plus-circle" aria-hidden="true"></i>
-                      Crea</span></h5>                    
+                  <h5>
+                    <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-success item-clickable">
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i> Crea
+                    </span>
+                  </h5>                    
                 </td>
               </tr>
             </tbody>
           </table>
           <div class="row">
             <div class="col-md-12 col-sm-12 mt-1 text-right">
-              <pagination-controls class="my-pagination" (pageChange)="p = $event"
+              <pagination-controls  id="service" class="my-pagination" (pageChange)="page_service = $event"
                                     autoHide="true"
                                     previousLabel="Indietro"
                                     nextLabel="Avanti"
@@ -247,42 +265,163 @@
     </div>
   </div>
 
+  <div class="modal fade" id="serviceLogsModal" tabindex="-1" role="dialog" aria-labelledby="serviceLogsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="serviceLogsModalLabel" *ngIf="services">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}, {{viewSecondaryTitle}}<br>Logs del servizio {{viewThirdTitle}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
+              <thead class="card-item-title">
+                <td scope="col"><i class="fa fa-calendar-check-o"></i> Data</td>
+                <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato</td>              
+                <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>       
+                <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo check</td>           
+              </thead>
+              <tbody>
+                <tr *ngFor="let service of service_logs | paginate: { id: 'service_log', itemsPerPage: 10, currentPage: page_service_log };" class="item-text">    
+                  <td>{{service.created_at}}</td>   
+                  <td class="up-status item-clickable" *ngIf="service.service_state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">OK</td>
+                  <td class="warn-status item-clickable" *ngIf="service.service_state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">WARNING</td>
+                  <td class="down-status item-clickable" *ngIf="service.service_state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">CRITICO</td>
+                  <td class="unknown-status item-clickable" *ngIf="service.service_state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">UNKNOWN</td>
+                  <td class="text-left">{{service.plugin_output}}</td>             
+                  <td>{{service.service_last_check}}</td>                
+                </tr>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 mt-1 text-right">
+                <pagination-controls  id="service_log" class="my-pagination" (pageChange)="page_service_log = $event"
+                                      autoHide="true"
+                                      previousLabel="Indietro"
+                                      nextLabel="Avanti"
+                                      directionLinks="false"
+                >
+                </pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="modal fade" id="hostLogsModal" tabindex="-1" role="dialog" aria-labelledby="hostLogsModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="hostLogsModalLabel" *ngIf="host_logs">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}<br>Logs dell'host {{viewSecondaryTitle}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">           
+            <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
+                <thead class="card-item-title" style="color: #172559;">
+                  <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Host</td>     
+                  <td scope="col"><i class="fa fa-calendar-check-o"></i> Data</td>                            
+                  <!--<td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Servizi</td>
+                  <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
+                  <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
+                  <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
+                  <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>-->
+                </thead>
+                <tbody>
+                  <tr *ngFor="let host of host_logs | paginate: { id: 'host_log', itemsPerPage: 10, currentPage: page_host_log };" class="item-text">
+                    <td class="up-status" *ngIf="host.hard_state == 0">UP</td>
+                    <td class="down-status" *ngIf="host.hard_state == 1">DOWN</td>         
+                    <td>{{host.created_at}}</td>                               
+                    <!--<td><i class="fa" [ngClass]="{
+                      'fa-check-circle hostgroup-up':host.host_num_services_crit == 0 && host.host_num_services_warn == 0 && host.host_num_services_unknown == 0,
+                      'fa-exclamation-circle hostgroup-warning':host.host_num_services_crit == 0 && host.host_num_services_warn > 0 && host.host_num_services_unknown == 0,
+                      'fa-times-circle hostgroup-critical':host.host_num_services_crit > 0,
+                      'fa-question-circle hostgroup-unknown':host.host_num_services_crit == 0 && host.host_num_services_unknown > 0
+                    }" aria-hidden="true"></i></td>
+                    <td>{{host.host_num_services_ok}}</td>
+                    <td>{{host.host_num_services_warn}}</td>
+                    <td>{{host.host_num_services_crit}}</td>
+                    <td>{{host.host_num_services_unknown}}</td>-->
+                  </tr>
+                </tbody>
+              </table>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 mt-1 text-right">
+                <pagination-controls  id="host_log" class="my-pagination" (pageChange)="page_host_log = $event"
+                                      autoHide="true"
+                                      previousLabel="Indietro"
+                                      nextLabel="Avanti"
+                                      directionLinks="false"
+                >
+                </pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <div class="modal fade" id="showACKModal" tabindex="-1" role="dialog" aria-labelledby="showACKModalLabel" aria-hidden="true" *ngIf="refreshedACK">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-ack" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="showACKModalLabel" *ngIf="refreshedACK">ACK del servizio {{refreshedACK.name}}, {{viewSecondaryTitle}}, {{viewMainTitle}}, {{hostgroup.name}} - {{hostgroup.description}}</h5>
+          <h5 class="modal-title" id="showACKModalLabel" *ngIf="refreshedACK">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}, {{viewSecondaryTitle}}<br>ACK del servizio {{refreshedACK.name}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">        
-          <table class="table table-sm text-center" *ngIf="(refreshedACK.ack | json) != '{}'">
+        <div class="modal-body">  
+          <div class="card hoverable ml-1 mr-1 mt-1">
+            <div class="pl-3 mb-2 status-hosts">
+              <p class="card-item-title text-center" style="margin-bottom: 0;"><i class="fa fa-file-text" aria-hidden="true"></i> Visualizza ACK</p>
+            </div>
+
+            <div class="card-body ml-1 mr-1 item-text-big">
+              <p><i class="fa fa-calendar-check-o"></i> Data: {{refreshedACK.ack.created_at}}</p>
+              <p><i class="fa fa-address-card-o"></i> Autore: {{refreshedACK.ack.creator_name}}</p>
+              <p><i class="fa fa-list-alt"></i> Descrizione: {{refreshedACK.ack.message}}</p>
+              <p class="item-clickable text-center" data-toggle="modal" data-target="#deleteACKModal"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></p>
+            </div>        
+          </div>
+
+          <!--<table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover" *ngIf="(refreshedACK.ack | json) != '{}'">
             <thead class="card-item-title">          
               <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Autore</td>
               <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>                
-              <td scope="col"><i class="fa fa-calendar-check-o"></i> Creazione</td>                
+              <td scope="col"><i class="fa fa-calendar-check-o"></i> Creazione</td>  
+              <td scope="col"></td>              
             </thead>
             <tbody>
               <tr class="item-text">                  
                 <td>{{refreshedACK.ack.creator_name}}</td>
-                <td>{{refreshedACK.ack.message}}</td>               
-                <td>{{refreshedACK.ack.created_at}}</td>                 
+                <td class="text-left">{{refreshedACK.ack.message}}</td>               
+                <td>{{refreshedACK.ack.created_at}}</td>   
+                <td class="item-clickable" data-toggle="modal" data-target="#deleteACKModal"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></td>              
               </tr>
             </tbody>
-          </table>
-          <form name="form" (ngSubmit)="f.form.valid && createACK(refreshedACK, currentUser.id, f)" #f="ngForm" novalidate>                         
-            <h4 *ngIf="(refreshedACK.ack | json) != '{}'"><span class="badge badge-warning"><i class="fa fa-pencil-square" aria-hidden="true"></i>
-                Modifica ACKnowledge</span>
-            </h4>    
-            <h4 *ngIf="(refreshedACK.ack | json) == '{}'"><span class="badge badge-success"><i class="fa fa-plus-circle" aria-hidden="true"></i>
-                  Crea ACKnowledge</span>
-            </h4>  
-            <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !message.valid }">
+          </table>-->
+          <form *ngIf="(refreshedACK.ack | json) == '{}'" name="form" (ngSubmit)="f.form.valid && createACK(refreshedACK, currentUser.id, f)" #f="ngForm" novalidate>                         
+            <!--<h4 *ngIf="(refreshedACK.ack | json) != '{}'">
+              <span class="badge badge-warning"><i class="fa fa-pencil-square" aria-hidden="true"></i> Modifica</span>
+            </h4>--> 
+            <p class="item-text-big"><i class="fa fa-asterisk" aria-hidden="true"></i>
+              Motivazione dell'ACK:</p>
+            <!--<h4>
+              <span class="badge badge-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> Crea</span>
+            </h4>-->
+            <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !message.valid }">
               <div class="input-group mb-2">                                
-                <input type="text" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required />    
+                <input type="text" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required />                    
               </div>
-              <div class="input-group mb-2">
+              <div class="text-center">
+                  <button [disabled]="loading" class="btn btn-success" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva
+                  </button>
+                  <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                </div>
+              <!--<div class="input-group mb-2">
                 <div class="row">
                   <div class="col-md-6">
                     <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="date_model" [locale]="it" required></my-date-picker>  
@@ -291,14 +430,29 @@
                       <input type="time" value="{{selectedTime}}"> 
                   </div>
                 </div>
-              </div>               
-              <div class="text-center">
-                <button [disabled]="loading" class="btn btn-primary" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                </button>
-                <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-              </div>
+              </div>-->                             
             </div>          
           </form>                
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteACKModal" tabindex="-1" role="dialog" aria-labelledby="deleteACKLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" *ngIf="refreshedACK">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteACKLabel">Elimina ACK</h5>
+          <button #btnACKClose type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-bottom: 0">
+          <p class="item-text-big">Sei sicuro di voler eliminare definitivamente l'ACK?</p>     
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+          <button type="button" class="btn btn-danger" (click)="deleteACK(refreshedACK._id, refreshedACK.ack._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
         </div>
       </div>
     </div>

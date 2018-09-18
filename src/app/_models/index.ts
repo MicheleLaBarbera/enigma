@@ -5,3 +5,6 @@ export * from './service';
 export * from './customer';
 export * from './server';
 export * from './service_ack';
+export * from './host_log';
+export * from './service_log';
+export * from './service_state';

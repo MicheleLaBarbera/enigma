@@ -13,8 +13,9 @@ export class Host {
   hard_state: number;
   name_ex: string;
   site: string;
+  acks: number;
 
-  constructor(_id: string, address: string, alias: string, groups: string, crit: string, ok:string, unknown: string, warn: string, name: string, ip:string, port: number, hard_state: number, name_ex: string, site: string) {
+  constructor(_id: string, address: string, alias: string, groups: string, crit: string, ok:string, unknown: string, warn: string, name: string, ip:string, port: number, hard_state: number, name_ex: string, site: string, acks: number) {
     this._id = _id;
     this.address = address;
   	this.alias = alias;
@@ -29,5 +30,6 @@ export class Host {
     this.hard_state = hard_state;
     this.name_ex = name_ex;
     this.site = site;
+    this.acks = acks;
   }
 }

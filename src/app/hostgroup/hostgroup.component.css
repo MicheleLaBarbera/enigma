@@ -67,11 +67,11 @@ i {
 }
 
 .host-up {
-	background-color: rgb(6, 170, 50);
+	background-color: #27c24c;
 }
 
 .host-pending {
-	background-color: rgb(0, 170, 255);
+	background-color: #0e71b4 !important;
 }
 
 .host-unreachable {
@@ -83,19 +83,19 @@ i {
 }
 
 .service-ok {
-	background-color: rgb(6, 170, 50);
+	background-color: #27c24c;
 }
 
 .service-pending {
-	background-color: rgb(0, 170, 255);
+	background-color: #0e71b4 !important;
 }
 
 .service-warn {
-	background-color: rgb(247, 203, 5);
+	background-color: #ff902b;
 }
 
 .service-unknown {
-	background-color: rgb(255, 136, 0);
+	background-color: #0e71b4 !important;
 }
 
 .service-crit {
@@ -118,7 +118,7 @@ i {
 	border-left: 1px solid rgba(0,0,0,.125);
   border-radius: .25rem;
   border-bottom: 1px solid rgba(0,0,0,.125);
-  background-color: rgb(247, 203, 5);
+  background-color: #ff902b;
   color: white;
 }
 
@@ -155,11 +155,15 @@ i {
 }
 
 .hostgroup-unknown {
-	color: #0666f5;
+	color: #0e71b4 !important;
 }
 
 .modal-xl {
 	max-width: 85%;
+}
+
+.modal-ack {
+	max-width: 40%;
 }
 
 @media (min-width: 768px){
@@ -198,6 +202,16 @@ i {
   color: white;
 }
 
+.warn-status {
+  background-color: #ff902b;
+  color: white;
+}
+
+.unknown-status {
+	background-color: #0e71b4 !important;
+  color: white;
+}
+
 .my-pagination /deep/ .ngx-pagination a, .ngx-pagination button {
 	color: rgba(0,0,0,.5);
 	font-weight: 600;
@@ -233,6 +247,16 @@ i {
 	background-color: #0e71b4 !important;
 }
 
+.badge-danger {
+	font-size: 0.8rem; 
+	font-weight: 600;
+	background-color: #f05050;
+}
+
 .btn-primary {
 	background-color: #0e71b4 !important;
+}
+
+.btn-success {
+	background-color: #27c24c;
 }

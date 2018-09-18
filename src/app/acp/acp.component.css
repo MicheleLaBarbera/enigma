@@ -124,3 +124,24 @@
 .underline:hover {
     text-decoration: underline;
 }
+
+.badge-danger {
+	font-size: 100%;
+	font-weight: 600;
+	background-color: #f05050;
+}
+
+.badge-warning {
+	font-size: 100%; 
+	font-weight: 600;
+	background-color: #ff902b;
+	color: white;
+}
+
+.btn-danger {
+	background-color: #f05050;
+}
+
+.modal-xl {
+	max-width: 85%;
+}

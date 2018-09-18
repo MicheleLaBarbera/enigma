@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NgForm } from '@angular/forms';
 
 import { User } from '../_models/index';
 import { AlertService, HostgroupService } from '../_services/index';
-import { Hostgroup, Host, Service, ServiceAck } from '../_models/index';
+import { Hostgroup, Host, Service, ServiceAck, HostLog, ServiceLog } from '../_models/index';
 
 import {IMyDpOptions} from 'mydatepicker';
 import * as Chartist from 'chartist';
@@ -33,6 +33,8 @@ export class HostgroupComponent implements OnInit {
   public hosts: Host[];
   public services: Service[];
   public service_ack: ServiceAck;
+  public host_logs: HostLog[];
+  public service_logs: ServiceLog[];
 
   public host_chart = [];
   public service_chart = [];
@@ -52,12 +54,16 @@ export class HostgroupComponent implements OnInit {
 
   public viewMainTitle: string;
   public viewSecondaryTitle: string;
+  public viewThirdTitle: string;
 
   public currentUser: User;
 
   public refreshedACK: Service;
 
-  p: number = 1;
+
+  page_service: number = 1;
+  page_service_log: number = 1;
+  page_host_log: number = 1;
 
   public today = new Date();
   public selectedTime = this.today.getHours() + ':' + this.today.getMinutes();
@@ -98,67 +104,52 @@ export class HostgroupComponent implements OnInit {
     });
   }
 
+  public tservices_crit: number = 0;
+  public tservices_ok: number = 0;
+  public tservices_pending: number = 0;
+  public tservices_unknown: number = 0;
+  public tservices_warn: number = 0;
+  public tservices_ack: number = 0;
+
+  @ViewChild('btnACKClose') btnACKClose : ElementRef;
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-
     const id2 = this.route.snapshot.paramMap.get('id2');
-    console.log("ID: " + id + "- ID2: " + id2);
+
 
   	this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
       this.hostgroup = hostgroup;
 
-      //for(let this.hostgroup of this.hostgroup) {
-        this.hosts_down += this.hostgroup['hosts_down'];
-        this.hosts_unreachable += this.hostgroup['hosts_unreachable'];
-        this.hosts_pending += this.hostgroup['hosts_pending'];
-        this.hosts_up += this.hostgroup['hosts_up'];
 
-        this.services_crit += this.hostgroup['services_crit'];
-        this.services_ok += this.hostgroup['services_ok'];
-        this.services_pending += this.hostgroup['services_pending'];
-        this.services_unknown += this.hostgroup['services_unknown'];
-        this.services_warn += this.hostgroup['services_warn'];
+      this.hosts_down = this.hostgroup['hosts_down'];
+      this.hosts_unreachable = this.hostgroup['hosts_unreachable'];
+      this.hosts_pending = this.hostgroup['hosts_pending'];
+      this.hosts_up = this.hostgroup['hosts_up'];
 
-        for(let group of this.hostgroup.groups) {
-          if(id2 == group['_id']) {
-            this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
-          }
+      this.services_crit = this.hostgroup['services_crit'];
+      this.services_ok = this.hostgroup['services_ok'];
+      this.services_pending = this.hostgroup['services_pending'];
+      this.services_unknown = this.hostgroup['services_unknown'];
+      this.services_warn = this.hostgroup['services_warn'];
+
+      this.tservices_crit = 0;
+      this.tservices_ok = 0;
+      this.tservices_pending = 0;
+      this.tservices_unknown = 0;
+      this.tservices_warn = 0;
+      this.tservices_ack = 0;
+
+      for(let group of this.hostgroup.groups) {
+        group['worst_service_state'] = -1;
+        if(id2 == group['_id']) {
+          this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
         }
-        /*if(id2 == 0) {
-          let found = false;
+        this.getHostsACKCount(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['_id']);
+      }
+        
 
-          for(let group of this.hostgroup.groups) {
-            if(this.hostgroup['default_group'] == group['name'])
-            {
-              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
-              found = true;
-            }
-          }
-
-          if(!found) {
-            console.log(this.hostgroup);
-            console.log(this.hostgroup.groups[0]);
-            console.log(this.hostgroup['ip']);
-            console.log(this.hostgroup['port']);
-            console.log(this.hostgroup.groups[0]['name']);
-            console.log(this.hostgroup.default_group);
-            this.getHosts(this.hostgroup, this.hostgroup.groups[0], this.hostgroup['ip'], this.hostgroup['port'], id2);
-          }
-        }
-        else {
-          let idx = 1;
-          for(let group of this.hostgroup.groups) {
-            if(id2 == idx)
-            {
-              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
-            }
-            idx++;
-          }
-        }*/
-
-      //}
-
-      this.host_chart = new Chartist.Pie('.hosts-chart', {
+      /*this.host_chart = new Chartist.Pie('.hosts-chart', {
         series: [
           {value: this.hosts_up, className: 'ct-host-up'},
           {value: this.hosts_pending, className: 'ct-host-pending'},
@@ -187,7 +178,7 @@ export class HostgroupComponent implements OnInit {
         donutSolid: true,
         startAngle: 270,
         showLabel: false
-      });
+      });*/
 
       this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
       this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
@@ -200,6 +191,135 @@ export class HostgroupComponent implements OnInit {
       this.viewMainTitle = groupID.alias;
       this.switchState(hostgroup);
       //hostgroup.toggleGroupState(groupID);
+    });
+  }
+
+  public getHostsACKCount(hostgroup: Hostgroup, groupID: any, ip:string, port: number, id: string) {
+    let local_crit = 0;
+    let local_ok = 0;
+    let local_pending = 0;
+    let local_unknown = 0;
+    let local_warn = 0;
+
+    this.hostgroupService.getHosts(ip, port, id).subscribe(hosts => {
+      for(let host of hosts) {
+
+        local_crit += parseInt(host.crit);
+        local_ok += parseInt(host.ok);    
+        local_unknown += parseInt(host.unknown);
+        local_warn += parseInt(host.warn);
+     
+        this.tservices_crit += parseInt(host.crit);
+        this.tservices_ok += parseInt(host.ok);    
+        this.tservices_unknown += parseInt(host.unknown);
+        this.tservices_warn += parseInt(host.warn);
+        this.tservices_ack += host.acks;
+      }
+
+      if(local_crit > 0)
+        groupID['worst_service_state'] = 2;
+      else if(local_unknown > 0)
+        groupID['worst_service_state'] = 3;
+      else if(local_warn > 0)
+        groupID['worst_service_state'] = 1;
+      else
+        groupID['worst_service_state'] = 0;
+    });
+  }
+
+  public getHostLogs(host: Host) {
+    //this.p = 1;
+    this.hostgroupService.getHostLogs(host._id).subscribe(host_logs => {
+      this.host_logs = host_logs;      
+    });
+    this.viewSecondaryTitle = host.alias;
+  }
+
+  public getServiceLogs(service: Service) {
+    //this.p = 1;
+    this.hostgroupService.getServiceLogs(service._id).subscribe(service_logs => {
+      this.service_logs = service_logs;      
+    });
+    this.viewThirdTitle = service.name;
+  }
+
+  public deleteACK(service_id: string, ack_id: string) {
+    this.hostgroupService.deleteServiceAck(service_id, ack_id).subscribe(response => {
+      if(response) {
+        for (const prop of Object.keys(this.refreshedACK.ack)) {
+          delete this.refreshedACK.ack[prop];         
+        }
+        this.btnACKClose.nativeElement.click();
+
+        const id = this.route.snapshot.paramMap.get('id');
+        const id2 = this.route.snapshot.paramMap.get('id2');
+    
+    
+        this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
+          this.hostgroup = hostgroup;
+    
+    
+          this.hosts_down = this.hostgroup['hosts_down'];
+          this.hosts_unreachable = this.hostgroup['hosts_unreachable'];
+          this.hosts_pending = this.hostgroup['hosts_pending'];
+          this.hosts_up = this.hostgroup['hosts_up'];
+    
+          this.services_crit = this.hostgroup['services_crit'];
+          this.services_ok = this.hostgroup['services_ok'];
+          this.services_pending = this.hostgroup['services_pending'];
+          this.services_unknown = this.hostgroup['services_unknown'];
+          this.services_warn = this.hostgroup['services_warn'];
+
+          this.tservices_crit = 0;
+          this.tservices_ok = 0;
+          this.tservices_pending = 0;
+          this.tservices_unknown = 0;
+          this.tservices_warn = 0;
+          this.tservices_ack = 0;
+    
+          for(let group of this.hostgroup.groups) {
+            if(id2 == group['_id']) {
+              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
+            }
+            this.getHostsACKCount(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['_id']);
+          }
+            
+    
+          /*this.host_chart = new Chartist.Pie('.hosts-chart', {
+            series: [
+              {value: this.hosts_up, className: 'ct-host-up'},
+              {value: this.hosts_pending, className: 'ct-host-pending'},
+              //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
+              {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
+            ],
+          }, {
+            donut: true,
+            donutWidth: 60,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false
+          });
+    
+          this.service_chart = new Chartist.Pie('.services-chart', {
+            series: [
+              {value: this.services_ok, className: 'ct-service-ok'},
+              {value: this.services_pending, className: 'ct-service-pending'},
+              {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
+              //{value: this.services_unknown, className: 'ct-service-unknown'},
+              {value: this.services_crit, className: 'ct-service-crit'}
+            ],
+          }, {
+            donut: true,
+            donutWidth: 60,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false
+          });*/
+    
+          this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
+          this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
+        });
+      }
     });
   }
 
@@ -223,14 +343,83 @@ export class HostgroupComponent implements OnInit {
     let check_formattedTime_ex = check_hours.substr(-2) + ':' + check_minutes.substr(-2) + ':' + check_seconds.substr(-2);
     
     let final = check_formattedTime + ' ' + check_formattedTime_ex;
-
-    this.hostgroupService.createACK(ack._id, user_id, this.model.message, final).subscribe(response => {
+    console.log(ack.host_id);
+    this.hostgroupService.createACK(ack.host_id, ack._id, user_id, this.model.message, final).subscribe(response => {
       console.log(this.date_model);
       if(response.status == 201) {
         this.alertService.success('ACK modificato con successo.');
         this.loading = false;
 
         this.refreshedACK.ack = response.body.message;
+
+        const id = this.route.snapshot.paramMap.get('id');
+        const id2 = this.route.snapshot.paramMap.get('id2');
+    
+    
+        this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
+          this.hostgroup = hostgroup;
+    
+    
+          this.hosts_down = this.hostgroup['hosts_down'];
+          this.hosts_unreachable = this.hostgroup['hosts_unreachable'];
+          this.hosts_pending = this.hostgroup['hosts_pending'];
+          this.hosts_up = this.hostgroup['hosts_up'];
+    
+          this.services_crit = this.hostgroup['services_crit'];
+          this.services_ok = this.hostgroup['services_ok'];
+          this.services_pending = this.hostgroup['services_pending'];
+          this.services_unknown = this.hostgroup['services_unknown'];
+          this.services_warn = this.hostgroup['services_warn'];
+
+          this.tservices_crit = 0;
+          this.tservices_ok = 0;
+          this.tservices_pending = 0;
+          this.tservices_unknown = 0;
+          this.tservices_warn = 0;
+          this.tservices_ack = 0;
+    
+          for(let group of this.hostgroup.groups) {
+            if(id2 == group['_id']) {
+              this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
+            }
+            this.getHostsACKCount(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['_id']);
+          }
+            
+    
+          /*this.host_chart = new Chartist.Pie('.hosts-chart', {
+            series: [
+              {value: this.hosts_up, className: 'ct-host-up'},
+              {value: this.hosts_pending, className: 'ct-host-pending'},
+              //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
+              {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
+            ],
+          }, {
+            donut: true,
+            donutWidth: 60,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false
+          });
+    
+          this.service_chart = new Chartist.Pie('.services-chart', {
+            series: [
+              {value: this.services_ok, className: 'ct-service-ok'},
+              {value: this.services_pending, className: 'ct-service-pending'},
+              {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
+              //{value: this.services_unknown, className: 'ct-service-unknown'},
+              {value: this.services_crit, className: 'ct-service-crit'}
+            ],
+          }, {
+            donut: true,
+            donutWidth: 60,
+            donutSolid: true,
+            startAngle: 270,
+            showLabel: false
+          });*/
+    
+          this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
+          this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
+        });
         if(form.valid) {
           form.reset();
         }
@@ -242,7 +431,7 @@ export class HostgroupComponent implements OnInit {
     });       
   }
 
-  public getServices(ip:string, port: number, host_id: string, alias: string) {
+  public getServices(ip:string, port: number, host_id: string, alias: string) {    
     this.hostgroupService.getServices(ip, port, host_id).subscribe(services => {
       this.services = services;
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HostgroupService } from '../_services/index';
 
 @Component({
   selector: 'app-footer',
@@ -7,15 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  public currentTime: any;
+  public lastCheck: any;
 
-  constructor() { }
+  constructor(private hostgroupService: HostgroupService) { }
 
   ngOnInit() {
-    this.currentTime = setInterval( () => {
-      //let todayDate = new Date();
-      this.currentTime = new Date();
-    }, 1000);
+    this.hostgroupService.getSchedulerLastCheck().subscribe(lastCheck => {
+      this.lastCheck = lastCheck;
+    });
+
   }
 
 }

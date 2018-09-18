@@ -56,12 +56,18 @@ i {
 	font-size: 0.8rem;
 }
 
+.item-text-big-gray {
+	color: rgba(0,0,0,.5);
+	font-weight: 600;
+	font-size: 1rem;
+}
+
 .host-up {
-	background-color: rgb(6, 170, 50);
+	background-color: #27c24c;
 }
 
 .host-pending {
-	background-color: rgb(0, 170, 255);
+	background-color: #0e71b4 !important;
 }
 
 .host-unreachable {
@@ -73,15 +79,15 @@ i {
 }
 
 .service-ok {
-	background-color: rgb(6, 170, 50);
+	background-color: #27c24c;
 }
 
 .service-pending {
-	background-color: rgb(0, 170, 255);
+	background-color: #0e71b4 !important;
 }
 
 .service-warn {
-	background-color: rgb(247, 203, 5);
+	background-color: #ff902b;
 }
 
 .service-unknown {
@@ -108,7 +114,7 @@ i {
 	border-left: 1px solid rgba(0,0,0,.125);
   border-radius: .25rem;
   border-bottom: 1px solid rgba(0,0,0,.125);
-  background-color: rgb(247, 203, 5);
+  background-color: #ff902b;
   color: white;
 }
 
@@ -145,7 +151,7 @@ i {
 }
 
 .hostgroup-unknown {
-	color: #0666f5;
+	color: #0e71b4 !important;
 }
 
 .field-border {
@@ -162,7 +168,7 @@ i {
 }
 
 .modal-xl {
-	max-width: 85%;
+	max-width: 95%;
 }
 
 .global-state {
@@ -194,4 +200,50 @@ i {
 
 .my-pagination /deep/ .ngx-pagination {
 	margin-bottom: 0;
+}
+
+.table-header {
+	background-color: #0e71b4 !important;
+	color: white;
+	font-weight: 600;
+}
+
+.panel-state-ok {
+	background-color: #27c24c !important;
+	color: white;
+}
+
+.panel-state-warn {
+	background-color: #ff902b;
+	color: white;
+}
+
+.panel-state-crit {
+	background-color: rgb(240, 80, 80);
+	color: white;
+}
+
+.panel-state-unknown {
+	background-color: #0e71b4 !important;
+	color: white;
+}
+
+.up-status {
+  background-color: #27c24c;
+  color: white;
+}
+
+.down-status {
+  background-color: #f05050;
+  color: white;
+}
+
+.warn-status {
+  background-color: #ff902b;
+  color: white;
+}
+
+.unknown-status {
+	background-color: #0e71b4 !important;
+  color: white;
 }

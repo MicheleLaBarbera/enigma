@@ -5,37 +5,44 @@
 <div id="main-card" class="card ml-3 mr-3 text-justify">
   <div class="card-body">
     <div class="row mt-1" *ngIf="host_chart">
-      <div class="col-md-6 col-sm-12 mb-2 mt-2">
+      <div class="col-md-3 col-sm-12 mb-2 mt-2">
         <div class="card hoverable ml-2 mr-2 mt-1 full-height">
           <div class="text-center mb-2 status-hosts">
             <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-6 col-sm-12">
+              <!--<div class="col-md-6 col-sm-12">
                 <div class="hosts-chart">
                 </div>
-              </div>
-              <div class="col-md-6 col-sm-12">
-                <table class="table table-sm table-hover item-text">
+              </div>-->
+              <div class="col-md-12 col-sm-12">
+                <table class="table table-sm table-hover item-text">                  
                   <tbody>
-                    <!--<tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'OK')">-->
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
-                      <td>OK</td>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'In Linea')">                   
+                      <td>Online</td>
                       <td class="host-up"></td>
                       <td class="text-right">{{hosts_up}}</td>
                     </tr>
-                    <!--<tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">-->
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
+                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">
                       <td>Offline</td>
                       <td class="host-down"></td>
                       <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
                     </tr>
-                    <!--<tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Downtime')">-->
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
-                      <td>Downtime</td>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Manutenzione')">                  
+                      <td>Manteinance</td>
                       <td class="host-pending"></td>
                       <td class="text-right">{{hosts_pending}}</td>
+                    </tr>
+                    <tr>
+                      <td><br></td>
+                      <td><br></td>
+                      <td><br></td>
+                    </tr>
+                    <tr>
+                      <td><br></td>
+                      <td><br></td>
+                      <td><br></td>
                     </tr>
                     <tr>
                       <td class="item-strong">Totale</td>
@@ -49,38 +56,43 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-sm-12 mb-2 mt-2">
+      <div class="col-md-3 col-sm-12 mb-2 mt-2">
         <div class="card hoverable ml-2 mr-2 mt-1 full-height">
           <div class="text-center mb-2 status-services">
             <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-6 col-sm-12">
+              <!--<div class="col-md-6 col-sm-12">
                 <div class="services-chart">
                 </div>
-              </div>
-              <div class="col-md-6 col-sm-12">
+              </div>-->
+              <div class="col-md-12 col-sm-12">
                 <table class="table table-sm table-hover item-text">
                   <tbody>
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
+                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(0, 'OK')">
                       <td>OK</td>
                       <td class="service-ok"></td>
                       <td class="text-right">{{services_ok}}</td>
                     </tr>
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
+                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(1, 'Warning')">
                       <td>Warning</td>
                       <td class="service-warn"></td>
-                      <td class="text-right">{{services_warn + services_unknown}}</td>
+                      <td class="text-right">{{services_warn}}</td>
                     </tr>
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
+                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(2, 'Critical')">
                       <td>Critical</td>
                       <td class="service-crit"></td>
                       <td class="text-right">{{services_crit}}</td>
                     </tr>
-                    <tr class="item-clickable" onclick="alert('Funzionalità disabilitata')">
-                      <td>Downtime</td>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(3, 'Unknown')">
+                      <td>Unknown</td>
                       <td class="service-pending"></td>
+                      <td class="text-right">{{services_unknown}}</td>
+                    </tr>
+                    <tr>
+                      <td>ACK</td>
+                      <td></td>
                       <td class="text-right">{{services_pending}}</td>
                     </tr>
                     <tr>
@@ -92,6 +104,55 @@
                 </table>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-2 mt-2">
+          <div class="card hoverable ml-2 mr-2 mt-1 full-height">
+            <div class="text-center mb-2 status-services">
+              <p class="card-item-title" style="margin-bottom: 0;">Notifiche</p>
+            </div>
+            <div class="card-body">
+              <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
+                <thead class="card-item-title">
+                  <td class="align-middle">Orario</td>
+                  <td class="align-middle">Cliente</td>
+                  <td class="align-middle">Host</td>
+                  <td class="align-middle">Servizio</td>
+                  <td class="align-middle">Stato</td>                 
+                </thead>
+                <!--<tbody *ngIf="services_state == undefined">
+                    <tr class="item-text-big-gray">
+                        <td colspan="10">
+                            <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                          Caricamento in corso
+                        </td>
+                    </tr>
+                </tbody>-->
+                <tbody class="text-left">
+                  <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="item-text">
+                    <td class="align-middle text-center">{{service_change.created_at}}</td>
+                    <td class="align-middle">{{service_change.customer_name}} - {{service_change.customer_site_description}}</td>
+                    <td class="align-middle">{{service_change.host_alias}}</td>
+                    <td class="align-middle">{{service_change.service_name}}</td>                
+                    <td class="align-middle text-center warn-status" *ngIf="service_change.plugin_output === 1">WARN</td>
+                    <td class="align-middle text-center down-status" *ngIf="service_change.plugin_output === 2">CRIT</td>
+                    <td class="align-middle text-center unknown-status" *ngIf="service_change.plugin_output === 3">UNKN</td>                             
+                  </tr>
+                  
+                </tbody>
+              </table>
+              <div *ngIf="services_change != undefined" class="row">
+                <div class="col-md-12 col-sm-12 mt-1 text-right">
+                  <pagination-controls id="service_change_paginate" class="my-pagination" (pageChange)="page_service_change = $event"
+                                        autoHide="true"
+                                        previousLabel="Indietro"
+                                        nextLabel="Avanti"
+                                        directionLinks="false"
+                  >
+                  </pagination-controls>
+                </div>
+              </div>
           </div>
         </div>
       </div>
@@ -118,8 +179,7 @@
   		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of filter(hostgroups); let j = index">
   			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
 
-  				<div class="text-center mb-2 status-hosts">
-            <!--<p class="item-clickable card-item-title" routerLink="/hostgroup/{{hostgroup.id}}">{{hostgroup.name}} - {{hostgroup.description}}</p>-->
+  				<div class="text-center mb-2 status-hosts">         
             <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
     			</div>
 
@@ -149,13 +209,13 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="hostModalLabel" *ngIf="hosts">Elenco Host, Stato: {{modalPanelTitle}}</h5>
+        <h5 class="modal-title" id="hostModalLabel" *ngIf="modalPanelTitle">Elenco Host, Stato: {{modalPanelTitle}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <table class="table table-sm text-center table-hover" *ngIf="hosts">
+        <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
           <thead class="card-item-title" style="color: #172559;">
             <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
             Cliente</td>
@@ -169,9 +229,18 @@
             <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
             <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
             <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
+            <td scope="col"><i class="fa fa-wrench hostgroup-ack" aria-hidden="true"></i> Ack</td>
           </thead>
-          <tbody *ngIf="hosts[0].alias != 'undefined'">
-            <tr *ngFor="let host of filter_ex(hosts) | paginate: { itemsPerPage: 20, currentPage: p };" class="item-text">
+          <tbody *ngIf="hosts == undefined">
+              <tr class="item-text-big-gray">
+                  <td colspan="10">
+                      <img *ngIf="host_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                    Caricamento in corso
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="hosts != undefined">
+            <tr *ngFor="let host of filter_ex(hosts) | paginate: { id: 'host_paginate', itemsPerPage: 20, currentPage: page_host };" class="item-text">
               <td>{{host.name_ex}}</td>
               <td>{{host.site}}</td>
               <td>{{host.alias}}</td>
@@ -186,12 +255,13 @@
               <td>{{host.warn}}</td>
               <td>{{host.crit}}</td>
               <td>{{host.unknown}}</td>
+              <td>{{host.acks}}</td>
             </tr>
           </tbody>
         </table>
-        <div class="row">
+        <div *ngIf="hosts != undefined" class="row">
           <div class="col-md-12 col-sm-12 mt-1 text-right">
-            <pagination-controls class="my-pagination" (pageChange)="p = $event"
+            <pagination-controls id="host_paginate" class="my-pagination" (pageChange)="page_host = $event"
                                  autoHide="true"
                                  previousLabel="Indietro"
                                  nextLabel="Avanti"
@@ -204,5 +274,65 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header" [ngClass]="{
+          'panel-state-ok': modalPanelState == 0,
+          'panel-state-warn': modalPanelState == 1,
+          'panel-state-crit': modalPanelState == 2,
+          'panel-state-unknown': modalPanelState == 3
+        }">
+          <h5 class="modal-title" id="serviceModalLabel" *ngIf="modalPanelTitle">Elenco Servizi, Stato: {{modalPanelTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped">
+            <thead class="card-item-title table-header">
+              <td class="align-middle">Cliente</td>
+              <td class="align-middle">Sito</td>
+              <td class="align-middle">Host</td>
+              <td class="align-middle">Nome</td>
+              <td class="align-middle">Descrizione</td>
+              <td class="align-middle">Ultimo Log</td>             
+            </thead>
+            <tbody *ngIf="services_state == undefined">
+                <tr class="item-text-big-gray">
+                    <td colspan="10">
+                        <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      Caricamento in corso
+                    </td>
+                </tr>
+            </tbody>
+            <tbody *ngIf="services_state != undefined">
+              <tr *ngFor="let service_state of filter_ex(services_state) | paginate: { id: 'service_paginate', itemsPerPage: 10, currentPage: page_service };" class="item-text">
+                <td class="align-middle">{{service_state.customer_name}}</td>
+                <td class="align-middle">{{service_state.customer_site_description}}</td>
+                <td class="align-middle">{{service_state.host_alias}}</td>
+                <td class="align-middle">{{service_state.service_name}}</td>
+                <td class="align-middle text-left">{{service_state.plugin_output}}</td>
+                <td class="align-middle">{{service_state.created_at}}</td>                
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="services_state != undefined" class="row">
+            <div class="col-md-12 col-sm-12 mt-1 text-right">
+              <pagination-controls id="service_paginate" class="my-pagination" (pageChange)="page_service = $event"
+                                   autoHide="true"
+                                   previousLabel="Indietro"
+                                   nextLabel="Avanti"
+                                   directionLinks="false"
+              >
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <app-footer></app-footer>

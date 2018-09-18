@@ -7,10 +7,13 @@ import { User } from '../_models/index';
 
 @Injectable()
 export class UserService {
+  //private api_site = 'http://enigma.posdata.it:3000';
+  private api_site = 'http://localhost:3000';
+
   constructor(private http: HttpClient) { }
 
   public getUsers() : Observable<User[]>  {
-    return this.http.get<User[]>('http://localhost:3000/users').map(
+    return this.http.get<User[]>(this.api_site + '/users').map(
     res => res.map(x => new User(x._id, x.username, x.firstname, x.lastname, '', x.customer_name, x.email, '', x.role)));
   }
 }

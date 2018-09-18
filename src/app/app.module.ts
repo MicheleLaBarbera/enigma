@@ -12,7 +12,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { HomeComponent } from './home/home.component';
 
-import { AuthGuard } from './_guards/index';
+import { AuthGuard, AdminGuard } from './_guards/index';
 import { JwtInterceptor } from './_helpers/index';
 import { EqualValidator } from './_helpers/equal-validator.directive';
 
@@ -60,6 +60,7 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
   ],
   providers: [
     AuthGuard,
+    AdminGuard,
     HostgroupService,
     {
       provide: HTTP_INTERCEPTORS,

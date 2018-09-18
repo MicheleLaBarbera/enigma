@@ -2,7 +2,7 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './_guards/index';
+import { AuthGuard, AdminGuard } from './_guards/index';
 import { LoginComponent } from './login/login.component';
 import { HostgroupComponent } from './hostgroup/hostgroup.component';
 import { AcpComponent } from './acp/acp.component';
@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
 	{ path: 'hostgroup/:id', component: HostgroupComponent },
 	{ path: 'site/:id/hostgroup/:id2', component: HostgroupComponent },
-	{ path: 'admin', component: AcpComponent},
+	{ path: 'admin', component: AcpComponent, canActivate: [AdminGuard]},
   { path: '**', redirectTo: '' }
 ];
 

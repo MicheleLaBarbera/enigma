@@ -7,6 +7,8 @@ import * as decode from 'jwt-decode';
 
 @Injectable()
 export class AuthenticationService {
+  //private api_site = 'http://enigma.posdata.it:3000';
+  private api_site = 'http://localhost:3000';
 
   public token: string;
 
@@ -16,7 +18,7 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post('http://localhost:3000/users/auth', { username: username, password: password })
+    return this.http.post(this.api_site + '/users/auth', { username: username, password: password })
     .map((response: HttpResponse<any>) => { 
       //console.log(response.status) 
       if(response.status == 200) {
@@ -32,8 +34,8 @@ export class AuthenticationService {
     });
   }
 
-  signup(firstname: string, lastname: string, username: string, password: string, customer_id: string, email: string): Observable<any> {
-    return this.http.post<any>('http://localhost:3000/users', { username: username, password: password, firstname: firstname, lastname: lastname, email: email, role: 0, telegram_id: 'undefined', customer_id: customer_id})
+  signup(firstname: string, lastname: string, username: string, password: string, customer_id: string, email: string, role: number): Observable<any> {
+    return this.http.post<any>(this.api_site + '/users', { username: username, password: password, firstname: firstname, lastname: lastname, email: email, role: role, telegram_id: 'undefined', customer_id: customer_id})
     .map((response: HttpResponse<any>) => {
       return response;
     });

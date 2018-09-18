@@ -2,6 +2,7 @@ import { ServiceAck } from '../_models/index';
 
 export class Service {
   _id: string;
+  host_id: string;
   name: string;
   status: string;
   age: string;
@@ -12,8 +13,9 @@ export class Service {
   last_check_min: string;
   ack: ServiceAck;
 
-  constructor(_id: string, name: string, status: string, age: string, age_min: string, state: number, h_name: string, last_check: string, last_check_min: string, ack: ServiceAck) {
+  constructor(_id: string, host_id: string, name: string, status: string, age: string, age_min: string, state: number, h_name: string, last_check: string, last_check_min: string, ack: ServiceAck) {
     this._id = _id;
+    this.host_id = host_id;
     this.name = name;
   	this.status = status;
   	this.age = age;

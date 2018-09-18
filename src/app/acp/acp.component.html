@@ -76,48 +76,40 @@
                         </nav>
                       </div>
                       <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
-                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea utente</button>
+                        <button type="button" class="btn btn-success card-item-title create-up" (click)="resetAlertMessage();" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea utente</button>
                       </div>
                     </div>
                     <div class="row mt-1">
                       <div class="col-md-12 col-sm-12">
                         <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="users">
                           <thead class="card-item-title" style="color: #172559;">
-                            <td (click)="sort('companyname')" scope="col" class="item-clickable">
+                            <td scope="col">
                               <i class="fa fa-building" aria-hidden="true"></i>
-                              Azienda
-                              <i class="fa" *ngIf="key =='companyname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='companyname'" aria-hidden="true"></i>
+                              Azienda                           
                             </td>
-                            <td (click)="sort('firstname')" scope="col" class="item-clickable">
+                            <td scope="col">
                               <i class="fa fa-address-card" aria-hidden="true"></i>
-                              Nome
-                              <i class="fa" *ngIf="key =='firstname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='firstname'" aria-hidden="true"></i>
+                              Nome                           
                             </td>
-                            <td (click)="sort('lastname')" scope="col" class="item-clickable">
+                            <td scope="col">
                               <i class="fa fa-address-card-o" aria-hidden="true"></i>
-                              Cognome
-                              <i class="fa" *ngIf="key =='lastname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='lastname'" aria-hidden="true"></i>
+                              Cognome                           
                             </td>
-                            <td (click)="sort('username')" scope="col" class="item-clickable">
+                            <td scope="col">
                               <i class="fa fa-user" aria-hidden="true"></i>
-                              Username
-                              <i class="fa" *ngIf="key =='username'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='username'" aria-hidden="true"></i>
+                              Username                      
                             </td>
                             <td></td>
                             <td></td>
                           </thead>
                           <tbody>
-                            <tr *ngFor="let user of users | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
+                            <tr *ngFor="let user of users | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
                               <td>{{user.customer_name}}</td>
                               <td>{{user.firstname}}</td>
                               <td>{{user.lastname}}</td>
                               <td>{{user.username}}</td>
-                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" (click)="editUser(user.id);"></i></td>
-                              <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
+                              <td class="text-right"><span class="badge badge-warning item-clickable" (click)="editUser(user);" data-toggle="modal" data-target="#editUserModal"><i class="fa fa-pencil-square" aria-hidden="true"></i> Modifica</span></td>                              
+                              <td><span class="badge badge-danger item-clickable" onclick="alert('Funzionalità non ancora sviluppata')"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></td>
                             </tr>
                           </tbody>
                         </table>
@@ -126,7 +118,7 @@
                             <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="createModalLabel">Crea utente</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button #btnUserCreate type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
@@ -228,6 +220,23 @@
                       						    	<i class="fa fa-times" aria-hidden="true"></i>
                       								</div>
                       				      </div>
+                                  </div>
+                                  
+                                  <p class="login-label">Ruolo</p>
+                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !role.valid }">
+                      				      <div class="input-group mb-2">
+                      				        <div class="input-group-prepend">
+                      				          <div class="input-group-text"><i class="fa fa-group" aria-hidden="true"></i></div>
+                      				        </div>
+                                      <select class="form-control" name="role" [(ngModel)]="model.role" #role="ngModel" required>
+                                        <option value="0">Utente standard</option>
+                                        <option value="1">Posdata Helpdesk</option>
+                                        <option value="2">Posdata Admin</option>
+                                      </select>
+                      				        <div *ngIf="f.submitted && !role.valid" class="help-block">
+                      						    	<i class="fa fa-times" aria-hidden="true"></i>
+                      								</div>
+                      				      </div>
                       						</div>
 
                       						<alert></alert>
@@ -253,167 +262,9 @@
                         >
                         </pagination-controls>
                       </div>
-
-                    </div>
-
-                    <div class="row" *ngIf="eu_username">
-                      <div class="col-md-9 col-sm-12 mb-2 mt-1">
-                        <nav class="navbar" style="padding: 0;">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <div class="input-group-text"><i class='fa fa-pencil-square' aria-hidden='true'></i></div>
-                            </div>
-                            <input class="form-control" type="text" placeholder="Lista siti: {{eu_firstname}} {{eu_lastname}} ({{eu_username}})" readonly>
-                          </div>
-                        </nav>
-
-                        <!--<nav aria-label="breadcrumb" class="mb-2">
-                          <ol class="breadcrumb mt-2">
-                            <li class="breadcrumb-item" style="color:#6c757d;">Lista siti: {{eu_firstname}} {{eu_lastname}} (<i>{{eu_username}}</i>)</li>
-                          </ol>
-                        </nav>-->
-                      </div>
-                      <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
-                        <button type="button" class="btn btn-success card-item-title create-up" onclick="alert('Funzionalità non ancora sviluppata');"><i class="fa fa-plus" aria-hidden="true"></i> Aggiungi sito</button>
-                      </div>
-                    </div>
-
-                    <div class="row mt-1">
-                      <div class="col-md-12 col-sm-12">
-                        <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="user_hostgroups">
-                          <thead class="card-item-title" style="color: #172559;">
-                            <td scope="col">
-                              <i class="fa fa-building" aria-hidden="true"></i>
-                              Azienda
-                            </td>
-                            <td scope="col">
-                              <i class="fa fa-address-card" aria-hidden="true"></i>
-                              Descrizione
-                            </td>
-                            <td scope="col">
-                              <i class="fa fa-podcast" aria-hidden="true"></i>
-                              Indirizzo IP
-                            </td>
-                            <td scope="col">
-                              <i class="fa fa-sign-in" aria-hidden="true"></i>
-                              Porta
-                            </td>
-                            <td></td>
-                            <td></td>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let user_hostgroup of user_hostgroups" class="item-text-big">
-                              <td>{{user_hostgroup.name}}</td>
-                              <td>{{user_hostgroup.description}}</td>
-                              <td>{{user_hostgroup.ip}}</td>
-                              <td>{{user_hostgroup.port}}</td>
-                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
-                              <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+                    </div>                    
                   </div>
                 </div>
-
-                <!--<div class="row" *ngIf="viewPanel == 1">
-                  <div class="col-md-12 col-sm-12">
-                    <div class="row">
-                      <div class="col-md-9 col-sm-12">
-                      </div>
-                      <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
-                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createCompanyModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea cliente</button>
-                      </div>
-                    </div>
-                    <div class="row mt-1" *ngIf='customers'>
-                  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let company of customers;">
-                  			<div style="height: 100%;" class="card hoverable mt-1">
-
-                  				<div class="text-center mb-2 status-hosts">
-                            <p class="item-clickable card-item-title" (click)="changeView(2, 'Amministrazione Cliente: ' + company.name, company.name, company._id);">{{company.name}}</p>
-                  				</div>
-
-                  				<div class="card-body text-center" *ngIf="company.logo != ''">
-                            <img [src]="'data:image;base64,'+company.logo | safeHtml" style="height: 40px;">
-                  				</div>
-                  			</div>
-                        <div class="modal fade" id="createCompanyModal" tabindex="-1" role="dialog" aria-labelledby="createCompanyLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="createCompanyLabel">Crea cliente</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <form name="form" (ngSubmit)="f.form.valid && createCompany(f)" #f="ngForm" novalidate>
-                                  <div class="row">
-                                    <div class="col-md-12 col-sm-12">
-                                      <p class="login-label">Nome</p>
-                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !companyname.valid }">
-                          				      <div class="input-group mb-2">
-                          				        <div class="input-group-prepend">
-                          				          <div class="input-group-text"><i class="fa fa-address-card" aria-hidden="true"></i></div>
-                          				        </div>
-                          				        <input type="text" class="form-control" name="companyname" autocomplete="companyname" [(ngModel)]="model.companyname" #companyname="ngModel" required />
-                          				        <div *ngIf="f.submitted && !companyname.valid" class="help-block">
-                          						    	<i class="fa fa-times" aria-hidden="true"></i>
-                          								</div>
-                          				      </div>
-                                      </div>
-                                      
-                                      <p class="login-label">Indirizzo</p>
-                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
-                          				      <div class="input-group mb-2">
-                          				        <div class="input-group-prepend">
-                          				          <div class="input-group-text"><i class="fa fa-home" aria-hidden="true"></i></div>
-                          				        </div>
-                          				        <input type="text" class="form-control" name="address" autocomplete="address" [(ngModel)]="model.address" #address="ngModel" required />
-                          				        <div *ngIf="f.submitted && !address.valid" class="help-block">
-                          						    	<i class="fa fa-times" aria-hidden="true"></i>
-                          								</div>
-                          				      </div>
-                                      </div>
-                                      
-                                      <p class="login-label">Partita IVA</p>
-                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !vat.valid }">
-                          				      <div class="input-group mb-2">
-                          				        <div class="input-group-prepend">
-                          				          <div class="input-group-text"><i class="fa fa-vcard-o" aria-hidden="true"></i></div>
-                          				        </div>
-                          				        <input type="text" class="form-control" name="vat" autocomplete="vat" [(ngModel)]="model.vat" #vat="ngModel" required />
-                          				        <div *ngIf="f.submitted && !vat.valid" class="help-block">
-                          						    	<i class="fa fa-times" aria-hidden="true"></i>
-                          								</div>
-                          				      </div>
-                          						</div>
-
-                                      <p class="login-label">Logo</p>
-                          						<div class="mt-2 mb-3">
-
-                                          <input type="file" name="file" id="file" (change)="onFileChanged($event)" />
-
-                          						</div>
-                                    </div>
-                                  </div>
-
-                      						<alert></alert>
-
-                      						<div class="text-center mt-4">
-                      							<button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Registra</button>
-                      							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                      					  </div>
-                      					</form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>-->
 
                 <div class="row" *ngIf="viewPanel == 1">
                   <div class="col-md-12 col-sm-12">
@@ -429,48 +280,35 @@
                         </nav>
                       </div>
                       <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
-                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createCompanyModal"><i class="fa fa-plus" aria-hidden="true"></i> Aggiungi cliente</button>
+                        <button type="button" class="btn btn-success card-item-title create-up" (click)="resetAlertMessage();" data-toggle="modal" data-target="#createCompanyModal"><i class="fa fa-plus" aria-hidden="true"></i> Aggiungi cliente</button>
                       </div>
                     </div>
                     <div class="row mt-1">
                       <div class="col-md-12 col-sm-12">
                         <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="customers">
                           <thead class="card-item-title" style="color: #172559;">
-                            <td (click)="sort('companyname')" scope="col" class="item-clickable">
+                            <td scope="col">
                               <i class="fa fa-address-card-o" aria-hidden="true"></i>
-                              Nome
-                              <i class="fa" *ngIf="key =='companyname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='companyname'" aria-hidden="true"></i>
+                              Ragione Sociale                         
                             </td>
-                            <td (click)="sort('firstname')" scope="col" class="item-clickable">
-                              <i class="fa fa-home" aria-hidden="true"></i>
-                              Indirizzo
-                              <i class="fa" *ngIf="key =='firstname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='firstname'" aria-hidden="true"></i>
+                            <td scope="col">
+                              <i class="fa fa-address-card" aria-hidden="true"></i>
+                              Referente                           
                             </td>
-                            <td (click)="sort('lastname')" scope="col" class="item-clickable">
-                              <i class="fa fa-vcard-o" aria-hidden="true"></i>
-                              Partita IVA
-                              <i class="fa" *ngIf="key =='lastname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='lastname'" aria-hidden="true"></i>
-                            </td>
-                            <!--<td (click)="sort('username')" scope="col" class="item-clickable">
-                              <i class="fa fa-user" aria-hidden="true"></i>
-                              Username
-                              <i class="fa" *ngIf="key =='username'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='username'" aria-hidden="true"></i>
-                            </td>-->
+                            <td scope="col">
+                              <i class="fa fa-phone" aria-hidden="true"></i>
+                              Telefono                         
+                            </td>                       
                             <td></td>
                             <td></td>
                           </thead>
                           <tbody>
-                            <tr *ngFor="let company of customers | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
+                            <tr *ngFor="let company of customers | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
                               <td>{{company.name}}</td>
-                              <td>via Test 88</td>
-                              <td>01647390812</td>
-                              <!--<td>{{server.username}}</td>-->
-                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
-                              <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
+                              <td>{{company.referent_name}}</td>
+                              <td>{{company.phone_number}}</td>                      
+                              <td class="text-right"><span class="badge badge-warning item-clickable" data-toggle="modal" data-target="#editCustomerModal" (click)="useCustomerEdit(company)"><i class="fa fa-pencil-square" aria-hidden="true"></i> Modifica</span></td>                              
+                              <td><span class="badge badge-danger item-clickable" data-toggle="modal" data-target="#deleteCustomerModal" (click)="useCustomer(company)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></td>
                             </tr>
                           </tbody>
                         </table>
@@ -479,7 +317,7 @@
                             <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="createCompanyLabel">Crea cliente</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button #btnCustomerCreate type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
@@ -487,7 +325,7 @@
                                 <form name="form" (ngSubmit)="f.form.valid && createCompany(f)" #f="ngForm" novalidate>
                                   <div class="row">
                                     <div class="col-md-12 col-sm-12">
-                                      <p class="login-label">Nome</p>
+                                      <p class="login-label">Ragione Sociale</p>
                           						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !companyname.valid }">
                           				      <div class="input-group mb-2">
                           				        <div class="input-group-prepend">
@@ -500,7 +338,7 @@
                           				      </div>
                                       </div>
                                       
-                                      <p class="login-label">Indirizzo</p>
+                                      <!--<p class="login-label">Indirizzo</p>
                           						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
                           				      <div class="input-group mb-2">
                           				        <div class="input-group-prepend">
@@ -511,26 +349,63 @@
                           						    	<i class="fa fa-times" aria-hidden="true"></i>
                           								</div>
                           				      </div>
-                                      </div>
-                                      
-                                      <p class="login-label">Partita IVA</p>
-                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !vat.valid }">
+                                      </div>-->
+
+                                      <p class="login-label">Codice Cliente</p>
+                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer_code.valid }">
                           				      <div class="input-group mb-2">
                           				        <div class="input-group-prepend">
-                          				          <div class="input-group-text"><i class="fa fa-vcard-o" aria-hidden="true"></i></div>
+                          				          <div class="input-group-text"><i class="fa fa-asterisk" aria-hidden="true"></i></div>
                           				        </div>
-                          				        <input type="text" class="form-control" name="vat" autocomplete="vat" [(ngModel)]="model.vat" #vat="ngModel" required />
-                          				        <div *ngIf="f.submitted && !vat.valid" class="help-block">
+                          				        <input type="text" class="form-control" name="customer_code" autocomplete="customer_code" [(ngModel)]="model.customer_code" #customer_code="ngModel" required />
+                          				        <div *ngIf="f.submitted && !customer_code.valid" class="help-block">
                           						    	<i class="fa fa-times" aria-hidden="true"></i>
                           								</div>
                           				      </div>
-                          						</div>
+                                      </div>
+
+                                      <p class="login-label">Referente</p>
+                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !referent_name.valid }">
+                          				      <div class="input-group mb-2">
+                          				        <div class="input-group-prepend">
+                          				          <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                          				        </div>
+                          				        <input type="text" class="form-control" name="referent_name" autocomplete="referent_name" [(ngModel)]="model.referent_name" #referent_name="ngModel" required />
+                          				        <div *ngIf="f.submitted && !referent_name.valid" class="help-block">
+                          						    	<i class="fa fa-times" aria-hidden="true"></i>
+                          								</div>
+                          				      </div>
+                                      </div>
+                                      
+                                      <p class="login-label">Telefono</p>
+                          						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !phone_number.valid }">
+                          				      <div class="input-group mb-2">
+                          				        <div class="input-group-prepend">
+                          				          <div class="input-group-text"><i class="fa fa-phone" aria-hidden="true"></i></div>
+                          				        </div>
+                          				        <input type="text" class="form-control" name="phone_number" autocomplete="phone_number" [(ngModel)]="model.phone_number" #phone_number="ngModel" required />
+                          				        <div *ngIf="f.submitted && !phone_number.valid" class="help-block">
+                          						    	<i class="fa fa-times" aria-hidden="true"></i>
+                          								</div>
+                          				      </div>
+                                      </div>
+                                      
+                                      <p class="login-label">E-Mail</p>
+                                      <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                                        <div class="input-group mb-2">
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                                          </div>
+                                          <input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="model.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required />
+                                          <div *ngIf="f.submitted && !email.valid" class="help-block">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                          </div>
+                                        </div>
+                                      </div>
 
                                       <p class="login-label">Logo</p>
                           						<div class="mt-2 mb-3">
-
                                           <input type="file" name="file" id="file" (change)="onFileChanged($event)" />
-
                           						</div>
                                     </div>
                                   </div>
@@ -560,147 +435,377 @@
                       </div>
                     </div>
                   </div>
-                </div>
-            
-              <div class="row" *ngIf="viewPanel == 2">
-                  <div class="col-md-12 col-sm-12">
-                    <div class="row">
-                      <div class="col-md-9 col-sm-12 mb-2 mt-1">
-                        <nav class="navbar" style="padding: 0;">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <div class="input-group-text"><i class='fa fa-search' aria-hidden='true'></i></div>
-                            </div>
-                            <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="Cerca...">
-                          </div>
-                        </nav>
-                      </div>
-                      <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
-                        <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createServerModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea sito</button>
-                      </div>
-                    </div>
-                    <div class="row mt-1">
-                      <div class="col-md-12 col-sm-12">
-                        <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="servers">
-                          <thead class="card-item-title" style="color: #172559;">
-                            <td (click)="sort('companyname')" scope="col" class="item-clickable">
-                              <i class="fa fa-address-card-o" aria-hidden="true"></i>
-                              Descrizione
-                              <i class="fa" *ngIf="key =='companyname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='companyname'" aria-hidden="true"></i>
-                            </td>
-                            <td (click)="sort('firstname')" scope="col" class="item-clickable">
-                              <i class="fa fa-podcast" aria-hidden="true"></i>
-                              Indirizzo IP
-                              <i class="fa" *ngIf="key =='firstname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='firstname'" aria-hidden="true"></i>
-                            </td>
-                            <td (click)="sort('lastname')" scope="col" class="item-clickable">
-                              <i class="fa fa-sign-in" aria-hidden="true"></i>
-                              Porta
-                              <i class="fa" *ngIf="key =='lastname'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='lastname'" aria-hidden="true"></i>
-                            </td>
-                            <!--<td (click)="sort('username')" scope="col" class="item-clickable">
-                              <i class="fa fa-user" aria-hidden="true"></i>
-                              Username
-                              <i class="fa" *ngIf="key =='username'" aria-hidden="true" [ngClass]="{'fa-sort-asc':reverse,'fa-sort-desc':!reverse}"></i>
-                              <i class="fa fa-sort" *ngIf="key !='username'" aria-hidden="true"></i>
-                            </td>-->
-                            <td></td>
-                            <td></td>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let server of servers | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
-                              <td>{{server.description}}</td>
-                              <td>{{server.ip_address}}</td>
-                              <td>{{server.port_number}}</td>
-                              <!--<td>{{server.username}}</td>-->
-                              <td><i class="fa fa-pencil-square fa-lg hostgroup-warning item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
-                              <td><i class="fa fa-trash fa-lg hostgroup-critical item-clickable" aria-hidden="true" onclick="alert('Funzionalità non ancora sviluppata');"></i></td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <div class="modal fade" id="createServerModal" tabindex="-1" role="dialog" aria-labelledby="createServerModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="createServerModalLabel">Crea sito</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <form name="form" (ngSubmit)="f.form.valid && createServer(f, companyeditid)" #f="ngForm" novalidate>
-                                  <p class="login-label">Descrizione</p>
-                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !description.valid }">
-                      				      <div class="input-group mb-2">
-                      				        <div class="input-group-prepend">
-                      				          <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
-                      				        </div>
-                      				        <input type="text" class="form-control" name="description" autocomplete="description" [(ngModel)]="model.description" #description="ngModel" required />
-                      				        <div *ngIf="f.submitted && !description.valid" class="help-block">
-                      						    	<i class="fa fa-times" aria-hidden="true"></i>
-                      								</div>
-                      				      </div>
-                      						</div>
-
-                                  <p class="login-label">Indirizzo IP</p>
-                      						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
-                      				      <div class="input-group mb-2">
-                      				        <div class="input-group-prepend">
-                      				          <div class="input-group-text"><i class="fa fa-podcast" aria-hidden="true"></i></div>
-                      				        </div>
-                      				        <input type="text" class="form-control" name="address" autocomplete="address" [(ngModel)]="model.address" #address="ngModel" required />
-                      				        <div *ngIf="f.submitted && !address.valid" class="help-block">
-                      						    	<i class="fa fa-times" aria-hidden="true"></i>
-                      								</div>
-                      				      </div>
-                      						</div>
-
-                      						<p class="login-label">Porta</p>
-                      						<div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !port.valid }">
-                      				      <div class="input-group mb-2">
-                      				        <div class="input-group-prepend">
-                      				          <div class="input-group-text"><i class="fa fa-sign-in" aria-hidden="true"></i></div>
-                      				        </div>
-                      				        <input type="text" class="form-control" name="port" autocomplete="current-port" [(ngModel)]="model.port" #port="ngModel" required />
-                      				        <div *ngIf="f.submitted && !port.valid" class="help-block">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                      </div>
-                      				      </div>
-                      						</div>
-
-                      						<alert></alert>
-
-                      						<div class="text-center mt-4">
-                      							<button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Registra</button>
-                      							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                      					  </div>
-                      					</form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12 col-sm-12 mt-1 text-right">
-                        <pagination-controls class="my-pagination" (pageChange)="p = $event"
-                                             autoHide="true"
-                                             previousLabel="Indietro"
-                                             nextLabel="Avanti"
-                                             directionLinks="false"
-                        >
-                        </pagination-controls>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
+                </div>           
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" *ngIf="use_customer">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteCustomerLabel">Elimina cliente: {{use_customer.name}}</h5>
+          <button #btnCustomerClose type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-bottom: 0">
+          <p class="item-text-big">Sei sicuro di voler eliminare definitivamente il cliente?</p>
+          <alert></alert>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+          <button type="button" class="btn btn-danger" (click)="deleteCustomer(use_customer._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-labelledby="editCustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content" *ngIf="use_customer">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editCustomerLabel">Modifica cliente: {{use_customer.name}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">          
+          <div class="row">
+            <div class="col-md-12 col-sm-12">                    
+              <form name="form" (ngSubmit)="f.form.valid && updateCustomer(f, use_customer)" #f="ngForm" novalidate>
+                <div class="row">
+                  <div class="col-md-4 col-sm-12">
+                    <p class="login-label">Ragione Sociale</p>
+                    <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !companyname.valid }">
+                      <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-address-card" aria-hidden="true"></i></div>
+                        </div>
+                        <input type="text" class="form-control" name="companyname" autocomplete="companyname" [(ngModel)]="model.companyname" #companyname="ngModel" value="{{use_customer.name}}" placeholder="{{use_customer.name}}" />
+                        <div *ngIf="f.submitted && !companyname.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-sm-12">
+                    <p class="login-label">Codice Cliente</p>
+                    <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer_code.valid }">
+                      <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-asterisk" aria-hidden="true"></i></div>
+                        </div>
+                        <input type="text" class="form-control" name="customer_code" autocomplete="customer_code" [(ngModel)]="model.customer_code" #customer_code="ngModel" value="{{use_customer.customer_code}}" placeholder="{{use_customer.customer_code}}" />
+                        <div *ngIf="f.submitted && !customer_code.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-sm-12">
+                    <p class="login-label">Referente</p>
+                    <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !referent_name.valid }">
+                      <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                        </div>
+                        <input type="text" class="form-control" name="referent_name" autocomplete="referent_name" [(ngModel)]="model.referent_name" #referent_name="ngModel" value="{{use_customer.referent_name}}" placeholder="{{use_customer.referent_name}}" />
+                        <div *ngIf="f.submitted && !referent_name.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">                       
+                  <div class="col-md-4 col-sm-12">
+                    <p class="login-label">Telefono</p>
+                    <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !phone_number.valid }">
+                      <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-phone" aria-hidden="true"></i></div>
+                        </div>
+                        <input type="text" class="form-control" name="phone_number" autocomplete="phone_number" [(ngModel)]="model.phone_number" #phone_number="ngModel" value="{{use_customer.phone_number}}" placeholder="{{use_customer.phone_number}}" />
+                        <div *ngIf="f.submitted && !phone_number.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-sm-12">                       
+                    <p class="login-label">E-Mail</p>
+                    <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                      <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                        </div>
+                        <input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="model.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" value="{{use_customer.email}}" placeholder="{{use_customer.email}}" />
+                        <div *ngIf="f.submitted && !email.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-sm-12">
+                    <p class="login-label">Logo</p>
+                    <div class="mt-2 mb-3">
+                        <input type="file" name="file" id="file" (change)="onFileChanged($event)" />
+                    </div>
+                  </div>
+                  <div class="col-md-2 col-sm-12 text-right" style="margin-top: 2rem!important;">                
+                    <button [disabled]="loading" class="btn badge-warning card-item-title" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva</button>
+                    <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                  </div>
+                </div>
+                <alert></alert>                      
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <h5 class="modal-title">Lista siti</h5>         
+                <hr style="padding: 0;">             
+            </div>
+          </div>                
+          <div class="row">
+            <div class="col-md-9 col-sm-12 mb-2 mt-1">      
+              <nav class="navbar" style="padding: 0;">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text"><i class='fa fa-search' aria-hidden='true'></i></div>
+                  </div>
+                  <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="Cerca...">
+                </div>
+              </nav>             
+            </div>
+            <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
+              <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createServerModal"><i class="fa fa-plus" aria-hidden="true"></i> Crea sito</button>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="col-md-12 col-sm-12">
+              <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" *ngIf="servers">
+                <thead class="card-item-title" style="color: #172559;">
+                  <td scope="col">
+                    <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                    Descrizione                 
+                  </td>
+                  <td scope="col">
+                    <i class="fa fa-podcast" aria-hidden="true"></i>
+                    Indirizzo IP                     
+                  </td>
+                  <td scope="col">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i>
+                    Porta                     
+                  </td>               
+                  <td></td>
+                  <td></td>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let server of servers | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
+                    <td>{{server.description}}</td>
+                    <td>{{server.ip_address}}</td>
+                    <td>{{server.port_number}}</td>                      
+                    <td class="text-right"><span class="badge badge-warning item-clickable" onclick="alert('Funzionalità non ancora sviluppata')"><i class="fa fa-pencil-square" aria-hidden="true"></i> Modifica</span></td>                              
+                    <td><span class="badge badge-danger item-clickable" (click)="deleteCustomerSite(use_customer._id, server._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></td>
+                  </tr>
+                </tbody>
+              </table>                    
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 mt-1 text-right">
+              <pagination-controls class="my-pagination" (pageChange)="p = $event"
+                                    autoHide="true"
+                                    previousLabel="Indietro"
+                                    nextLabel="Avanti"
+                                    directionLinks="false"
+              >
+              </pagination-controls>
+            </div>          
+          </div>
+        </div>        
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="createServerModal" tabindex="-1" role="dialog" aria-labelledby="createServerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" *ngIf="use_customer">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createServerModalLabel">Crea sito</h5>
+          <button #btnCustomerSiteClose type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="form" (ngSubmit)="f.form.valid && createServer(f, use_customer._id)" #f="ngForm" novalidate>
+            <p class="login-label">Descrizione</p>
+            <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !description.valid }">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                </div>
+                <input type="text" class="form-control" name="description" autocomplete="description" [(ngModel)]="model.description" #description="ngModel" required />
+                <div *ngIf="f.submitted && !description.valid" class="help-block">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+
+            <p class="login-label">Indirizzo IP</p>
+            <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !address.valid }">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-podcast" aria-hidden="true"></i></div>
+                </div>
+                <input type="text" class="form-control" name="address" autocomplete="address" [(ngModel)]="model.address" #address="ngModel" required />
+                <div *ngIf="f.submitted && !address.valid" class="help-block">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+
+            <p class="login-label">Porta</p>
+            <div class="mt-2" [ngClass]="{ 'has-error': f.submitted && !port.valid }">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-sign-in" aria-hidden="true"></i></div>
+                </div>
+                <input type="text" class="form-control" name="port" autocomplete="current-port" [(ngModel)]="model.port" #port="ngModel" required />
+                <div *ngIf="f.submitted && !port.valid" class="help-block">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+
+            <alert></alert>
+
+            <div class="text-center mt-4">
+              <button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Registra</button>
+              <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content" *ngIf="use_user">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUserLabel">Modifica utente: {{use_user.firstname}} {{use_user.lastname}} ({{use_user.username}})</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12 col-sm-12">
+            <div class="row">
+              <div class="col-md-9 col-sm-12 mb-2 mt-1">      
+                <nav class="navbar" style="padding: 0;">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"><i class='fa fa-search' aria-hidden='true'></i></div>
+                    </div>
+                    <input class="form-control" type="text" name="search" [(ngModel)]="filter" placeholder="Cerca...">
+                  </div>
+                </nav>             
+              </div>
+              <div class="col-md-3 col-sm-12 text-right mb-2 mt-1">
+                <button type="button" class="btn btn-success card-item-title create-up" data-toggle="modal" data-target="#createUserSiteModal" (click)="loadSites()"><i class="fa fa-plus" aria-hidden="true"></i> Aggiungi sito</button>
+              </div>
+            </div>        
+            <div class="row mt-1">
+              <div class="col-md-12 col-sm-12">
+                <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover">
+                  <thead class="card-item-title" style="color: #172559;">
+                    <td scope="col">
+                      <i class="fa fa-building" aria-hidden="true"></i>
+                      Azienda
+                    </td>
+                    <td scope="col">
+                      <i class="fa fa-address-card" aria-hidden="true"></i>
+                      Descrizione
+                    </td>
+                    <td scope="col">
+                      <i class="fa fa-podcast" aria-hidden="true"></i>
+                      Indirizzo IP
+                    </td>
+                    <td scope="col">
+                      <i class="fa fa-sign-in" aria-hidden="true"></i>
+                      Porta
+                    </td>
+                    <td></td>              
+                  </thead>
+                  <tbody *ngIf="user_sites">
+                    <tr *ngFor="let user_site of user_sites | filter:filter | paginate: { itemsPerPage: 10, currentPage: p };" class="item-text-big">
+                      <td>{{user_site.customer_name}}</td>
+                      <td>{{user_site.description}}</td>
+                      <td>{{user_site.ip_address}}</td>
+                      <td>{{user_site.port_number}}</td>
+                      <td class="text-center"><span class="badge badge-danger item-clickable" (click)="deleteUserCustomerSite(use_user._id, user_site._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 mt-1 text-right">
+                <pagination-controls class="my-pagination" (pageChange)="p = $event"
+                                      autoHide="true"
+                                      previousLabel="Indietro"
+                                      nextLabel="Avanti"
+                                      directionLinks="false"
+                >
+                </pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="createUserSiteModal" tabindex="-1" role="dialog" aria-labelledby="createUserSiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" *ngIf="use_user">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createUserSiteModalLabel">Aggiungi sito</h5>
+          <button #btnUserSiteClose type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="form" (ngSubmit)="f.form.valid && createUserSite(f, use_user._id)" #f="ngForm" novalidate>
+            <p class="login-label">Sito</p>
+            <div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !customer_site.valid }">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                </div>                
+                <select class="form-control" name="customer_site" [(ngModel)]="model.customer_site" #customer_site="ngModel" required>
+                    <option *ngFor="let site of sites" value="{{site._id}}">{{site.customer_name}} - {{site.description}}</option>
+                  </select>
+                <div *ngIf="f.submitted && !customer_site.valid" class="help-block">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+
+            <alert></alert>
+
+            <div class="text-center mt-4">
+              <button [disabled]="loading" class="btn btn-primary card-item-title create-down" type="submit">Aggiungi</button>
+              <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            </div>
+          </form>
         </div>
       </div>
     </div>
