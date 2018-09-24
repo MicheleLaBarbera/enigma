@@ -17,8 +17,8 @@ export class AuthenticationService {
     this.token = currentUser && currentUser.token;
   }
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post(this.api_site + '/users/auth', { username: username, password: password })
+  login(username: string, password: string, remember: number): Observable<boolean> {
+    return this.http.post(this.api_site + '/users/auth', { username: username, password: password, remember: remember })
     .map((response: HttpResponse<any>) => { 
       //console.log(response.status) 
       if(response.status == 200) {

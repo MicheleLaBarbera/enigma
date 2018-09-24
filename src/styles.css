@@ -1,5 +1,58 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+/*::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+/* Track */
+/*::-webkit-scrollbar-track {    
+    -webkit-border-radius: 5px;
+	border-radius: 5px;
+	/*-webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.774);*/
+/*}
+ 
+/* Handle */
+/*::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    background: #dee2e6;
+    /*-webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.774); */
+/*}*/
+
+::-webkit-scrollbar {
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background: rgba(0,0,0,0.1);
+	border: 1px solid #ccc;
+  }
+  
+
+  ::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background: linear-gradient(#e4e4e4, #fff, left);
+	border: 1px solid #aaa;
+  }
+
+  ::-webkit-scrollbar-thumb:horizontal {
+	border-radius: 10px;
+	background: linear-gradient(#e4e4e4, #fff, left);
+	height: 10px;
+  }
+  
+
+  ::-webkit-scrollbar-thumb:hover {
+	background: #fff;
+  }
+  
+
+  ::-webkit-scrollbar-thumb:active {
+	background: #0e71b4 !important;
+  }
+
 body {
 	background: #eeeeff;
 	padding-bottom: 70px;

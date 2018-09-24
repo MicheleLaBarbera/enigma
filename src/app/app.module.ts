@@ -32,6 +32,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MyDatePickerModule } from 'mydatepicker';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +58,8 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
-    MyDatePickerModule 
+    MyDatePickerModule,
+    NgxChartsModule
   ],
   providers: [
     AuthGuard,

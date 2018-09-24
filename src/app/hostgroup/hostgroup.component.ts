@@ -8,7 +8,6 @@ import { AlertService, HostgroupService } from '../_services/index';
 import { Hostgroup, Host, Service, ServiceAck, HostLog, ServiceLog } from '../_models/index';
 
 import {IMyDpOptions} from 'mydatepicker';
-import * as Chartist from 'chartist';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 
 @Component({
@@ -146,39 +145,7 @@ export class HostgroupComponent implements OnInit {
           this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
         }
         this.getHostsACKCount(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['_id']);
-      }
-        
-
-      /*this.host_chart = new Chartist.Pie('.hosts-chart', {
-        series: [
-          {value: this.hosts_up, className: 'ct-host-up'},
-          {value: this.hosts_pending, className: 'ct-host-pending'},
-          //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
-          {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
-        ],
-      }, {
-        donut: true,
-        donutWidth: 60,
-        donutSolid: true,
-        startAngle: 270,
-        showLabel: false
-      });
-
-      this.service_chart = new Chartist.Pie('.services-chart', {
-        series: [
-          {value: this.services_ok, className: 'ct-service-ok'},
-          {value: this.services_pending, className: 'ct-service-pending'},
-          {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
-          //{value: this.services_unknown, className: 'ct-service-unknown'},
-          {value: this.services_crit, className: 'ct-service-crit'}
-        ],
-      }, {
-        donut: true,
-        donutWidth: 60,
-        donutSolid: true,
-        startAngle: 270,
-        showLabel: false
-      });*/
+      }        
 
       this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
       this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
@@ -189,8 +156,7 @@ export class HostgroupComponent implements OnInit {
     this.hostgroupService.getHosts(ip, port, id).subscribe(hosts => {
       this.hosts = hosts;
       this.viewMainTitle = groupID.alias;
-      this.switchState(hostgroup);
-      //hostgroup.toggleGroupState(groupID);
+      this.switchState(hostgroup); 
     });
   }
 
@@ -282,39 +248,7 @@ export class HostgroupComponent implements OnInit {
               this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
             }
             this.getHostsACKCount(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['_id']);
-          }
-            
-    
-          /*this.host_chart = new Chartist.Pie('.hosts-chart', {
-            series: [
-              {value: this.hosts_up, className: 'ct-host-up'},
-              {value: this.hosts_pending, className: 'ct-host-pending'},
-              //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
-              {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
-            ],
-          }, {
-            donut: true,
-            donutWidth: 60,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: false
-          });
-    
-          this.service_chart = new Chartist.Pie('.services-chart', {
-            series: [
-              {value: this.services_ok, className: 'ct-service-ok'},
-              {value: this.services_pending, className: 'ct-service-pending'},
-              {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
-              //{value: this.services_unknown, className: 'ct-service-unknown'},
-              {value: this.services_crit, className: 'ct-service-crit'}
-            ],
-          }, {
-            donut: true,
-            donutWidth: 60,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: false
-          });*/
+          }         
     
           this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
           this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
@@ -385,38 +319,7 @@ export class HostgroupComponent implements OnInit {
             this.getHostsACKCount(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], group['_id']);
           }
             
-    
-          /*this.host_chart = new Chartist.Pie('.hosts-chart', {
-            series: [
-              {value: this.hosts_up, className: 'ct-host-up'},
-              {value: this.hosts_pending, className: 'ct-host-pending'},
-              //{value: this.hosts_unreachable, className: 'ct-host-unreachable'},
-              {value: this.hosts_down + this.hosts_unreachable, className: 'ct-host-down'}
-            ],
-          }, {
-            donut: true,
-            donutWidth: 60,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: false
-          });
-    
-          this.service_chart = new Chartist.Pie('.services-chart', {
-            series: [
-              {value: this.services_ok, className: 'ct-service-ok'},
-              {value: this.services_pending, className: 'ct-service-pending'},
-              {value: this.services_warn + this.services_unknown, className: 'ct-service-warn'},
-              //{value: this.services_unknown, className: 'ct-service-unknown'},
-              {value: this.services_crit, className: 'ct-service-crit'}
-            ],
-          }, {
-            donut: true,
-            donutWidth: 60,
-            donutSolid: true,
-            startAngle: 270,
-            showLabel: false
-          });*/
-    
+        
           this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
           this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
         });

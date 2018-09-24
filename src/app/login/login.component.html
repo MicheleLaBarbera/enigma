@@ -13,7 +13,7 @@
 		<div class="col-md-3 col-sm-2"></div>
 		<div class="col-md-6 col-sm-8">
 			<div class="card">
-				<div class="card-body">
+				<div class="card-body item-text">
 					<form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
 
 						<p class="login-label">Username</p>
@@ -45,21 +45,54 @@
 						<alert></alert>
 
 						<div class="text-center mt-4">
-							<button [disabled]="loading" class="btn btn-primary" type="submit">Log in</button>
+							<button [disabled]="loading" class="btn btn-primary" type="submit"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
 							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 					  </div>
 
 					  <div class="form-check mt-2 mb-2">
-					    <input type="checkbox" class="form-check-input" id="rememberMe">
+					    <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" [(ngModel)]="model.remember" #remember="ngModel">
 					    <label class="form-check-label" for="rememberMe">Mantieni accesso</label>
 					  </div>
 
 					  <div class="row">
 					  	<div class="col-md-6 col-sm-8">
-					  		<a href="#" class="forgot-p" onclick="alert('Attenzione: Funzione non ancora implementata.');"><i class="fa fa-question-circle prefix grey-text"></i> Ho dimenticato la password</a>
+					  		<p data-toggle="modal" data-target="#forgotPasswordModal" class="forgot-p item-clickable"><i class="fa fa-question-circle prefix grey-text"></i> Ho dimenticato la password</p>
 					  	</div>
 					  </div>
 					</form>
+
+					<!--<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="forgotPasswordLabel">Password dimenticata</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form name="form" (ngSubmit)="f.form.valid && forgotPassword(f)" #f="ngForm" novalidate>
+									<div class="modal-body" style="padding-bottom: 0">										
+										<p class="login-label">Indirizzo E-Mail</p>
+										<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+											<div class="input-group mb-2">
+												<div class="input-group-prepend">
+													<div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+												</div>
+												<input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="model.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required />
+												<div *ngIf="f.submitted && !email.valid" class="help-block">
+													<i class="fa fa-times" aria-hidden="true"></i>
+												</div>
+											</div>
+										</div>				
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+										<button type="button" class="btn btn-primary" type="submit"><i class="fa fa-window-restore" aria-hidden="true"></i> Resetta</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>-->
 				</div>
 			</div>
 		</div>

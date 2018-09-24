@@ -202,6 +202,23 @@ i {
 	margin-bottom: 0;
 }
 
+.my-pagination-t /deep/ .ngx-pagination a, .ngx-pagination button {
+	color: white;
+	font-weight: 600;
+	font-size: 0.8rem;
+}
+
+.my-pagination-t /deep/ .ngx-pagination .current {
+	color: #0e71b4 !important;
+	font-weight: 600;
+	font-size: 0.8rem;
+	background-color: white;
+}
+
+.my-pagination-t /deep/ .ngx-pagination {
+	margin-bottom: 0;
+}
+
 .table-header {
 	background-color: #0e71b4 !important;
 	color: white;
@@ -228,7 +245,7 @@ i {
 	color: white;
 }
 
-.up-status {
+.ok-status {
   background-color: #27c24c;
   color: white;
 }

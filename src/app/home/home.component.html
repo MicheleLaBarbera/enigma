@@ -4,55 +4,151 @@
 
 <div id="main-card" class="card ml-3 mr-3 text-justify">
   <div class="card-body">
-    <div class="row mt-1" *ngIf="host_chart">
+    <div class="row mt-1">
+      <div class="col-md-6 col-sm-12 mb-2 mt-2">
+        <div class="card hoverable ml-2 mr-2 mt-1 full-height">
+          <div class="text-center mb-2 status-services">
+            <div class="row">
+              <div class="col-md-7 text-right pr-3">
+                <p class="card-item-title" style="margin-bottom: 0;">Notifiche</p>
+              </div>
+              <div class="col-md-5 text-right" *ngIf="services_change != undefined">          
+                <pagination-controls id="service_change_paginate" class="my-pagination-t" (pageChange)="page_service_change = $event"
+                                      autoHide="true"
+                                      previousLabel="Indietro"
+                                      nextLabel="Avanti"
+                                      directionLinks="false"
+                >
+                </pagination-controls>               
+              </div>
+            </div>
+          </div>
+          <div class="card-body" style="padding-bottom: 0;">           
+            <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover" style="margin-bottom: 0;">
+              <thead class="card-item-title">
+                <tr class="d-flex">
+                  <td class="align-middle col-1">Stato</td>
+                  <td class="align-middle col-1">Data</td>
+                  <td class="align-middle col-1">Ora</td>
+                  <td class="align-middle col-3">Cliente</td>
+                  <td class="align-middle col-3">Host</td>
+                  <td class="align-middle col-3">Servizio</td>          
+                </tr>                         
+              </thead>   
+              <!--<tbody *ngIf="services_change == undefined">
+                <tr class="item-text-big-gray">
+                  <td colspan="6">
+                      <img *ngIf="num_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                    Caricamento in corso
+                  </td>
+                </tr>
+              </tbody>-->
+              <tbody class="text-left">
+                <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="d-flex">
+                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 0"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>       
+                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 1"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
+                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 2"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></td>
+                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 3"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i></td>    
+
+                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 4"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>    
+                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 5"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
+
+                  <td class="align-middle text-center col-1 item-text">{{service_change.date}}</td>
+                  <td class="align-middle text-center col-1 item-text">{{service_change.time}}</td>
+                  <td class="align-middle text-center col-3 item-text">{{service_change.customer_name}}</td>
+                  <td class="align-middle text-center col-3 item-text">{{service_change.host_alias}}</td>
+                  <td class="align-middle text-center col-3 item-text">{{service_change.service_name}}</td>                                                  
+                </tr>                  
+              </tbody>
+            </table>              
+          </div>
+        </div>
+      </div>
       <div class="col-md-3 col-sm-12 mb-2 mt-2">
         <div class="card hoverable ml-2 mr-2 mt-1 full-height">
           <div class="text-center mb-2 status-hosts">
             <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
           </div>
-          <div class="card-body">
-            <div class="row">
-              <!--<div class="col-md-6 col-sm-12">
-                <div class="hosts-chart">
-                </div>
-              </div>-->
-              <div class="col-md-12 col-sm-12">
-                <table class="table table-sm table-hover item-text">                  
-                  <tbody>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'In Linea')">                   
-                      <td>Online</td>
-                      <td class="host-up"></td>
-                      <td class="text-right">{{hosts_up}}</td>
-                    </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">
-                      <td>Offline</td>
-                      <td class="host-down"></td>
-                      <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
-                    </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Manutenzione')">                  
-                      <td>Manteinance</td>
-                      <td class="host-pending"></td>
-                      <td class="text-right">{{hosts_pending}}</td>
-                    </tr>
-                    <tr>
-                      <td><br></td>
-                      <td><br></td>
-                      <td><br></td>
-                    </tr>
-                    <tr>
-                      <td><br></td>
-                      <td><br></td>
-                      <td><br></td>
-                    </tr>
-                    <tr>
-                      <td class="item-strong">Totale</td>
-                      <td></td>
-                      <td class="item-strong text-right">{{hosts_count}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          <div class="card-body" style="display: flex; overflow: hidden;"> 
+            <!--<ngx-charts-line-chart [scheme]="lineChartColorScheme" [results]="lineChartMulti" [gradient]="lineChartGradient" [xAxis]="lineChartShowXAxis" [yAxis]="lineChartShowYAxis" [legend]="lineChartShowLegend" [showXAxisLabel]="lineChartShowXAxisLabel" [showYAxisLabel]="lineChartShowYAxisLabel" [xAxisLabel]="lineChartXAxisLabel" [yAxisLabel]="lineChartYAxisLabel" [autoScale]="lineChartAutoScale" [curve]="lineChartLineInterpolation" (select)="onSelect($event)"> </ngx-charts-line-chart>
+            -->
+        
+            <ngx-charts-advanced-pie-chart data-toggle="modal" [label]="Totale" data-target="#hostModal" *ngIf="hostChartData" [scheme]="hostChartScheme" [results]="hostChartData" (select)="onSelectHostChart($event)"></ngx-charts-advanced-pie-chart>
+      
+              <!--<div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'Online')">                                                   
+              <div class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">Online</div>                                        
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_up}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
             </div>
+            <div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">                                    
+              <div class="col-3 text-center"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">Offline</div>                             
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_down + hosts_unreachable}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>
+            <div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Manteinance')">                               
+              <div class="col-3 text-center"><i class="fa fa-map-signs hostgroup-unknown" aria-hidden="true"></i></div>  
+              <div class="col-6 item-text">Manteinance</div>                 
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_pending}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>
+            <div class="row">
+              <div class="col-4"><br></div>
+              <div class="col-4"><br></div>
+              <div class="col-4"><br></div>
+            </div>
+            <div class="row">
+              <div class="col-4"><br></div>
+              <div class="col-4"><br></div>
+              <div class="col-4"><br></div>
+            </div>
+            <div class="row">
+              <div class="col-3 text-center"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
+              <div class="item-strong col-6 item-text">Totale</div>                   
+              <div class="item-strong text-right col-3 item-text" *ngIf="!num_loading">{{hosts_count}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>-->
+            <!--<div class="col-md-12 col-sm-12">        
+              <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover">                    
+                <tbody>
+                  <tr class="item-clickable d-flex" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'Online')">                                                            
+                    <td class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>
+                    <td class="col-6 item-text">Online</td>                                        
+                    <td class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_up}}</td>
+                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
+                  </tr>
+                  <tr class="item-clickable d-flex" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">                      
+                    <td class="col-3 text-center"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></td>
+                    <td class="col-6 item-text">Offline</td>                             
+                    <td class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_down + hosts_unreachable}}</td>
+                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
+                  </tr>
+                  <tr class="item-clickable d-flex" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Manteinance')">                                  
+                    <td class="col-3 text-center"><i class="fa fa-map-signs hostgroup-unknown" aria-hidden="true"></i></td>  
+                    <td class="col-6 item-text">Manteinance</td>                 
+                    <td class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_pending}}</td>
+                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
+                  </tr>
+                  <tr class="d-flex">
+                    <td class="col-4"><br></td>
+                    <td class="col-4"><br></td>
+                    <td class="col-4"><br></td>
+                  </tr>
+                  <tr class="d-flex">
+                    <td class="col-4"><br></td>
+                    <td class="col-4"><br></td>
+                    <td class="col-4"><br></td>
+                  </tr>
+                  <tr class="d-flex">
+                    <td class="col-3 text-center"></td>
+                    <td class="item-strong col-6 item-text">Totale</td>                   
+                    <td class="item-strong text-right col-3 item-text" *ngIf="!num_loading">{{hosts_count}}</td>
+                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>-->           
           </div>
         </div>
       </div>
@@ -61,119 +157,92 @@
           <div class="text-center mb-2 status-services">
             <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
           </div>
-          <div class="card-body">
+          <div class="card-body" style="display: flex; overflow: hidden;">    
+              <ngx-charts-advanced-pie-chart data-toggle="modal" data-target="#serviceModal" [label]="Totale" *ngIf="serviceChartData" [scheme]="serviceChartScheme" [results]="serviceChartData" (select)="onSelectServiceChart($event)"></ngx-charts-advanced-pie-chart>
+              
+            <!--<div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(0, 'OK')">   
+              <div class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">OK</div>                                        
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_ok}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>    
+            <div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(1, 'Warning')">   
+              <div class="col-3 text-center"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">Warning</div>                                        
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_warn}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>       
+            <div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(2, 'Critical')">   
+              <div class="col-3 text-center"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">Critical</div>                                        
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_crit}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>   
+            <div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(3, 'Unknown')">   
+              <div class="col-3 text-center"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">Unknown</div>                                        
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_unknown}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>   
+            <div class="row item-clickable" data-toggle="modal" data-target="#ackModal" (click)="getACKS()">   
+              <div class="col-3 text-center"><i class="fa fa-handshake-o" aria-hidden="true"></i></div>
+              <div class="col-6 item-text">ACKS</div>                                        
+              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_pending}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>  
             <div class="row">
-              <!--<div class="col-md-6 col-sm-12">
-                <div class="services-chart">
-                </div>
-              </div>-->
-              <div class="col-md-12 col-sm-12">
+              <div class="col-3 text-center"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
+              <div class="item-strong col-6 item-text">Totale</div>                   
+              <div class="item-strong text-right col-3 item-text" *ngIf="!num_loading">{{services_count}}</div>
+              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
+            </div>-->
+              <!--<div class="col-md-12 col-sm-12">
                 <table class="table table-sm table-hover item-text">
                   <tbody>
                     <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(0, 'OK')">
                       <td>OK</td>
                       <td class="service-ok"></td>
-                      <td class="text-right">{{services_ok}}</td>
+                      <td class="text-right" *ngIf="!num_loading">{{services_ok}}</td>
+                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
                     </tr>
                     <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(1, 'Warning')">
                       <td>Warning</td>
                       <td class="service-warn"></td>
-                      <td class="text-right">{{services_warn}}</td>
+                      <td class="text-right" *ngIf="!num_loading">{{services_warn}}</td>
+                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
                     </tr>
                     <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(2, 'Critical')">
                       <td>Critical</td>
                       <td class="service-crit"></td>
-                      <td class="text-right">{{services_crit}}</td>
+                      <td class="text-right" *ngIf="!num_loading">{{services_crit}}</td>
+                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
                     </tr>
                     <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(3, 'Unknown')">
                       <td>Unknown</td>
                       <td class="service-pending"></td>
-                      <td class="text-right">{{services_unknown}}</td>
+                      <td class="text-right" *ngIf="!num_loading">{{services_unknown}}</td>
+                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
                     </tr>
-                    <tr>
+                    <tr class="item-clickable" data-toggle="modal" data-target="#ackModal" (click)="getACKS()">
                       <td>ACK</td>
                       <td></td>
-                      <td class="text-right">{{services_pending}}</td>
+                      <td class="text-right" *ngIf="!num_loading">{{services_pending}}</td>
+                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
                     </tr>
                     <tr>
                       <td class="item-strong">Totale</td>
                       <td></td>
-                      <td class="item-strong text-right">{{services_count}}</td>
+                      <td class="item-strong text-right" *ngIf="!num_loading">{{services_count}}</td>
+                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div>-->
           </div>
         </div>
-      </div>
-      <div class="col-md-6 col-sm-12 mb-2 mt-2">
-          <div class="card hoverable ml-2 mr-2 mt-1 full-height">
-            <div class="text-center mb-2 status-services">
-              <p class="card-item-title" style="margin-bottom: 0;">Notifiche</p>
-            </div>
-            <div class="card-body">
-              <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-                <thead class="card-item-title">
-                  <td class="align-middle">Orario</td>
-                  <td class="align-middle">Cliente</td>
-                  <td class="align-middle">Host</td>
-                  <td class="align-middle">Servizio</td>
-                  <td class="align-middle">Stato</td>                 
-                </thead>
-                <!--<tbody *ngIf="services_state == undefined">
-                    <tr class="item-text-big-gray">
-                        <td colspan="10">
-                            <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                          Caricamento in corso
-                        </td>
-                    </tr>
-                </tbody>-->
-                <tbody class="text-left">
-                  <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="item-text">
-                    <td class="align-middle text-center">{{service_change.created_at}}</td>
-                    <td class="align-middle">{{service_change.customer_name}} - {{service_change.customer_site_description}}</td>
-                    <td class="align-middle">{{service_change.host_alias}}</td>
-                    <td class="align-middle">{{service_change.service_name}}</td>                
-                    <td class="align-middle text-center warn-status" *ngIf="service_change.plugin_output === 1">WARN</td>
-                    <td class="align-middle text-center down-status" *ngIf="service_change.plugin_output === 2">CRIT</td>
-                    <td class="align-middle text-center unknown-status" *ngIf="service_change.plugin_output === 3">UNKN</td>                             
-                  </tr>
-                  
-                </tbody>
-              </table>
-              <div *ngIf="services_change != undefined" class="row">
-                <div class="col-md-12 col-sm-12 mt-1 text-right">
-                  <pagination-controls id="service_change_paginate" class="my-pagination" (pageChange)="page_service_change = $event"
-                                        autoHide="true"
-                                        previousLabel="Indietro"
-                                        nextLabel="Avanti"
-                                        directionLinks="false"
-                  >
-                  </pagination-controls>
-                </div>
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--<div class="row mt-2" *ngIf="globalState">
-      <div class="col-md-12 ml-1">
-        <button *ngIf="globalState === 'active'" (click)="switchState(hostgroups)" class="btn btn btn-secondary">Comprimi
-          <i class="fa" [ngClass]="{
-            'fa-toggle-on':globalState === 'active',
-            'fa-toggle-off':globalState === 'inactive'
-          }" aria-hidden="true"></i>
-        </button>
-        <button *ngIf="globalState === 'inactive'" (click)="switchState(hostgroups)" class="btn btn btn-secondary">Espandi
-          <i class="fa" [ngClass]="{
-            'fa-toggle-on':globalState === 'active',
-            'fa-toggle-off':globalState === 'inactive'
-          }" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>-->
+      </div>      
+    </div>  
 
     <div class="row mt-2" *ngIf="hostgroups">
   		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of filter(hostgroups); let j = index">
@@ -183,7 +252,7 @@
             <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
     			</div>
 
-  				<div class="card-body" [@hostgroupState]="hostgroup.state">
+  				<div class="card-body">
   					<div *ngFor="let group of hostgroup.groups; let i = index">
   						<div class="row">
       					<div class="text-center col-3"><i class="fa" [ngClass]="{
@@ -215,21 +284,18 @@
         </button>
       </div>
       <div class="modal-body">
-        <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-          <thead class="card-item-title" style="color: #172559;">
-            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
-            Cliente</td>
-            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
-            Sito</td>
-            <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i>
-            Nome</td>
-            <td scope="col"><i class="fa fa-podcast" aria-hidden="true"></i> Indirizzo IP</td>
-            <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Servizi</td>
-            <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
-            <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
-            <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
-            <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
-            <td scope="col"><i class="fa fa-wrench hostgroup-ack" aria-hidden="true"></i> Ack</td>
+        <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped">
+          <thead class="card-item-title table-header">
+            <td scope="col">Cliente</td>
+            <td scope="col">Sito</td>
+            <td scope="col">Nome</td>
+            <td scope="col">Indirizzo IP</td>
+            <td scope="col">Stato Servizi</td>
+            <td scope="col">OK</td>
+            <td scope="col">Warning</td>
+            <td scope="col">Critical</td>
+            <td scope="col">Unknown</td>
+            <td scope="col">ACK</td>
           </thead>
           <tbody *ngIf="hosts == undefined">
               <tr class="item-text-big-gray">
@@ -279,12 +345,7 @@
 <div class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div class="modal-header" [ngClass]="{
-          'panel-state-ok': modalPanelState == 0,
-          'panel-state-warn': modalPanelState == 1,
-          'panel-state-crit': modalPanelState == 2,
-          'panel-state-unknown': modalPanelState == 3
-        }">
+        <div class="modal-header">
           <h5 class="modal-title" id="serviceModalLabel" *ngIf="modalPanelTitle">Elenco Servizi, Stato: {{modalPanelTitle}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>

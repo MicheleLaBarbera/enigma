@@ -332,8 +332,8 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let host of host_logs | paginate: { id: 'host_log', itemsPerPage: 10, currentPage: page_host_log };" class="item-text">
-                    <td class="up-status" *ngIf="host.hard_state == 0">UP</td>
-                    <td class="down-status" *ngIf="host.hard_state == 1">DOWN</td>         
+                    <td class="up-status" *ngIf="host.hard_state == 0">ONLINE</td>
+                    <td class="down-status" *ngIf="host.hard_state == 1">OFFLINE</td>         
                     <td>{{host.created_at}}</td>                               
                     <!--<td><i class="fa" [ngClass]="{
                       'fa-check-circle hostgroup-up':host.host_num_services_crit == 0 && host.host_num_services_warn == 0 && host.host_num_services_unknown == 0,

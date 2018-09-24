@@ -8,3 +8,4 @@ export * from './service_ack';
 export * from './host_log';
 export * from './service_log';
 export * from './service_state';
+export * from './service_change';

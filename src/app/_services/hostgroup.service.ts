@@ -3,16 +3,21 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 import { AuthenticationService } from '../_services/authentication.service';
-import { Hostgroup, Host, Service, Customer, Server, ServiceAck, HostLog, ServiceLog, ServiceState } from '../_models/index';
+import { Hostgroup, Host, Service, Customer, Server, ServiceAck, HostLog, ServiceLog, ServiceState, ServiceChange } from '../_models/index';
 import * as decode from 'jwt-decode';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 @Injectable()
 export class HostgroupService {
   //private api_site = 'http://enigma.posdata.it:3000';
   private api_site = 'http://localhost:3000';
 
-  constructor(private http: HttpClient, private authenticationService: AuthenticationService) {}
+  constructor(private http: HttpClient, private authenticationService: AuthenticationService, private router: Router) {    
+  }
 
+  ngOnInit() {
+    
+  }
 
   public getHostgroups(token: string): Observable<Hostgroup[]> {
     let tokenPayload = decode(token);
@@ -48,6 +53,11 @@ export class HostgroupService {
   public getServiceAck(service_id: string) : Observable<ServiceAck> {
     return this.http.get<ServiceAck>(this.api_site + '/services/' + service_id + '/ack').map(
     res => new ServiceAck(res._id, res.host_id, res.service_id, res.creator_name, res.message, res.created_at));
+  }
+
+  public getACKS() : Observable<ServiceAck[]> {
+    return this.http.get<ServiceAck[]>(this.api_site + '/acks/').map(
+    res => res.map(x=> new ServiceAck(x._id, x.host_id, x.service_id, x.creator_name, x.message, x.created_at)));
   }
 
   public deleteServiceAck(service_id: string, ack_id: string): Observable<boolean> {
@@ -189,8 +199,8 @@ export class HostgroupService {
     res => res.map(x => new ServiceState(x.customer_name, x.customer_site_description, x.host_alias, x.service_name, x.plugin_output, x.created_at)));
   }
 
-  public getServicesChange() : Observable<ServiceState[]> {
-    return this.http.get<ServiceState[]>(this.api_site + '/services/change/' + 0).map(
-    res => res.map(x => new ServiceState(x.customer_name, x.customer_site_description, x.host_alias, x.service_name, x.plugin_output, x.created_at)));
+  public getServicesChange() : Observable<ServiceChange[]> {
+    return this.http.get<ServiceChange[]>(this.api_site + '/services/change/' + 0).map(
+    res => res.map(x => new ServiceChange(x.customer_name, x.customer_site_description, x.host_alias, x.service_name, x.plugin_output, x.created_at, x.date, x.time)));
   }
 }
