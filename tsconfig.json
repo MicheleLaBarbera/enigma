@@ -14,6 +14,15 @@
     "lib": [
       "es2017",
       "dom"
-    ]
-  }
+    ],
+    "module": "es2015",
+    "baseUrl": "./"    
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "files": [
+    "src/app/app.module.ts",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbargauge.ts"
+  ]
 }

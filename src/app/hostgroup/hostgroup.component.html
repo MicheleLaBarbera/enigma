@@ -47,18 +47,29 @@
           </div>
         </div>
 
-        <div class="row d-none d-sm-block" *ngIf="host_chart">
+        <div class="row">
           <div class="col col-sm-12 mb-2">
             <div class="card hoverable ml-1 mr-1 mt-1 full-height">
               <div class="text-center mb-2 status-hosts">
                 <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
               </div>
-              <div class="card-body">
-                <div class="row">
-                  <!--<div class="col-md-6 col-sm-12">
+              <div class="card-body" style="display: flex; overflow: hidden;">
+                <ngx-charts-pie-chart *ngIf="hostChartData"            
+                [scheme]="hostChartScheme"
+                [results]="hostChartData"
+                [legend]="false"
+                [explodeSlices]="false"
+                [trimLabels]="false"
+                [tooltipDisabled]="true"
+                [labels]="true"
+                [doughnut]="false"    
+                (select)="onSelectHostChart($event)">
+                </ngx-charts-pie-chart>
+                <!--<div class="row">
+                  <div class="col-md-6 col-sm-12">
                     <div class="hosts-chart">
                     </div>
-                  </div>-->
+                  </div>
                   <div class="col-md-12 col-sm-12">
                     <table class="table table-sm table-hover item-text">
                       <tbody>
@@ -85,24 +96,35 @@
                       </tbody>
                     </table>
                   </div>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
         </div>
 
-        <div class="row d-none d-sm-block" *ngIf="service_chart">
+        <div class="row">
           <div class="col col-sm-12 mb-2">
             <div class="card hoverable ml-1 mr-1 mt-1">
               <div class="text-center mb-2 status-services">
                 <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
               </div>
-              <div class="card-body">
-                <div class="row">
-                  <!--<div class="col-md-6 col-sm-12">
+              <div class="card-body" style="display: flex; overflow: hidden;">
+                <ngx-charts-pie-chart *ngIf="serviceChartData"          
+                [scheme]="serviceChartScheme"
+                [results]="serviceChartData"
+                [legend]="false"
+                [explodeSlices]="false"
+                [trimLabels]="false"
+                [tooltipDisabled]="true"
+                [labels]="true"
+                [doughnut]="false"    
+                (select)="onSelectServiceChart($event)">
+                </ngx-charts-pie-chart>
+                <!--<div class="row">
+                  <div class="col-md-6 col-sm-12">
                     <div class="services-chart">
                     </div>
-                  </div>-->
+                  </div>
                   <div class="col-md-12 col-sm-12">
                     <table class="table table-sm table-hover item-text">
                       <tbody>
@@ -139,7 +161,7 @@
                       </tbody>
                     </table>
                   </div>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
@@ -374,12 +396,12 @@
           </button>
         </div>
         <div class="modal-body">  
-          <div class="card hoverable ml-1 mr-1 mt-1">
+          <div *ngIf="(refreshedACK.ack | json) != '{}'" class="card hoverable ml-1 mr-1 mt-1">
             <div class="pl-3 mb-2 status-hosts">
               <p class="card-item-title text-center" style="margin-bottom: 0;"><i class="fa fa-file-text" aria-hidden="true"></i> Visualizza ACK</p>
             </div>
 
-            <div class="card-body ml-1 mr-1 item-text-big">
+            <div class="card-body ml-1 mr-1 item-text-big"> 
               <p><i class="fa fa-calendar-check-o"></i> Data: {{refreshedACK.ack.created_at}}</p>
               <p><i class="fa fa-address-card-o"></i> Autore: {{refreshedACK.ack.creator_name}}</p>
               <p><i class="fa fa-list-alt"></i> Descrizione: {{refreshedACK.ack.message}}</p>
@@ -387,50 +409,17 @@
             </div>        
           </div>
 
-          <!--<table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover" *ngIf="(refreshedACK.ack | json) != '{}'">
-            <thead class="card-item-title">          
-              <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Autore</td>
-              <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>                
-              <td scope="col"><i class="fa fa-calendar-check-o"></i> Creazione</td>  
-              <td scope="col"></td>              
-            </thead>
-            <tbody>
-              <tr class="item-text">                  
-                <td>{{refreshedACK.ack.creator_name}}</td>
-                <td class="text-left">{{refreshedACK.ack.message}}</td>               
-                <td>{{refreshedACK.ack.created_at}}</td>   
-                <td class="item-clickable" data-toggle="modal" data-target="#deleteACKModal"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></td>              
-              </tr>
-            </tbody>
-          </table>-->
           <form *ngIf="(refreshedACK.ack | json) == '{}'" name="form" (ngSubmit)="f.form.valid && createACK(refreshedACK, currentUser.id, f)" #f="ngForm" novalidate>                         
-            <!--<h4 *ngIf="(refreshedACK.ack | json) != '{}'">
-              <span class="badge badge-warning"><i class="fa fa-pencil-square" aria-hidden="true"></i> Modifica</span>
-            </h4>--> 
-            <p class="item-text-big"><i class="fa fa-asterisk" aria-hidden="true"></i>
-              Motivazione dell'ACK:</p>
-            <!--<h4>
-              <span class="badge badge-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> Crea</span>
-            </h4>-->
+            <p class="item-text-big"><i class="fa fa-asterisk" aria-hidden="true"></i>Motivazione dell'ACK:</p>        
             <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !message.valid }">
               <div class="input-group mb-2">                                
                 <input type="text" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required />                    
               </div>
               <div class="text-center">
-                  <button [disabled]="loading" class="btn btn-success" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva
-                  </button>
-                  <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                </div>
-              <!--<div class="input-group mb-2">
-                <div class="row">
-                  <div class="col-md-6">
-                    <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="date_model" [locale]="it" required></my-date-picker>  
-                  </div>
-                  <div class="col-md-6">
-                      <input type="time" value="{{selectedTime}}"> 
-                  </div>
-                </div>
-              </div>-->                             
+                <button [disabled]="loading" class="btn btn-success" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva
+                </button>
+                <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+              </div>                                 
             </div>          
           </form>                
         </div>

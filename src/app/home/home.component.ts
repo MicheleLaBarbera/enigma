@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HostgroupService } from '../_services/index';
 import { User, Hostgroup, Host, Service, ServiceState, ServiceChange, ServiceAck } from '../_models/index';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -50,6 +50,11 @@ export class HomeComponent implements OnInit {
 
   public refreshPanelTimer;
 
+  @ViewChild('btnServiceModalOpen') btnServiceModalOpen : ElementRef;
+  @ViewChild('btnHostModalOpen') btnHostModalOpen : ElementRef;
+
+  values: number[] = [102, 115, 130, 137];
+
   /********************************************************************
    * Host Graph
    * 
@@ -78,24 +83,30 @@ export class HomeComponent implements OnInit {
 
   public onSelectHostChart(event) {
     if(event.name == 'Online') {
+      this.btnHostModalOpen.nativeElement.click();
       this.getHostsByState(0, 'Online');
     }
     else if(event.name == 'Offline') {
+      this.btnHostModalOpen.nativeElement.click();
       this.getHostsByState(1, 'Offline');
     }
   }
 
   public onSelectServiceChart(event) {
     if(event.name == 'OK') {
+      this.btnServiceModalOpen.nativeElement.click();
       this.getServicesByState(0, 'OK');
     }
     else if(event.name == 'Warning') {
+      this.btnServiceModalOpen.nativeElement.click();
       this.getServicesByState(1, 'Warning');
     }
     else if(event.name == 'Critical') {
+      this.btnServiceModalOpen.nativeElement.click();
       this.getServicesByState(2, 'Critical');
     }
     else if(event.name == 'Unknown') {
+      this.btnServiceModalOpen.nativeElement.click();
       this.getServicesByState(3, 'Unknown');
     }
   }
@@ -105,6 +116,7 @@ export class HomeComponent implements OnInit {
   	this.token = this.currentUser && this.currentUser.token;
   }
 
+  
   ngOnInit() {    
 
     this.hosts_down = 0;
@@ -144,36 +156,36 @@ export class HomeComponent implements OnInit {
       this.hostChartData = [
         {
           "name": "Online",
-          "value": this.hosts_up
+          "value": this.hosts_up / 100
         },
         {
           "name": "Offline",
-          "value": this.hosts_down
+          "value": this.hosts_down / 30
         },
         {
           "name": "Manteinance",
-          "value": this.hosts_pending
+          "value": this.hosts_pending / 30
         }
-      ]
+      ];
 
       this.serviceChartData = [
         {
           "name": "OK",
-          "value": this.services_ok
+          "value": this.services_ok / 100
         },
         {
           "name": "Warning",
-          "value": this.services_warn
+          "value": this.services_warn / 30
         },
         {
           "name": "Critical",
-          "value": this.services_crit
+          "value": this.services_crit / 30 
         },
         {
           "name": "Unknown",
-          "value": this.services_unknown
+          "value": this.services_unknown / 30
         }
-      ]
+      ];
     });   
     this.getServicesChange();
 
@@ -258,6 +270,7 @@ export class HomeComponent implements OnInit {
   public getServicesChange() {    
     this.hostgroupService.getServicesChange().subscribe(services_change => {
       this.services_change = services_change;    
+      console.log(services_change)
       this.num_loading = false;    
     });    
   }

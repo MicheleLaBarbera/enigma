@@ -5,7 +5,7 @@ import { AlertService, AuthenticationService, HostgroupService, UserService } fr
 
 import { Customer, User, Server, Hostgroup } from '../_models/index';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-acp',

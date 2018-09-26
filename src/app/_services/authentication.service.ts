@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 //import { Http, Headers, Response } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map'
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import * as decode from 'jwt-decode';
 
 @Injectable()
 export class AuthenticationService {
-  //private api_site = 'http://enigma.posdata.it:3000';
-  private api_site = 'http://localhost:3000';
+  private api_site = 'http://enigma.posdata.it:3000';
+  //private api_site = 'http://localhost:3000';
 
   public token: string;
 
@@ -19,7 +20,7 @@ export class AuthenticationService {
 
   login(username: string, password: string, remember: number): Observable<boolean> {
     return this.http.post(this.api_site + '/users/auth', { username: username, password: password, remember: remember })
-    .map((response: HttpResponse<any>) => { 
+    .pipe(map((response: HttpResponse<any>) => { 
       //console.log(response.status) 
       if(response.status == 200) {
         let token = response.body.token;
@@ -31,14 +32,14 @@ export class AuthenticationService {
       else {
         return false;
       }
-    });
+    }));
   }
 
   signup(firstname: string, lastname: string, username: string, password: string, customer_id: string, email: string, role: number): Observable<any> {
     return this.http.post<any>(this.api_site + '/users', { username: username, password: password, firstname: firstname, lastname: lastname, email: email, role: role, telegram_id: 'undefined', customer_id: customer_id})
-    .map((response: HttpResponse<any>) => {
+    .pipe(map((response: HttpResponse<any>) => {
       return response;
-    });
+    }));
   }
 
   logout() {

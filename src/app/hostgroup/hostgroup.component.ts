@@ -8,7 +8,6 @@ import { AlertService, HostgroupService } from '../_services/index';
 import { Hostgroup, Host, Service, ServiceAck, HostLog, ServiceLog } from '../_models/index';
 
 import {IMyDpOptions} from 'mydatepicker';
-import { AmazingTimePickerService } from 'amazing-time-picker';
 
 @Component({
   selector: 'app-hostgroup',
@@ -84,23 +83,9 @@ export class HostgroupComponent implements OnInit {
     date: { year: this.today_year, month: this.today_month, day: this.today_day },
   };
 
-  constructor(private atp: AmazingTimePickerService, private route: ActivatedRoute, private alertService: AlertService, private hostgroupService: HostgroupService) {
+  constructor(private route: ActivatedRoute, private alertService: AlertService, private hostgroupService: HostgroupService) {
   	this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   	this.token = this.currentUser && this.currentUser.token;
-  }
-
-  open() {
-    const amazingTimePicker = this.atp.open({
-      time:  this.selectedTime,
-      theme: 'dark',
-      arrowStyle: {
-          background: 'red',
-          color: 'white'
-      }
-    });
-    amazingTimePicker.afterClose().subscribe(time => {
-        this.selectedTime = time;
-    });
   }
 
   public tservices_crit: number = 0;
@@ -112,13 +97,53 @@ export class HostgroupComponent implements OnInit {
 
   @ViewChild('btnACKClose') btnACKClose : ElementRef;
 
+  public hostChartData: any[];
+  public hostChartScheme = {
+    domain: ['#27c24c', '#f05050', '#0e71b4']
+  };
+
+  public onSelectHostChart(event) {
+    /*if(event.name == 'Online') {
+      this.btnHostModalOpen.nativeElement.click();
+      this.getHostsByState(0, 'Online');
+    }
+    else if(event.name == 'Offline') {
+      this.btnHostModalOpen.nativeElement.click();
+      this.getHostsByState(1, 'Offline');
+    }*/
+  }
+
+  public serviceChartData: any[];
+  public serviceChartScheme = {
+    domain: ['#27c24c', '#ff902b', '#f05050', '#0e71b4']
+  };
+
+  public onSelectServiceChart(event) {
+    /*if(event.name == 'OK') {
+      this.btnServiceModalOpen.nativeElement.click();
+      this.getServicesByState(0, 'OK');
+    }
+    else if(event.name == 'Warning') {
+      this.btnServiceModalOpen.nativeElement.click();
+      this.getServicesByState(1, 'Warning');
+    }
+    else if(event.name == 'Critical') {
+      this.btnServiceModalOpen.nativeElement.click();
+      this.getServicesByState(2, 'Critical');
+    }
+    else if(event.name == 'Unknown') {
+      this.btnServiceModalOpen.nativeElement.click();
+      this.getServicesByState(3, 'Unknown');
+    }*/
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     const id2 = this.route.snapshot.paramMap.get('id2');
 
 
   	this.hostgroupService.getHostgroup(this.token, id).subscribe(hostgroup => {
-      this.hostgroup = hostgroup;
+      /*this.hostgroup = hostgroup;
 
 
       this.hosts_down = this.hostgroup['hosts_down'];
@@ -148,7 +173,97 @@ export class HostgroupComponent implements OnInit {
       }        
 
       this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;
+
+      this.hostChartData = [
+        {
+          "name": "Online",
+          "value": this.hosts_up / 100
+        },
+        {
+          "name": "Offline",
+          "value": this.hosts_down / 30
+        },
+        {
+          "name": "Manteinance",
+          "value": this.hosts_pending / 30
+        }
+      ];
+
       this.services_count = this.services_ok + this.services_pending + this.services_warn + this.services_unknown + this.services_crit;
+
+      this.serviceChartData = [
+        {
+          "name": "OK",
+          "value": this.tservices_ok / 100
+        },
+        {
+          "name": "Warning",
+          "value": this.tservices_warn / 30
+        },
+        {
+          "name": "Critical",
+          "value": this.tservices_crit / 30 
+        },
+        {
+          "name": "Unknown",
+          "value": this.tservices_unknown / 30
+        }
+      ];*/
+      this.hostgroup = hostgroup;
+
+      this.hosts_down += this.hostgroup['hosts_down'];
+      this.hosts_unreachable += this.hostgroup['hosts_unreachable'];
+      this.hosts_pending += this.hostgroup['hosts_pending'];
+      this.hosts_up += this.hostgroup['hosts_up'];
+
+      this.services_crit += this.hostgroup['services_crit'];
+      this.services_ok += this.hostgroup['services_ok'];
+      this.services_pending += this.hostgroup['services_pending'];
+      this.services_unknown += this.hostgroup['services_unknown'];
+      this.services_warn += this.hostgroup['services_warn'];
+    
+      this.hosts_count = this.hosts_up + this.hosts_pending + this.hosts_unreachable + this.hosts_down;  
+      this.services_count = this.services_ok + this.services_crit + this.services_warn + this.services_unknown;   
+      
+      this.hostChartData = [
+        {
+          "name": "Online",
+          "value": this.hosts_up / 100
+        },
+        {
+          "name": "Offline",
+          "value": this.hosts_down / 30
+        },
+        {
+          "name": "Manteinance",
+          "value": this.hosts_pending / 30
+        }
+      ];
+
+      this.serviceChartData = [
+        {
+          "name": "OK",
+          "value": this.services_ok / 100
+        },
+        {
+          "name": "Warning",
+          "value": this.services_warn / 30
+        },
+        {
+          "name": "Critical",
+          "value": this.services_crit / 30 
+        },
+        {
+          "name": "Unknown",
+          "value": this.services_unknown / 30
+        }
+      ];
+
+      for(let group of this.hostgroup.groups) {
+        if(id2 == group['_id']) {
+          this.getHosts(this.hostgroup, group, this.hostgroup['ip'], this.hostgroup['port'], id2);
+        }
+      }
     });
   }
 

@@ -2,6 +2,32 @@
   <app-navbar></app-navbar>
 </header>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Task', 'Hours per Day'],
+      ['Work',     11],
+      ['Eat',      2],
+      ['Commute',  2],
+      ['Watch TV', 2],
+      ['Sleep',    7]
+    ]);
+
+    var options = {
+      title: 'My Daily Activities'
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+  }
+</script>
+
 <div id="main-card" class="card ml-3 mr-3 text-justify">
   <div class="card-body">
     <div class="row mt-1">
@@ -32,7 +58,7 @@
                   <td class="align-middle col-1">Ora</td>
                   <td class="align-middle col-3">Cliente</td>
                   <td class="align-middle col-3">Host</td>
-                  <td class="align-middle col-3">Servizio</td>          
+                  <td class="align-middle col-3">Servizio</td>             
                 </tr>                         
               </thead>   
               <!--<tbody *ngIf="services_change == undefined">
@@ -44,20 +70,20 @@
                 </tr>
               </tbody>-->
               <tbody class="text-left">
-                <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="d-flex">
-                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 0"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>       
-                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 1"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
-                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 2"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></td>
-                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 3"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i></td>    
+                <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="item-clickable d-flex">
+                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 0"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>       
+                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 1"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
+                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 2"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></td>
+                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 3"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i></td>    
 
-                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 4"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>    
-                    <td class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 5"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
+                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 4"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>    
+                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 5"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
 
-                  <td class="align-middle text-center col-1 item-text">{{service_change.date}}</td>
-                  <td class="align-middle text-center col-1 item-text">{{service_change.time}}</td>
-                  <td class="align-middle text-center col-3 item-text">{{service_change.customer_name}}</td>
-                  <td class="align-middle text-center col-3 item-text">{{service_change.host_alias}}</td>
-                  <td class="align-middle text-center col-3 item-text">{{service_change.service_name}}</td>                                                  
+                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1 item-text">{{service_change.date}}</td>
+                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1 item-text">{{service_change.time}}</td>
+                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-3 item-text">{{service_change.customer_name}}</td>
+                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-3 item-text">{{service_change.host_alias}}</td>
+                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-3 item-text">{{service_change.service_name}}</td> 
                 </tr>                  
               </tbody>
             </table>              
@@ -72,9 +98,21 @@
           <div class="card-body" style="display: flex; overflow: hidden;"> 
             <!--<ngx-charts-line-chart [scheme]="lineChartColorScheme" [results]="lineChartMulti" [gradient]="lineChartGradient" [xAxis]="lineChartShowXAxis" [yAxis]="lineChartShowYAxis" [legend]="lineChartShowLegend" [showXAxisLabel]="lineChartShowXAxisLabel" [showYAxisLabel]="lineChartShowYAxisLabel" [xAxisLabel]="lineChartXAxisLabel" [yAxisLabel]="lineChartYAxisLabel" [autoScale]="lineChartAutoScale" [curve]="lineChartLineInterpolation" (select)="onSelect($event)"> </ngx-charts-line-chart>
             -->
-        
-            <ngx-charts-advanced-pie-chart data-toggle="modal" [label]="Totale" data-target="#hostModal" *ngIf="hostChartData" [scheme]="hostChartScheme" [results]="hostChartData" (select)="onSelectHostChart($event)"></ngx-charts-advanced-pie-chart>
-      
+            <span #btnHostModalOpen data-toggle="modal" data-target="#hostModal" ></span>
+            <ngx-charts-pie-chart *ngIf="hostChartData"            
+            [scheme]="hostChartScheme"
+            [results]="hostChartData"
+            [legend]="false"
+            [explodeSlices]="false"
+            [trimLabels]="false"
+            [tooltipDisabled]="true"
+            [labels]="true"
+            [doughnut]="false"    
+            (select)="onSelectHostChart($event)">
+            </ngx-charts-pie-chart>
+
+            <!--<ngx-charts-advanced-pie-chart data-toggle="modal" [label]="Totale" data-target="#hostModal" *ngIf="hostChartData" [scheme]="hostChartScheme" [results]="hostChartData" (select)="onSelectHostChart($event)"></ngx-charts-advanced-pie-chart>
+            -->
               <!--<div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'Online')">                                                   
               <div class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></div>
               <div class="col-6 item-text">Online</div>                                        
@@ -158,8 +196,21 @@
             <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
           </div>
           <div class="card-body" style="display: flex; overflow: hidden;">    
-              <ngx-charts-advanced-pie-chart data-toggle="modal" data-target="#serviceModal" [label]="Totale" *ngIf="serviceChartData" [scheme]="serviceChartScheme" [results]="serviceChartData" (select)="onSelectServiceChart($event)"></ngx-charts-advanced-pie-chart>
-              
+            <!--<ngx-charts-advanced-pie-chart data-toggle="modal" data-target="#serviceModal" [label]="Totale" *ngIf="serviceChartData" [scheme]="serviceChartScheme" [results]="serviceChartData" (select)="onSelectServiceChart($event)"></ngx-charts-advanced-pie-chart>
+            -->
+            <span #btnServiceModalOpen data-toggle="modal" data-target="#serviceModal"></span>
+            <ngx-charts-pie-chart *ngIf="serviceChartData"          
+            [scheme]="serviceChartScheme"
+            [results]="serviceChartData"
+            [legend]="false"
+            [explodeSlices]="false"
+            [trimLabels]="false"
+            [tooltipDisabled]="true"
+            [labels]="true"
+            [doughnut]="false"    
+            (select)="onSelectServiceChart($event)">
+            </ngx-charts-pie-chart>
+
             <!--<div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(0, 'OK')">   
               <div class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></div>
               <div class="col-6 item-text">OK</div>                                        
