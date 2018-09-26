@@ -8,8 +8,8 @@ import * as decode from 'jwt-decode';
 
 @Injectable()
 export class AuthenticationService {
-  private api_site = 'http://enigma.posdata.it:3000';
-  //private api_site = 'http://localhost:3000';
+  //private api_site = 'http://enigma.posdata.it:3000';
+  private api_site = 'http://localhost:3000';
 
   public token: string;
 

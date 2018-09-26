@@ -10,8 +10,8 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from
 
 @Injectable()
 export class HostgroupService {
-  private api_site = 'http://enigma.posdata.it:3000';
-  //private api_site = 'http://localhost:3000';
+  //private api_site = 'http://enigma.posdata.it:3000';
+  private api_site = 'http://localhost:3000';
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService, private router: Router) {    
   }
@@ -25,7 +25,7 @@ export class HostgroupService {
     return this.http.get<Hostgroup[]>(this.api_site + '/users/' + tokenPayload.data.id + '/sites/hostgroups').pipe(map(
   		res => res.map(x => new Hostgroup(x._id, x.name, x.ip, x.port, x.status, x.state, x.description, x.default_group, x.groups, x.hosts_down, x.hosts_pending,
                                              x.hosts_unreachable, x.hosts_up, x.services_crit, x.services_ok, x.services_pending, x.services_unknown,
-                                             x.services_warn))));
+                                             x.services_warn, x.check_state))));
   }
 
   public getHostgroup(token: string, id: string): Observable<Hostgroup> {
@@ -33,7 +33,7 @@ export class HostgroupService {
     return this.http.get<Hostgroup>(this.api_site + '/users/' + tokenPayload.data.id + '/sites/' + id + '/hostgroups').pipe(map(
   		res => new Hostgroup(res._id, res.name, res.ip, res.port, res.status, res.state, res.description, res.default_group, res.groups, res.hosts_down, res.hosts_pending,
                                              res.hosts_unreachable, res.hosts_up, res.services_crit, res.services_ok, res.services_pending, res.services_unknown,
-                                             res.services_warn)));
+                                             res.services_warn, res.check_state)));
   }
 
   public getHosts(ip:string, port: number, host_group_id: string) : Observable<Host[]> {
@@ -170,6 +170,13 @@ export class HostgroupService {
 
   public getSchedulerLastCheck(): Observable<any> {
     return this.http.get<any>(this.api_site + '/scheduler_infos/lastcheck')
+    .pipe(map((response: HttpResponse<any>) => {
+      return response;
+    }));
+  }
+
+  public getCustomerSiteLastLog(site_id: string): Observable<any> {
+    return this.http.get<any>(this.api_site + '/customer_sites/' + site_id + '/state')
     .pipe(map((response: HttpResponse<any>) => {
       return response;
     }));

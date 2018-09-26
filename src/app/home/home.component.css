@@ -46,6 +46,10 @@ i {
   cursor: pointer;
 }
 
+.fa:hover {
+  cursor: default;
+}
+
 .item-clickable {
   margin-bottom: 0;
 }

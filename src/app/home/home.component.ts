@@ -137,8 +137,12 @@ export class HomeComponent implements OnInit {
 
     this.hostgroupService.getHostgroups(this.token).subscribe(hostgroups => {
       this.hostgroups = hostgroups;
-
+      console.log(this.hostgroups)
       for(let single of this.hostgroups) {
+        /*this.hostgroupService.getCustomerSiteLastLog(single._id).subscribe(lastLog => {
+          //this.lastCheck = lastCheck;
+        });*/
+
         this.hosts_down += single['hosts_down'];
         this.hosts_unreachable += single['hosts_unreachable'];
         this.hosts_pending += single['hosts_pending'];

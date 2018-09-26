@@ -2,32 +2,6 @@
   <app-navbar></app-navbar>
 </header>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
-
-  function drawChart() {
-
-    var data = google.visualization.arrayToDataTable([
-      ['Task', 'Hours per Day'],
-      ['Work',     11],
-      ['Eat',      2],
-      ['Commute',  2],
-      ['Watch TV', 2],
-      ['Sleep',    7]
-    ]);
-
-    var options = {
-      title: 'My Daily Activities'
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-    chart.draw(data, options);
-  }
-</script>
-
 <div id="main-card" class="card ml-3 mr-3 text-justify">
   <div class="card-body">
     <div class="row mt-1">
@@ -300,8 +274,21 @@
   			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
 
   				<div class="text-center mb-2 status-hosts">         
-            <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
-    			</div>
+            <p *ngIf="hostgroup.check_state == 0" class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
+            <div class="row text-center" *ngIf="hostgroup.check_state == 1">
+              <div class="col-md-3"></div>
+              <div class="col-md-6">
+                <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}} </p>
+              </div>
+              <div class="col-md-3" style="padding-top: 1px;">
+                <span style="background-color: #f05050; color: white; font-weight: 600; border-radius: 5px; padding-left: 0.5rem; padding-right: 0.5rem;"><i class="fa fa-power-off" aria-hidden="true"></i>
+                   OFF</span>
+              </div>
+              
+            </div>
+            <!--<p  class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}} <span class="badge badge-pill badge-danger">Offline</span></p>
+            -->
+            </div>
 
   				<div class="card-body">
   					<div *ngFor="let group of hostgroup.groups; let i = index">
