@@ -1,20 +1,290 @@
-<header>
-  <app-navbar></app-navbar>
-</header>
+<app-navbar></app-navbar>
 
 <div id="main-card" class="card ml-3 mr-3 text-justify">
   <div class="card-body">
-    <div class="row">
-      <div class="col-md-3 col-sm-12"></div>
-      <div class="col-md-6 col-sm-12">
-        <div class="card hoverable ml-1 mr-1 mt-1">
-          <div class="text-center mb-2 status-hosts">
-            <p class="card-item-title">Profilo</p>
+    <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+      <div class="col-md-12 col-sm-12">
+        <nav aria-label="breadcrumb" class="mr-2 ml-2" *ngIf="currentUser">
+          <ol class="breadcrumb mt-3">
+            <li class="breadcrumb-item"><a style="color:#6c757d;" href="" routerLink="/home">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Pagina Profilo</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row mb-2" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+      <div class="col-md-3 col-sm-12 mt-2">
+        <div class="card ml-2 mr-2 mt-1">
+          <div class="pl-3 mb-2 status-hosts">
+            <p class="card-item-title text-center" style="margin-bottom: 0;">Opzioni</p>
           </div>
-          <div class="card-body">
+          <div class="row">
+            <div class="text-center col-3 icon-text">
+              <i class="fa fa-user" aria-hidden="true"></i>
+            </div>
+            <div class="col-6 item-clickable item-text-o" (click)="changeView(1, 'Modifica Informazioni');">Modifica Informazioni</div>
+          </div>
+          <div class="row">
+            <div class="text-center col-3 icon-text">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+            </div>
+            <div class="col-6 item-clickable item-text-o" (click)="changeView(2, 'Modifica Password');">Modifica Password</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mt-2">
+        <div class="card ml-2 mr-2 mt-1">
+          <div class="pl-3 mb-2 status-hosts">
+            <p class="card-item-title text-center" style="margin-bottom: 0;">{{viewTitle}}</p>
+          </div>
+
+          <div class="card-body ml-2 mr-2 mb-2" *ngIf="viewPanel == 1">
+            <form class="mt-2" name="form" (ngSubmit)="userForm.form.valid && updateUser(userForm, currentUser.id) && userForm.reset()" #userForm="ngForm" novalidate>
+              <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+                <div class="col-md-6 col-sm-12">
+                  <p class="login-label">Nome</p>
+                  <div class="mt-2 mb-3" [ngClass]="{ 'has-error': userForm.submitted && !firstname.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-address-card" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="firstname" autocomplete="firstname" [(ngModel)]="userModel.firstname" #firstname="ngModel" />
+                      <div *ngIf="userForm.submitted && !firstname.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-12" style="padding-left: .9rem">
+                  <p class="login-label">Cognome</p>
+                  <div class="mt-2 mb-3" [ngClass]="{ 'has-error': userForm.submitted && !lastname.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-address-card-o" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="lastname" autocomplete="lastname" [(ngModel)]="userModel.lastname" #lastname="ngModel" />
+                      <div *ngIf="userForm.submitted && !lastname.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>         
+              </div>
+
+              
+              <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+                <div class="col-md-6 col-sm-12">
+                  <p class="login-label">E-Mail</p>
+                  <div class="mt-2 mb-3" [ngClass]="{ 'has-error': userForm.submitted && !email.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="userModel.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" />
+                      <div *ngIf="userForm.submitted && !email.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-sm-12" style="padding-left: .9rem">
+                  <p class="login-label">Telegram ID</p>
+                  <div class="mt-2 mb-3" [ngClass]="{ 'has-error': userForm.submitted && !telegram_id.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-telegram" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="telegram_id" autocomplete="telegram_id" [(ngModel)]="userModel.telegram_id" #telegram_id="ngModel" />
+                      <div *ngIf="userForm.submitted && !telegram_id.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+                <div class="col-md-6 col-sm-12">
+                  <p class="login-label">Cellulare</p>
+                  <div class="mt-2 mb-3" [ngClass]="{ 'has-error': userForm.submitted && !phone_number.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-phone" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="phone_number" autocomplete="phone_number" [(ngModel)]="userModel.phone_number" #phone_number="ngModel" />
+                      <div *ngIf="userForm.submitted && !phone_number.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-12" style="padding-left: .9rem">
+                  <p class="login-label">Ufficio</p>
+                  <div class="mt-2 mb-3" [ngClass]="{ 'has-error': userForm.submitted && !office_number.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-phone" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="office_number" autocomplete="office_number" [(ngModel)]="userModel.office_number" #office_number="ngModel" />
+                      <div *ngIf="userForm.submitted && !office_number.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>                
+              </div>
+                
+
+              <div class="row mb-2">
+                <div class="col-md-12 col-sm-12 text-center mt-1">                
+                  <button [disabled]="loading" class="btn btn-success card-item-title create-up" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva</button>
+                  <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                </div>
+              </div>
+              <alert class="item-text" style="font-size: 0.9rem"></alert>                          
+            </form>
+          </div>
+
+          <div class="card-body ml-2 mr-2 mb-2" *ngIf="viewPanel == 2">
+            <form class="mt-2" name="form" (ngSubmit)="passwordForm.form.valid && updateUserPassword(passwordForm, currentUser.id) && passwordForm.reset()" #passwordForm="ngForm" novalidate>
+
+              <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+                <div class="col-md-12 col-sm-12">
+                  <p class="login-label">Vecchia Password</p>
+                  <div class="mt-2" [ngClass]="{ 'has-error': passwordForm.submitted && !current_password.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="password" class="form-control" name="current_password" autocomplete="current-old_password" [(ngModel)]="passwordModel.current_password" #current_password="ngModel" required />
+                      <div *ngIf="passwordForm.submitted && !current_password.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+                <div class="col-md-12 col-sm-12">
+                  <p class="login-label">Nuova Password</p>
+                  <div class="mt-2" [ngClass]="{ 'has-error': passwordForm.submitted && !new_password.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="password" class="form-control" name="new_password" autocomplete="current-new_password" [(ngModel)]="passwordModel.new_password" #new_password="ngModel" required />
+                      <div *ngIf="passwordForm.submitted && !new_password.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+                <div class="col-md-12 col-sm-12">
+                  <p class="login-label">Conferma Password</p>
+                  <div class="mt-2" [ngClass]="{ 'has-error': passwordForm.submitted && !confirm_password.valid }">
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="password" class="form-control" name="confirm_password" autocomplete="current-confirm_password" [(ngModel)]="passwordModel.confirm_password" #confirm_password="ngModel" validateEqual="new_password" required />
+                      <div *ngIf="passwordForm.submitted && !confirm_password.valid" class="help-block">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>               
+
+              <div class="row mb-2">
+                <div class="col-md-12 col-sm-12 text-center mt-1">                
+                  <button [disabled]="loading" class="btn btn-success card-item-title create-up" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva</button>
+                  <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                </div>
+              </div>
+              <alert class="item-text" style="font-size: 0.9rem"></alert>                          
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-12 mt-2">
+        <div class="card ml-2 mr-2 mt-1">
+          <div class="pl-3 mb-2 status-hosts">
+            <p class="card-item-title text-center" style="margin-bottom: 0;">Utente</p>
+          </div>
+          <div class="card-body ml-1 mr-1 text-center">
+            <img class="img-fluid rounded-circle" style="width: 30%; height: 30%" src="data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABQAAD/4QMsaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49Iu+7vyIgaWQ9Ilc1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCI/PiA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJBZG9iZSBYTVAgQ29yZSA1LjUtYzAxNCA3OS4xNTE0ODEsIDIwMTMvMDMvMTMtMTI6MDk6MTUgICAgICAgICI+IDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+IDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo5OTMwMTUwNzU0RjYxMUUzQUM2N0M4N0VBQjIwQzA2NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo5OTMwMTUwODU0RjYxMUUzQUM2N0M4N0VBQjIwQzA2NyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjk5MzAxNTA1NTRGNjExRTNBQzY3Qzg3RUFCMjBDMDY3IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjk5MzAxNTA2NTRGNjExRTNBQzY3Qzg3RUFCMjBDMDY3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+/+4ADkFkb2JlAGTAAAAAAf/bAIQAAgICAgICAgICAgMCAgIDBAMC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" />
+
+            <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+              <div class="col-md-3"></div>
+              <div class="col-md-6 col-sm-12">
+                <p class="item-text-big mt-1">{{currentUser.firstname}} {{currentUser.lastname}}</p>
+              </div>
+              <div class="col-md-3"></div>
+            </div>
+
+            <div class="row mt-2 text-left" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+              <div class="col-5 item-text">
+                <div class="row">
+                  <div class="col-3 text-center">
+                    <i class="fa fa-building" aria-hidden="true"></i> 
+                  </div>
+                  <div class="col-9">
+                    <span>Azienda:</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-7 item-text-no">
+                <span>{{currentUser.customer_name}}</span>
+              </div>     
+            </div>
+
+            <div class="row mt-1 text-left" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+              <div class="col-5 item-text">
+                <div class="row">
+                  <div class="col-3 text-center">
+                    <i class="fa fa-group" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-9">
+                    <span>Ruolo:</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-7 item-text-no">
+                <span *ngIf="currentUser.role == 0">Utente standard</span>
+                <span *ngIf="currentUser.role == 1">Posdata Helpdesk</span>
+                <span *ngIf="currentUser.role == 2">Posdata Admin</span>
+              </div>
+            </div>
+
+            <!--<div class="row mt-1 text-left">
+              <div class="col-5 item-text">
+                <div class="row">
+                  <div class="col-3 text-center">
+                    <i class="fa fa-calendar-check-o"></i>
+                  </div>
+                  <div class="col-9">
+                    <span>Registrato il:</span>
+                  </div>
+                </div>              
+              </div>
+              <div class="col-7 item-text-no">
+                <span>08/02/2018</span>
+              </div>
+            </div>-->
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<app-footer></app-footer>

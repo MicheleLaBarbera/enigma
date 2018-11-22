@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertService, AuthenticationService } from '../_services/index';
@@ -7,15 +9,21 @@ import { AlertService, AuthenticationService } from '../_services/index';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  moduleId: module.id
 })
 
 export class LoginComponent implements OnInit {
 
+  
+  @ViewChild('f') form: any;
   model: any = {};
-  loading = false;
+
+
+  login_loading = false;
+  recover_loading = false;
   error = '';
   returnUrl: string;
+
+  public alertType: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,8 +36,8 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  login() {
-    this.loading = true;
+  login(form: NgForm) {
+    this.login_loading = true;
     let remember = (this.model.remember == true) ? 1 : 0;
 
     this.authenticationService.login(this.model.username, this.model.password, remember).subscribe(response => {
@@ -39,8 +47,24 @@ export class LoginComponent implements OnInit {
         }, 1500);        
       }
       else {
+        this.alertType = 0;
         this.alertService.error('Username o password errati');
-        this.loading = false;
+        this.login_loading = false;
+      }
+    });
+  }
+
+  public forgotPassword(form: NgForm) {
+    console.log(this.model);
+    this.recover_loading = true;
+    this.authenticationService.recoverPassword(this.model.email).subscribe(response => {
+      if(response) {
+        this.recover_loading = false;
+      }
+      else {
+        this.alertType = 1;
+        this.alertService.error('Indirizzo E-Mail inesistente');
+        this.recover_loading = false;
       }
     });
   }

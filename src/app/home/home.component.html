@@ -1,18 +1,29 @@
-<header>
+<div *ngIf="fullyLoaded">
+<header id="navbar">
   <app-navbar></app-navbar>
 </header>
 
-<div id="main-card" class="card ml-3 mr-3 text-justify">
+<div id="main-card" class="card ml-3 mr-3 text-justify" *ngIf="errorService.errorCode">
+  <div class="card-body pb-0">   
+    <div class="row mt-2">      
+      <div class="col-md-12 col-sm-12 text-center">
+        <div class="alert alert-danger custom-bold mt-2 ml-2 mr-2">{{errorService.errorMessage}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main-card" class="card ml-3 mr-3 text-justify" style="display: flex;" *ngIf="!errorService.errorCode">
   <div class="card-body">
-    <div class="row mt-1">
+    <div class="row mt-1" style="margin-left: .0rem!important; margin-right: .0rem!important;">
       <div class="col-md-6 col-sm-12 mb-2 mt-2">
-        <div class="card hoverable ml-2 mr-2 mt-1 full-height">
+        <div class="card hoverable ml-2 mr-2 mt-1 full-height d-none d-lg-block">
           <div class="text-center mb-2 status-services">
             <div class="row">
-              <div class="col-md-7 text-right pr-3">
+              <div class="col-md-7 text-right pr-3 ">
                 <p class="card-item-title" style="margin-bottom: 0;">Notifiche</p>
               </div>
-              <div class="col-md-5 text-right" *ngIf="services_change != undefined">          
+              <div class="col-md-5 text-right pr-3" *ngIf="services_change != undefined">          
                 <pagination-controls id="service_change_paginate" class="my-pagination-t" (pageChange)="page_service_change = $event"
                                       autoHide="true"
                                       previousLabel="Indietro"
@@ -23,11 +34,11 @@
               </div>
             </div>
           </div>
-          <div class="card-body" style="padding-bottom: 0;">           
-            <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover" style="margin-bottom: 0;">
+          <div id="notify" class="card-body" style="padding-bottom: 0;">           
+            <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" style="margin-bottom: 0;">
               <thead class="card-item-title">
                 <tr class="d-flex">
-                  <td class="align-middle col-1">Stato</td>
+                  <td class="align-middle col-1 text-center">Stato</td>
                   <td class="align-middle col-1">Data</td>
                   <td class="align-middle col-1">Ora</td>
                   <td class="align-middle col-3">Cliente</td>
@@ -35,30 +46,73 @@
                   <td class="align-middle col-3">Servizio</td>             
                 </tr>                         
               </thead>   
-              <!--<tbody *ngIf="services_change == undefined">
-                <tr class="item-text-big-gray">
-                  <td colspan="6">
-                      <img *ngIf="num_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                    Caricamento in corso
-                  </td>
-                </tr>
-              </tbody>-->
-              <tbody class="text-left">
+              
+              <tbody class="text-left" *ngIf="services_change != undefined" [@slideInOut]>
                 <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="item-clickable d-flex">
-                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 0"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>       
-                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 1"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
-                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 2"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></td>
-                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 3"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i></td>    
+                    <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 0"><i class="fa fa-check-circle hostgroup-up no-clickable" aria-hidden="true"></i></td>       
+                    <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 1"><i class="fa fa-exclamation-circle hostgroup-warning no-clickable" aria-hidden="true"></i></td>
+                    <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 2"><i class="fa fa-times-circle hostgroup-critical no-clickable" aria-hidden="true"></i></td>
+                    <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 3"><i class="fa fa-question-circle hostgroup-unknown no-clickable" aria-hidden="true"></i></td>    
 
-                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 4"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>    
-                    <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 5"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></td>
+                    <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 4"><i class="fa fa-check-circle hostgroup-up no-clickable" aria-hidden="true"></i></td>    
+                    <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 5"><i class="fa fa-times-circle hostgroup-critical no-clickable" aria-hidden="true"></i></td>
 
-                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1 item-text">{{service_change.date}}</td>
-                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-1 item-text">{{service_change.time}}</td>
-                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-3 item-text">{{service_change.customer_name}}</td>
-                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-3 item-text">{{service_change.host_alias}}</td>
-                  <td routerLink="/site/{{service_change.customer_site_id}}/hostgroup/{{service_change.host_group_id}}" class="align-middle text-center col-3 item-text">{{service_change.service_name}}</td> 
+                  <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-1 item-text">{{service_change.date}}</td>
+                  <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-1 item-text">{{service_change.time}}</td>
+                  <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-3 item-text">{{service_change.customer_name}}</td>
+                  <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-3 item-text">{{service_change.host_alias}}</td>
+                  <td data-toggle="modal" data-target="#serviceModalEx" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-3 item-text">{{service_change.service_name}}</td>
                 </tr>                  
+              </tbody>
+              <tbody *ngIf="services_change == undefined">
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
               </tbody>
             </table>              
           </div>
@@ -69,98 +123,16 @@
           <div class="text-center mb-2 status-hosts">
             <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
           </div>
-          <div class="card-body" style="display: flex; overflow: hidden;"> 
-            <!--<ngx-charts-line-chart [scheme]="lineChartColorScheme" [results]="lineChartMulti" [gradient]="lineChartGradient" [xAxis]="lineChartShowXAxis" [yAxis]="lineChartShowYAxis" [legend]="lineChartShowLegend" [showXAxisLabel]="lineChartShowXAxisLabel" [showYAxisLabel]="lineChartShowYAxisLabel" [xAxisLabel]="lineChartXAxisLabel" [yAxisLabel]="lineChartYAxisLabel" [autoScale]="lineChartAutoScale" [curve]="lineChartLineInterpolation" (select)="onSelect($event)"> </ngx-charts-line-chart>
-            -->
-            <span #btnHostModalOpen data-toggle="modal" data-target="#hostModal" ></span>
-            <ngx-charts-pie-chart *ngIf="hostChartData"            
-            [scheme]="hostChartScheme"
-            [results]="hostChartData"
-            [legend]="false"
-            [explodeSlices]="false"
-            [trimLabels]="false"
-            [tooltipDisabled]="true"
-            [labels]="true"
-            [doughnut]="false"    
-            (select)="onSelectHostChart($event)">
-            </ngx-charts-pie-chart>
-
-            <!--<ngx-charts-advanced-pie-chart data-toggle="modal" [label]="Totale" data-target="#hostModal" *ngIf="hostChartData" [scheme]="hostChartScheme" [results]="hostChartData" (select)="onSelectHostChart($event)"></ngx-charts-advanced-pie-chart>
-            -->
-              <!--<div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'Online')">                                                   
-              <div class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">Online</div>                                        
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_up}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>
-            <div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">                                    
-              <div class="col-3 text-center"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">Offline</div>                             
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_down + hosts_unreachable}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>
-            <div class="row item-clickable" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Manteinance')">                               
-              <div class="col-3 text-center"><i class="fa fa-map-signs hostgroup-unknown" aria-hidden="true"></i></div>  
-              <div class="col-6 item-text">Manteinance</div>                 
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_pending}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>
-            <div class="row">
-              <div class="col-4"><br></div>
-              <div class="col-4"><br></div>
-              <div class="col-4"><br></div>
-            </div>
-            <div class="row">
-              <div class="col-4"><br></div>
-              <div class="col-4"><br></div>
-              <div class="col-4"><br></div>
-            </div>
-            <div class="row">
-              <div class="col-3 text-center"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
-              <div class="item-strong col-6 item-text">Totale</div>                   
-              <div class="item-strong text-right col-3 item-text" *ngIf="!num_loading">{{hosts_count}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>-->
-            <!--<div class="col-md-12 col-sm-12">        
-              <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover">                    
-                <tbody>
-                  <tr class="item-clickable d-flex" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(0, 'Online')">                                                            
-                    <td class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></td>
-                    <td class="col-6 item-text">Online</td>                                        
-                    <td class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_up}}</td>
-                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                  </tr>
-                  <tr class="item-clickable d-flex" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(1, 'Offline')">                      
-                    <td class="col-3 text-center"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></td>
-                    <td class="col-6 item-text">Offline</td>                             
-                    <td class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_down + hosts_unreachable}}</td>
-                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                  </tr>
-                  <tr class="item-clickable d-flex" data-toggle="modal" data-target="#hostModal" (click)="getHostsByState(2, 'Manteinance')">                                  
-                    <td class="col-3 text-center"><i class="fa fa-map-signs hostgroup-unknown" aria-hidden="true"></i></td>  
-                    <td class="col-6 item-text">Manteinance</td>                 
-                    <td class="text-right col-3 item-text" *ngIf="!num_loading">{{hosts_pending}}</td>
-                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                  </tr>
-                  <tr class="d-flex">
-                    <td class="col-4"><br></td>
-                    <td class="col-4"><br></td>
-                    <td class="col-4"><br></td>
-                  </tr>
-                  <tr class="d-flex">
-                    <td class="col-4"><br></td>
-                    <td class="col-4"><br></td>
-                    <td class="col-4"><br></td>
-                  </tr>
-                  <tr class="d-flex">
-                    <td class="col-3 text-center"></td>
-                    <td class="item-strong col-6 item-text">Totale</td>                   
-                    <td class="item-strong text-right col-3 item-text" *ngIf="!num_loading">{{hosts_count}}</td>
-                    <td class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>-->           
+          <div id="hostGraph" class="card-body" style="display: flex;">             
+            <span #btnHostModalOpen data-toggle="modal" data-target="#hostModal" (click)="resetHostPage()"></span>
+            <jqxChart #myHostChart style="float: left" (onClick)="clickHostsGraph($event)" [@slideInOut] *ngIf="hostsDataSource"
+                [width]="myHostChartWidth" [height]="myHostChartHeight"
+                [title]="''"
+                [description]="hostsDataSource.title"
+                [showLegend]="true" [enableAnimations]="false" [padding]="padding"
+                [titlePadding]="titlePadding" [source]="hostsDataSource.dataSource" [showBorderLine]="false" 
+                [seriesGroups]="seriesGroups">
+            </jqxChart>              
           </div>
         </div>
       </div>
@@ -169,135 +141,40 @@
           <div class="text-center mb-2 status-services">
             <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
           </div>
-          <div class="card-body" style="display: flex; overflow: hidden;">    
-            <!--<ngx-charts-advanced-pie-chart data-toggle="modal" data-target="#serviceModal" [label]="Totale" *ngIf="serviceChartData" [scheme]="serviceChartScheme" [results]="serviceChartData" (select)="onSelectServiceChart($event)"></ngx-charts-advanced-pie-chart>
-            -->
-            <span #btnServiceModalOpen data-toggle="modal" data-target="#serviceModal"></span>
-            <ngx-charts-pie-chart *ngIf="serviceChartData"          
-            [scheme]="serviceChartScheme"
-            [results]="serviceChartData"
-            [legend]="false"
-            [explodeSlices]="false"
-            [trimLabels]="false"
-            [tooltipDisabled]="true"
-            [labels]="true"
-            [doughnut]="false"    
-            (select)="onSelectServiceChart($event)">
-            </ngx-charts-pie-chart>
-
-            <!--<div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(0, 'OK')">   
-              <div class="col-3 text-center"><i class="fa fa-check-circle hostgroup-up" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">OK</div>                                        
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_ok}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>    
-            <div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(1, 'Warning')">   
-              <div class="col-3 text-center"><i class="fa fa-exclamation-circle hostgroup-warning" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">Warning</div>                                        
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_warn}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>       
-            <div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(2, 'Critical')">   
-              <div class="col-3 text-center"><i class="fa fa-times-circle hostgroup-critical" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">Critical</div>                                        
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_crit}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>   
-            <div class="row item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(3, 'Unknown')">   
-              <div class="col-3 text-center"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">Unknown</div>                                        
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_unknown}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>   
-            <div class="row item-clickable" data-toggle="modal" data-target="#ackModal" (click)="getACKS()">   
-              <div class="col-3 text-center"><i class="fa fa-handshake-o" aria-hidden="true"></i></div>
-              <div class="col-6 item-text">ACKS</div>                                        
-              <div class="text-right col-3 item-text" *ngIf="!num_loading">{{services_pending}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>  
-            <div class="row">
-              <div class="col-3 text-center"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
-              <div class="item-strong col-6 item-text">Totale</div>                   
-              <div class="item-strong text-right col-3 item-text" *ngIf="!num_loading">{{services_count}}</div>
-              <div class="text-right col-3 item-text" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></div>
-            </div>-->
-              <!--<div class="col-md-12 col-sm-12">
-                <table class="table table-sm table-hover item-text">
-                  <tbody>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(0, 'OK')">
-                      <td>OK</td>
-                      <td class="service-ok"></td>
-                      <td class="text-right" *ngIf="!num_loading">{{services_ok}}</td>
-                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                    </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(1, 'Warning')">
-                      <td>Warning</td>
-                      <td class="service-warn"></td>
-                      <td class="text-right" *ngIf="!num_loading">{{services_warn}}</td>
-                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                    </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(2, 'Critical')">
-                      <td>Critical</td>
-                      <td class="service-crit"></td>
-                      <td class="text-right" *ngIf="!num_loading">{{services_crit}}</td>
-                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                    </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServicesByState(3, 'Unknown')">
-                      <td>Unknown</td>
-                      <td class="service-pending"></td>
-                      <td class="text-right" *ngIf="!num_loading">{{services_unknown}}</td>
-                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                    </tr>
-                    <tr class="item-clickable" data-toggle="modal" data-target="#ackModal" (click)="getACKS()">
-                      <td>ACK</td>
-                      <td></td>
-                      <td class="text-right" *ngIf="!num_loading">{{services_pending}}</td>
-                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                    </tr>
-                    <tr>
-                      <td class="item-strong">Totale</td>
-                      <td></td>
-                      <td class="item-strong text-right" *ngIf="!num_loading">{{services_count}}</td>
-                      <td class="text-right" *ngIf="num_loading"><img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>-->
+          <div class="card-body" style="display: flex;">    
+            <span #btnServiceModalOpen data-toggle="modal" data-target="#serviceModal" (click)="resetServicePage()"></span>
+            <jqxChart #myServiceChart style="float: left" (onClick)="clickServicesGraph($event)" [@slideInOut] *ngIf="servicesDataSource"
+                [width]="myServiceChartWidth" [height]="myServiceChartHeight"
+                [title]="''"
+                [description]="servicesDataSource.title"
+                [showLegend]="true" [enableAnimations]="false" [padding]="padding"
+                [titlePadding]="titlePadding" [source]="servicesDataSource.dataSource" [showBorderLine]="false" 
+                [seriesGroups]="seriesGroups">
+            </jqxChart>  
           </div>
         </div>
       </div>      
-    </div>  
+    </div>   
 
-    <div class="row mt-2" *ngIf="hostgroups">
-  		<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of filter(hostgroups); let j = index">
-  			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1">
-
-  				<div class="text-center mb-2 status-hosts">         
-            <p *ngIf="hostgroup.check_state == 0" class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
-            <div class="row text-center" *ngIf="hostgroup.check_state == 1">
-              <div class="col-md-3"></div>
-              <div class="col-md-6">
-                <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}} </p>
-              </div>
-              <div class="col-md-3" style="padding-top: 1px;">
-                <span style="background-color: #f05050; color: white; font-weight: 600; border-radius: 5px; padding-left: 0.5rem; padding-right: 0.5rem;"><i class="fa fa-power-off" aria-hidden="true"></i>
-                   OFF</span>
-              </div>
-              
-            </div>
-            <!--<p  class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}} <span class="badge badge-pill badge-danger">Offline</span></p>
-            -->
-            </div>
+    <div class="row mt-2" style="margin-left: .0rem!important; margin-right: .0rem!important;" *ngIf="custom_hostgroups">
+    	<div class="col-md-3 col-sm-12 mb-3" *ngFor="let hostgroup of custom_hostgroups; let j = index">
+  			<div style="height: 100%;" class="card hoverable ml-2 mr-2 mt-1" [@slideInOut]>
+  				<div class="text-center mb-2 status-hosts" [ngClass]="{
+            'status-hosts': hostgroup.check_state == 0,
+            'status-hosts-off': hostgroup.check_state == 1
+          }">         
+            <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}}</p>            
+          </div>
 
   				<div class="card-body">
   					<div *ngFor="let group of hostgroup.groups; let i = index">
   						<div class="row">
-      					<div class="text-center col-3"><i class="fa" [ngClass]="{
+      					<div class="col-3 pl-4"><i class="fa no-clickable" [ngClass]="{
   								'fa-check-circle hostgroup-up':group.worst_service_state == '0',
   								'fa-exclamation-circle hostgroup-warning':group.worst_service_state == '1',
   								'fa-times-circle hostgroup-critical':group.worst_service_state == '2',
-                  'fa-question-circle hostgroup-unknown':group.worst_service_state == '3'
+                  'fa-question-circle hostgroup-unknown':group.worst_service_state == '3',
+                  'fa-minus-circle hostgroup-ack':group.worst_service_state == '4'
   							}" aria-hidden="true"></i></div>
                 
   							<div class="col item-text item-clickable" routerLink="/site/{{hostgroup._id}}/hostgroup/{{group._id}}">{{group.alias}}</div>
@@ -308,8 +185,13 @@
   		</div>
   	</div>
 
+    <div class="row d-none d-sm-block" style="margin-right: .0rem!important;" *ngIf="custom_hostgroups">
+      <div class="col-md-12 col-sm-12 text-right">
+        <i class="fa fa-chevron-circle-left pl-2 pr-1 item-clickable icon-blue fa-2x" (click)="previousPage()" aria-hidden="true"></i>        
+        <i class="fa fa-chevron-circle-right pl-1 pr-2 item-clickable icon-blue fa-2x" (click)="nextPage()" aria-hidden="true"></i>
+      </div>
+    </div>
   </div>
-
 </div>
 
 <div class="modal fade" id="hostModal" tabindex="-1" role="dialog" aria-labelledby="hostModalLabel" aria-hidden="true">
@@ -324,9 +206,9 @@
       <div class="modal-body">
         <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped">
           <thead class="card-item-title table-header">
-            <td scope="col">Cliente</td>
-            <td scope="col">Sito</td>
-            <td scope="col">Nome</td>
+            <td class="text-left" scope="col">Cliente</td>
+            <td class="text-left" scope="col">Sito</td>
+            <td class="text-left" scope="col">Nome</td>
             <td scope="col">Indirizzo IP</td>
             <td scope="col">Stato Servizi</td>
             <td scope="col">OK</td>
@@ -344,16 +226,17 @@
               </tr>
           </tbody>
           <tbody *ngIf="hosts != undefined">
-            <tr *ngFor="let host of filter_ex(hosts) | paginate: { id: 'host_paginate', itemsPerPage: 20, currentPage: page_host };" class="item-text">
-              <td>{{host.name_ex}}</td>
-              <td>{{host.site}}</td>
-              <td>{{host.alias}}</td>
+            <tr *ngFor="let host of hosts | paginate: { id: 'host_paginate', itemsPerPage: 10, currentPage: page_host };" class="item-text">
+              <td class="text-left">{{host.name_ex}}</td>
+              <td class="text-left">{{host.site}}</td>
+              <td class="text-left">{{host.alias}}</td>
               <td>{{host.address}}</td>
-              <td><i class="fa" [ngClass]="{
-                'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
+              <td><i class="fa no-clickable" [ngClass]="{
+                'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0 && host.ack_num == 0,
                 'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
                 'fa-times-circle hostgroup-critical':host.crit > 0,
-                'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
+                'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0,
+                'fa-minus-circle hostgroup-ack':host.crit == 0 && host.unknown == 0 && host.warn == 0 && host.ack_num > 0
               }" aria-hidden="true"></i></td>
               <td>{{host.ok}}</td>
               <td>{{host.warn}}</td>
@@ -379,6 +262,67 @@
   </div>
 </div>
 
+<div class="modal fade" id="serviceModalEx" tabindex="-1" role="dialog" aria-labelledby="serviceModalExLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="serviceModalExLabel" *ngIf="services">Dettagli dell'host {{viewSecondaryTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
+            <thead class="card-item-title table-header">
+              <td scope="col">Stato</td>
+              <td scope="col">Attributo</td>
+              <td scope="col">Descrizione</td>
+              <!--<td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo cambiamento di Stato</td>-->
+              <td scope="col">Ultimo check</td>
+              <!--<td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>-->
+            </thead>
+            <tbody>
+              <tr *ngFor="let service of services | paginate: { id: 'service_ex', itemsPerPage: 10, currentPage: page_service_ex };" class="item-text">
+                <td class="up-status item-clickable item_ex" *ngIf="service.state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">OK</td>
+                <td class="warn-status item-clickable item_ex" *ngIf="service.state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">WARN</td>
+                <td class="down-status item-clickable item_ex" *ngIf="service.state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">CRIT</td>
+                <td class="unknown-status item-clickable item_ex" *ngIf="service.state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">UNKN</td>
+                <td class="text-left">{{service.name}}</td>
+                <td class="text-left">{{service.status}}</td>
+                <!--<td class="">{{service.age}} <br> {{service.age_min}}</td>-->
+                <td class="">{{service.last_check}} {{service.last_check_min}}</td>                   
+                <!--<td *ngIf="(service.ack | json) != '{}'">
+                  <h5>
+                    <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACKModal(service)" class="badge badge-primary item-clickable">
+                      <i class="fa fa-file-text" aria-hidden="true"></i> Visualizza
+                    </span>
+                  </h5> 
+                </td>                
+                <td *ngIf="(service.ack | json) == '{}'">
+                  <h5>
+                    <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACKModal(service)" class="badge badge-success item-clickable">
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i> Crea
+                    </span>
+                  </h5>                    
+                </td>-->
+              </tr>
+            </tbody>
+          </table>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 mt-1 text-right">
+              <pagination-controls  id="service_ex" class="my-pagination" (pageChange)="page_service_ex = $event"
+                                    autoHide="true"
+                                    previousLabel="Indietro"
+                                    nextLabel="Avanti"
+                                    directionLinks="false"
+              >
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -389,13 +333,33 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" *ngIf="services_state == undefined">
           <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped">
             <thead class="card-item-title table-header">
-              <td class="align-middle">Cliente</td>
-              <td class="align-middle">Sito</td>
-              <td class="align-middle">Host</td>
-              <td class="align-middle">Nome</td>
+              <td class="align-middle text-left">Cliente</td>
+              <td class="align-middle text-left">Sito</td>
+              <td class="align-middle text-left">Host</td>
+              <td class="align-middle text-left">Nome</td>
+              <td class="align-middle">Descrizione</td>
+              <td class="align-middle">Ultimo Log</td>             
+            </thead>
+            <tbody>
+                <tr class="item-text-big-gray">
+                    <td colspan="10">
+                        <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      Caricamento in corso
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-body" *ngIf="services_state != undefined">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped" *ngIf="services_state[0]._id === ''">
+            <thead class="card-item-title table-header">
+              <td class="align-middle text-left">Cliente</td>
+              <td class="align-middle text-left">Sito</td>
+              <td class="align-middle text-left">Host</td>
+              <td class="align-middle text-left">Nome</td>
               <td class="align-middle">Descrizione</td>
               <td class="align-middle">Ultimo Log</td>             
             </thead>
@@ -407,14 +371,53 @@
                     </td>
                 </tr>
             </tbody>
-            <tbody *ngIf="services_state != undefined">
-              <tr *ngFor="let service_state of filter_ex(services_state) | paginate: { id: 'service_paginate', itemsPerPage: 10, currentPage: page_service };" class="item-text">
-                <td class="align-middle">{{service_state.customer_name}}</td>
-                <td class="align-middle">{{service_state.customer_site_description}}</td>
-                <td class="align-middle">{{service_state.host_alias}}</td>
-                <td class="align-middle">{{service_state.service_name}}</td>
+            <tbody>
+              <tr *ngFor="let service_state of services_state | paginate: { id: 'service_paginate', itemsPerPage: 10, currentPage: page_service };" class="item-text">
+                <td class="align-middle text-left">{{service_state.customer_name}}</td>
+                <td class="align-middle text-left">{{service_state.customer_site_description}}</td>
+                <td class="align-middle text-left">{{service_state.host_alias}}</td>
+                <td class="align-middle text-left">{{service_state.service_name}}</td>
                 <td class="align-middle text-left">{{service_state.plugin_output}}</td>
                 <td class="align-middle">{{service_state.created_at}}</td>                
+              </tr>
+            </tbody>
+          </table>
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped" *ngIf="services_state[0]._id !== ''">
+            <thead class="card-item-title table-header">
+              <td class="align-middle">Stato</td>
+              <td class="align-middle text-left">Cliente</td>
+              <td class="align-middle text-left">Sito</td>
+              <td class="align-middle text-left">Host</td>
+              <td class="align-middle text-left">Nome</td>
+              <td class="align-middle text-left">Codice chiamata</td>
+              <td class="align-middle text-left">Motivazione</td>
+              <td class="align-middle text-left">Autore</td>              
+              <td class="align-middle text-left">Data creazione</td>   
+              <td></td>          
+            </thead>
+            <tbody *ngIf="services_state == undefined">
+                <tr class="item-text-big-gray">
+                    <td colspan="10">
+                        <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      Caricamento in corso
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+              <tr *ngFor="let service_state of services_state | paginate: { id: 'service_paginate', itemsPerPage: 10, currentPage: page_service };" class="item-text">
+                <td class="align-middle up-status item_ex" *ngIf="service_state.state == 0">OK</td>
+                <td class="align-middle warn-status item_ex" *ngIf="service_state.state == 1">WARN</td>
+                <td class="align-middle down-status item_ex" *ngIf="service_state.state == 2">CRIT</td>
+                <td class="align-middle unknown-status item_ex" *ngIf="service_state.state == 3">UNKN</td>
+                <td class="align-middle text-left">{{service_state.customer_name}}</td>
+                <td class="align-middle text-left">{{service_state.customer_site_description}}</td>
+                <td class="align-middle text-left">{{service_state.host_alias}}</td>
+                <td class="align-middle text-left">{{service_state.service_name}}</td>                
+                <td class="align-middle text-left">{{service_state.code}}</td>
+                <td class="align-middle text-left">{{service_state.plugin_output}}</td>
+                <td class="align-middle text-left">{{service_state.author}}</td>
+                <td class="align-middle text-left">{{service_state.created_at}}</td>                   
+                <td class="align-middle"><p class="item-clickable text-center" (click)="refreshACK(service_state._id, service_state.service_id)" data-toggle="modal" data-target="#deleteACKModal"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></p></td>             
               </tr>
             </tbody>
           </table>
@@ -434,4 +437,151 @@
     </div>
   </div>
 
+<div class="modal fade" id="deleteACKModal" tabindex="-1" role="dialog" aria-labelledby="deleteACKLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" *ngIf="refreshedACK">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteACKLabel">Elimina ACK</h5>
+        <button #btnACKClose type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-bottom: 0">
+        <p class="item-text-big">Sei sicuro di voler eliminare definitivamente l'ACK?</p>     
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+        <button type="button" class="btn btn-danger" (click)="deleteACK(refreshedACK, refreshedService)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="showACKModal" tabindex="-1" role="dialog" aria-labelledby="showACKModalLabel" aria-hidden="true" *ngIf="refreshedACKModal">
+  <div class="modal-dialog modal-ack" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showACKModalLabel" *ngIf="refreshedACKModal">ACK del servizio {{refreshedACKModal.name}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">  
+        <div *ngIf="(refreshedACKModal.ack | json) != '{}'" class="card hoverable ml-1 mr-1 mt-1">
+          <div class="pl-3 mb-2 status-hosts">
+            <p class="card-item-title text-center" style="margin-bottom: 0;"><i class="fa fa-file-text" aria-hidden="true"></i> Visualizza ACK</p>
+          </div>
+
+          <div class="card-body ml-1 mr-1 item-text-big"> 
+            <p *ngIf="refreshedACKModal.ack.code"><i class="fa fa-code"></i> Codice chiamata: {{refreshedACKModal.ack.code}}</p>
+            <p><i class="fa fa-calendar-check-o"></i> Data: {{refreshedACKModal.ack.created_at}}</p>
+            <p><i class="fa fa-address-card-o"></i> Autore: {{refreshedACKModal.ack.creator_name}}</p>
+            <p><i class="fa fa-list-alt"></i> Motivazione: {{refreshedACKModal.ack.message}}</p>
+            <p class="item-clickable text-center" data-toggle="modal" data-target="#deleteACKModalEx"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></p>
+          </div>        
+        </div>
+
+        <form *ngIf="(refreshedACKModal.ack | json) == '{}'" name="form" (ngSubmit)="f.form.valid && createACKModal(refreshedACKModal, currentUser.id, f)" #f="ngForm" novalidate>       
+        <p class="item-text-big"><i class="fa fa-code" aria-hidden="true"></i> Codice chiamata:</p>        
+          <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !code.valid }">
+            <div class="input-group mb-2">                                
+              <input type="text" class="form-control" name="code" autocomplete="code" [(ngModel)]="model.code" #code="ngModel" />                    
+            </div>
+          </div>
+
+          <p class="item-text-big"><i class="fa fa-list-alt" aria-hidden="true"></i> Motivazione:</p>        
+          <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !message.valid }">
+            <div class="input-group mb-2">                                
+              <textarea rows="3" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required>
+              </textarea>                    
+            </div>
+          </div>
+          <div class="text-center">
+            <button [disabled]="loading" class="btn btn-success" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva
+            </button>
+            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+          </div>         
+        </form>                
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="serviceLogsModal" tabindex="-1" role="dialog" aria-labelledby="serviceLogsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="serviceLogsModalLabel" *ngIf="services">{{viewSecondaryTitle}}<br>Logs del servizio {{viewThirdTitle}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
+          <thead class="card-item-title table-header">
+            <td scope="col">Data</td>
+            <td scope="col">Stato</td>              
+            <td scope="col">Descrizione</td>       
+            <td scope="col">Ultimo check</td>           
+          </thead>
+          <tbody>
+            <tr *ngFor="let service of service_logs | paginate: { id: 'service_log', itemsPerPage: 10, currentPage: page_service_log };" class="item-text">    
+              <td>{{service.created_at}}</td>   
+              <td class="up-status item-clickable" *ngIf="service.service_state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">OK</td>
+              <td class="warn-status item-clickable" *ngIf="service.service_state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">WARN</td>
+              <td class="down-status item-clickable" *ngIf="service.service_state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">CRIT</td>
+              <td class="unknown-status item-clickable" *ngIf="service.service_state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">UNKN</td>
+              <td class="text-left">{{service.plugin_output}}</td>             
+              <td>{{service.service_last_check}}</td>                
+            </tr>
+          </tbody>
+        </table>
+        <div class="row">
+          <div class="col-md-12 col-sm-12 mt-1 text-right">
+            <pagination-controls  id="service_log" class="my-pagination" (pageChange)="page_service_log = $event"
+                                  autoHide="true"
+                                  previousLabel="Indietro"
+                                  nextLabel="Avanti"
+                                  directionLinks="false"
+            >
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div class="modal fade" id="deleteACKModalEx" tabindex="-1" role="dialog" aria-labelledby="deleteACKExLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" *ngIf="refreshedACKModal">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteACKExLabel">Elimina ACK</h5>
+        <button #btnACKCloseEx type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding-bottom: 0">
+        <p class="item-text-big">Sei sicuro di voler eliminare definitivamente l'ACK?</p>     
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+        <button type="button" class="btn btn-danger" (click)="deleteACKEx(refreshedACKModal._id, refreshedACKModal.ack._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
+      </div>
+    </div>
+  </div>
+</div>-->
+
 <app-footer></app-footer>
+</div>
+
+<div class="fake-body" *ngIf="!fullyLoaded" [style.height.px]="monitorHeight">
+  <div class="loader">
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__ball"></div>
+  </div>
+</div>

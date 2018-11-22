@@ -1,11 +1,11 @@
 export class Server {
-  _id: number;
+  _id: string;
   description: string;
   ip_address: string;
   port_number: number;
   customer_name: string;
 
-  constructor(_id: number, description: string, ip_address: string, port_number: number, customer_name: string) {
+  constructor(_id: string, description: string, ip_address: string, port_number: number, customer_name: string) {
   	this._id = _id;
     this.description = description;
     this.ip_address = ip_address;

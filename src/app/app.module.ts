@@ -31,7 +31,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MyDatePickerModule } from 'mydatepicker';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { jqxBarGaugeComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbargauge';
+import { jqxChartComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxchart';
+                                              
+import { RecoverComponent } from './recover/recover.component';
+
+import { HttpErrorHandler } from'./http-error-handler.service';
 
 @NgModule({
   declarations: [
@@ -46,7 +50,8 @@ import { jqxBarGaugeComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqx
     AcpComponent,
     ProfileComponent,
     EqualValidator,
-    jqxBarGaugeComponent
+    jqxChartComponent,
+    RecoverComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { jqxBarGaugeComponent } from 'jqwidgets-scripts/jqwidgets-ts/angular_jqx
     },
     AlertService,
     AuthenticationService,
-    UserService
+    UserService,
+    HttpErrorHandler
   ],
   bootstrap: [AppComponent]
 })

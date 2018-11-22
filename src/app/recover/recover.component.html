@@ -1,0 +1,57 @@
+<nav class="navbar bg-white">
+	<ul class="nav navbar-nav navbar-logo mx-auto">
+		<li class="nav-item">
+		  <a class="navbar-brand" href="#">
+		    <img src="/assets/images/logo-posdata.png" style="height: 40px" alt="">
+		  </a>
+		</li>
+	</ul>
+</nav>
+
+<div class="container h-100" style="margin-top:175px;">
+	<div class="row h-100">
+		<div class="col-md-3 col-sm-2"></div>
+		<div class="col-md-6 col-sm-8">
+			<div class="card">
+				<div class="card-body item-text">
+					<form name="form" (ngSubmit)="passwordForm.form.valid && changePassword(passwordForm)" #passwordForm="ngForm" novalidate>
+						<p class="login-label">Nuova Password</p>
+						<div class="mt-2" [ngClass]="{ 'has-error': passwordForm.submitted && !password.valid }">
+				      <div class="input-group mb-2">
+				        <div class="input-group-prepend">
+				          <div class="input-group-text"><i class="fa fa-lock prefix grey-text"></i></div>
+				        </div>
+				        <input type="password" class="form-control" name="password" autocomplete="current-password" [(ngModel)]="passwordModel.password" #password="ngModel" required />
+				        <div *ngIf="passwordForm.submitted && !password.valid" class="help-block">
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</div>
+				      </div>
+						</div>
+
+						<p class="login-label">Conferma Password</p>
+						<div class="mt-2" [ngClass]="{ 'has-error': passwordForm.submitted && !confirm_password.valid }">
+				      <div class="input-group mb-2">
+				        <div class="input-group-prepend">
+				          <div class="input-group-text"><i class="fa fa-lock prefix grey-text"></i></div>
+				        </div>
+				        <input type="password" class="form-control" name="confirm_password" autocomplete="current-confirm_password" [(ngModel)]="passwordModel.confirm_password" #confirm_password="ngModel" required />
+				        <div *ngIf="passwordForm.submitted && !confirm_password.valid" class="help-block">
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</div>
+				      </div>
+						</div>						
+
+						<alert></alert>
+
+						<div class="text-center mt-4">
+							<button [disabled]="loading" class="btn btn-primary" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Ripristina</button>
+							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+					  </div>			  
+					</form>				
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<app-footer></app-footer>

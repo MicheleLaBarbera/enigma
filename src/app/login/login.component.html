@@ -8,14 +8,19 @@
 	</ul>
 </nav>-->
 
-<div class="container h-100" style="margin-top:175px;">
+<div class="container h-100" style="margin-top:175px;">	
 	<div class="row h-100">
 		<div class="col-md-3 col-sm-2"></div>
 		<div class="col-md-6 col-sm-8">
 			<div class="card">
 				<div class="card-body item-text">
-					<form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+					<div class="row h-100">		
+						<div class="col-md-12 col-sm-12 text-center">
+							<a href="http://www.posdata.it"><img src="data:image/png;base64,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" height="80%" alt=""></a>
+						</div>
+					</div>
 
+					<form name="form" (ngSubmit)="f.form.valid && login(f)" #f="ngForm" novalidate>
 						<p class="login-label">Username</p>
 						<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
 				      <div class="input-group mb-2">
@@ -42,62 +47,75 @@
 				      </div>
 						</div>
 
-						<alert></alert>
+						<alert *ngIf="alertType != 1"></alert>
 
 						<div class="text-center mt-4">
-							<button [disabled]="loading" class="btn btn-primary" type="submit"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button>
-							<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+							<button [disabled]="login_loading" class="btn btn-primary" type="submit"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</button> <img *ngIf="login_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 					  </div>
 
 					  <div class="form-check mt-2 mb-2">
 					    <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" [(ngModel)]="model.remember" #remember="ngModel">
 					    <label class="form-check-label" for="rememberMe">Mantieni accesso</label>
-					  </div>
-
-					  <div class="row">
-					  	<div class="col-md-6 col-sm-8">
-					  		<p data-toggle="modal" data-target="#forgotPasswordModal" class="forgot-p item-clickable"><i class="fa fa-question-circle prefix grey-text"></i> Ho dimenticato la password</p>
-					  	</div>
-					  </div>
+					  </div>					  
 					</form>
-
-					<!--<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="forgotPasswordLabel">Password dimenticata</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<form name="form" (ngSubmit)="f.form.valid && forgotPassword(f)" #f="ngForm" novalidate>
-									<div class="modal-body" style="padding-bottom: 0">										
-										<p class="login-label">Indirizzo E-Mail</p>
-										<div class="mt-2 mb-3" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
-											<div class="input-group mb-2">
-												<div class="input-group-prepend">
-													<div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
-												</div>
-												<input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="model.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required />
-												<div *ngIf="f.submitted && !email.valid" class="help-block">
-													<i class="fa fa-times" aria-hidden="true"></i>
-												</div>
-											</div>
-										</div>				
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
-										<button type="button" class="btn btn-primary" type="submit"><i class="fa fa-window-restore" aria-hidden="true"></i> Resetta</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>-->
+					<div class="row">
+				  	<div class="col-md-6 col-sm-8">
+				  		<p data-toggle="modal" data-target="#forgotPasswordModal" class="forgot-p item-clickable" style="margin-bottom: 0; padding-bottom: 0"><i class="fa fa-question-circle prefix grey-text"></i> Ho dimenticato la password</p>
+				  	</div>
+				  </div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="forgotPasswordLabel">Password dimenticata</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body item-text" style="padding-bottom: 0">										
+				<form name="form" (ngSubmit)="recover.form.valid && forgotPassword(recover)" #recover="ngForm" novalidate>
+					<p class="login-label">Indirizzo E-Mail</p>
+					<div class="mt-2 mb-3" [ngClass]="{ 'has-error': recover.submitted && !email.valid }">
+						<div class="input-group mb-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+							</div>
+							<input type="email" class="form-control" name="email" autocomplete="email" [(ngModel)]="model.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required />
+							<div *ngIf="recover.submitted && !email.valid" class="help-block">
+								<i class="fa fa-times" aria-hidden="true"></i>
+							</div>							
+						</div>
+					</div>				
+				
+					<div *ngIf="recover.submitted && !email.valid" class="alert alert-danger">Inserire un formato E-Mail valido</div>
+					<alert *ngIf="alertType != 0"></alert>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+						<button [disabled]="recover_loading" type="button" class="btn btn-primary" type="submit"><i class="fa fa-envelope-o" aria-hidden="true"></i> Recupera</button>
+						<img *ngIf="recover_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+					</div>
+				</form>
+			</div>								
+		</div>
+	</div>
+</div>
 
-<app-footer></app-footer>
+
+<footer class="card-footer fixed-bottom d-none d-sm-block">
+	<div class="row">
+		<div class="col-md-3 col-sm-2">
+		</div>
+		<div class="col-md-6 col-sm-8 text-center">
+			<span class="align-middle item-text-footer">© P.O.S. Data System S.r.l. | Via Nicolò Mineo, 10 - Palermo | P.IVA 01647390812 | Tutti i diritti riservati.</span>
+		</div>
+		<div class="col-md-3 col-sm-2 text-right item-text">			
+		</div>
+	</div>
+</footer>
+

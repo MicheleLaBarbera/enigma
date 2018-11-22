@@ -12,8 +12,9 @@ export class Service {
   last_check: string;
   last_check_min: string;
   ack: ServiceAck;
+  host_group_id: string;
 
-  constructor(_id: string, host_id: string, name: string, status: string, age: string, age_min: string, state: number, h_name: string, last_check: string, last_check_min: string, ack: ServiceAck) {
+  constructor(_id: string, host_id: string, name: string, status: string, age: string, age_min: string, state: number, h_name: string, last_check: string, last_check_min: string, ack: ServiceAck, host_group_id: string) {
     this._id = _id;
     this.host_id = host_id;
     this.name = name;
@@ -25,5 +26,6 @@ export class Service {
     this.last_check = last_check;
     this.last_check_min = last_check_min;
     this.ack = ack;
+    this.host_group_id = host_group_id;
   }
 }

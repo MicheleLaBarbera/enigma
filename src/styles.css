@@ -1,24 +1,3 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
-/*::-webkit-scrollbar {
-    width: 12px;
-}
- 
-/* Track */
-/*::-webkit-scrollbar-track {    
-    -webkit-border-radius: 5px;
-	border-radius: 5px;
-	/*-webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.774);*/
-/*}
- 
-/* Handle */
-/*::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-    background: #dee2e6;
-    /*-webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.774); */
-/*}*/
-
 ::-webkit-scrollbar {
 	width: 10px;
 	background-color: #F5F5F5;

@@ -1,167 +1,278 @@
+<!--<div *ngIf="fullyLoaded">-->
 <header>
   <app-navbar></app-navbar>
 </header>
 
+<div id="main-card" class="card ml-3 mr-3 text-justify" *ngIf="errorService.errorCode">
+  <div class="card-body pb-0">   
+    <div class="row mt-2">      
+      <div class="col-md-12 col-sm-12 text-center">
+        <div class="alert alert-danger custom-bold mt-2 ml-2 mr-2">{{errorService.errorMessage}}</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<div id="main-card" class="card ml-3 mr-3 text-justify">
+<div id="main-card" class="card ml-3 mr-3 text-justify" *ngIf="!errorService.errorCode">
+  <div class="card-body">     
 
-  <div class="card-body">
-    <div class="row">
+    <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
       <div class="col-md-12 col-sm-12">
-        <nav aria-label="breadcrumb" class="mr-1 ml-1" *ngIf="hostgroup">
+        <nav aria-label="breadcrumb" class="mr-2 ml-2" *ngIf="hostgroup">
           <ol class="breadcrumb mt-3">
             <li class="breadcrumb-item"><a style="color:#6c757d;" href="" routerLink="/home">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{hostgroup.name}} - {{hostgroup.description}}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{hostgroup.name}}</li>
+            <li class="ml-auto" aria-current="page">
+            <p class="card-item-title pr-3" style="margin-bottom: 0; color:#6c757d;" (click)="updateNotification(hostgroup.user_customer_site_id, hostgroup.notification)">
+                      <i class="fa fa-bell" aria-hidden="true"></i> Notifiche: <span class="item-clickable" *ngIf="hostgroup.notification == 0">OFF</span>
+                        <span class="item-clickable" *ngIf="hostgroup.notification == 1">ON</span>
+                       <!--<i class="fa" [ngClass]="{
+                        'fa-toggle-off': hostgroup.notification == 0,
+                        'fa-toggle-on': hostgroup.notification == 1
+                      }"aria-hidden="true"></i>--></p>
+            </li>
           </ol>
         </nav>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row d-block d-lg-none d-xl-none" style="margin-left: .0rem!important; margin-right: .0rem!important;">
       <div id="left" class="col-md-3 col-sm-12 full-height">
-        <div class="row" *ngIf="hostgroup">
-          <div class="col col-sm-12 mb-2 mt-2">
-            <div class="card hoverable ml-1 mr-1 mt-1 full-height">
-              <div class="text-center mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}} - {{hostgroup.description}}</p>
+        <div class="row" *ngIf="hostgroup && hostgroup.referent_name">
+          <div class="col col-sm-12 mt-2">
+             <div class="card hoverable ml-2 mr-2 mt-1">
+              <div class="text-center mb-2" [ngClass]="{
+                'status-hosts': hostgroup.check_state == 0,
+                'status-hosts-off': hostgroup.check_state == 1
+              }">
+                <p class="card-item-title" style="margin-bottom: 0;">Referente</p>
               </div>
-
-      				<div *ngFor="let group of hostgroup.groups; let i = index" [attr.data-index]="i">
-      					<div class="row">
-      						<div class="text-center col-3"><i class="fa" [ngClass]="{
-      							'fa-check-circle hostgroup-up':group.worst_service_state == 0,
-      							'fa-exclamation-circle hostgroup-warning':group.worst_service_state == 1,
-      							'fa-times-circle hostgroup-critical':group.worst_service_state == 2,
-                    'fa-question-circle hostgroup-unknown':group.worst_service_state == 3
-      						}" aria-hidden="true"></i></div>
-      						<div class="col-6 item-clickable item-text" routerLink="/site/{{hostgroup._id}}/hostgroup/{{group._id}}" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group._id);">{{group.alias}}</div>
-                  <!--<div class="col-3">
-                    <i class="custom-color fa" [ngClass]="{
-        							'fa-toggle-off':(hostgroup.default_group === null  && i !== 0) || hostgroup.default_group !== group.name,
-        							'fa-toggle-on':(hostgroup.default_group === null && i === 0) || hostgroup.default_group === group.name
-        						}" aria-hidden="true" (click)="setDefaultGroup(hostgroup, group);"></i>
-                  </div>-->
+              <div class="card-body ml-1 mr-1 text-center">                
+                <div class="row">                
+                  <div class="col-md-12 col-sm-12">
+                    <p class="item-text-big mt-1" style="margin-bottom: 0;  color: #172559;">{{hostgroup.referent_name}}</p>
+                  </div>       
                 </div>
-      				</div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row">
-          <div class="col col-sm-12 mb-2">
-            <div class="card hoverable ml-1 mr-1 mt-1 full-height">
-              <div class="text-center mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">Hosts</p>
-              </div>
-              <div class="card-body" style="display: flex; overflow: hidden;">
-                <ngx-charts-pie-chart *ngIf="hostChartData"            
-                [scheme]="hostChartScheme"
-                [results]="hostChartData"
-                [legend]="false"
-                [explodeSlices]="false"
-                [trimLabels]="false"
-                [tooltipDisabled]="true"
-                [labels]="true"
-                [doughnut]="false"    
-                (select)="onSelectHostChart($event)">
-                </ngx-charts-pie-chart>
-                <!--<div class="row">
-                  <div class="col-md-6 col-sm-12">
-                    <div class="hosts-chart">
-                    </div>
+                <div class="row mt-2 text-left" *ngIf="hostgroup.referent_mail">
+                  <div class="col-2 text-center item-text">
+                    <i class="fa fa-envelope" aria-hidden="true"></i> 
                   </div>
-                  <div class="col-md-12 col-sm-12">
-                    <table class="table table-sm table-hover item-text">
-                      <tbody>
-                        <tr>
-                          <td>Online</td>
-                          <td class="host-up"></td>
-                          <td class="text-right">{{hosts_up}}</td>
-                        </tr>
-                        <tr>
-                          <td>Offline</td>
-                          <td class="host-down"></td>
-                          <td class="text-right">{{hosts_down + hosts_unreachable}}</td>
-                        </tr>
-                        <tr>
-                          <td>Manteinance</td>
-                          <td class="host-pending"></td>
-                          <td class="text-right">{{hosts_pending}}</td>
-                        </tr>
-                        <tr>
-                          <td>Totale</td>
-                          <td></td>
-                          <td class="text-right">{{hosts_count}}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <!--<div class="col-3 item-text">E-Mail:</div>-->
+                  <div class="col-10 item-text-no">
+                    <span>{{hostgroup.referent_mail}}</span>
+                  </div>     
+                </div>
+
+                <div class="row mt-2 text-left" *ngIf="hostgroup.referent_phone">
+                  <div class="col-2 text-center item-text">
+                    <i class="fa fa-phone" aria-hidden="true"></i> 
                   </div>
-                </div>-->
+                  <!--<div class="col-3 item-text">Telefono:</div>-->
+                  <div class="col-10 item-text-no">
+                    <span>{{hostgroup.referent_phone}}</span>
+                  </div>     
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="row">
-          <div class="col col-sm-12 mb-2">
-            <div class="card hoverable ml-1 mr-1 mt-1">
-              <div class="text-center mb-2 status-services">
-                <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
+    <div class="row mt-1" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+      <div id="left" class="col-md-3 col-sm-12 mt-2">
+        <div class="card hoverable ml-2 mr-2 mt-1 full-height" *ngIf="first_time && hostgroup" [style.height.px]="myMenuHeight - 8">
+          <div class="text-center mb-2" [ngClass]="{
+            'status-hosts': hostgroup.check_state == 0,
+            'status-hosts-off': hostgroup.check_state == 1
+          }">
+            <p class="card-item-title" style="margin-bottom: 0;">{{hostgroup.name}}</p>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let group of hostgroup.groups; let i = index" [attr.data-index]="i">
+              <div class="row">
+                <div class="text-center col-2"><i class="fa" [ngClass]="{
+                  'fa-check-circle hostgroup-up':group.worst_service_state == 0,
+                  'fa-exclamation-circle hostgroup-warning':group.worst_service_state == 1,
+                  'fa-times-circle hostgroup-critical':group.worst_service_state == 2,
+                  'fa-question-circle hostgroup-unknown':group.worst_service_state == '3',
+                  'fa-minus-circle hostgroup-ack':group.worst_service_state == '4'
+                }" aria-hidden="true"></i></div>   
+                <div class="col-10 item-clickable item-text" routerLink="/site/{{hostgroup._id}}/hostgroup/{{group._id}}" (click)="getHosts(hostgroup, group, hostgroup.ip, hostgroup.port, group._id);">{{group.alias}}</div>
               </div>
-              <div class="card-body" style="display: flex; overflow: hidden;">
-                <ngx-charts-pie-chart *ngIf="serviceChartData"          
-                [scheme]="serviceChartScheme"
-                [results]="serviceChartData"
-                [legend]="false"
-                [explodeSlices]="false"
-                [trimLabels]="false"
-                [tooltipDisabled]="true"
-                [labels]="true"
-                [doughnut]="false"    
-                (select)="onSelectServiceChart($event)">
-                </ngx-charts-pie-chart>
-                <!--<div class="row">
-                  <div class="col-md-6 col-sm-12">
-                    <div class="services-chart">
-                    </div>
-                  </div>
+            </div>
+          </div>
+        </div> 
+      </div>
+      <div class="col-md-6 col-sm-12 mb-2 mt-2 d-none d-lg-block">
+        <div id="card_not" class="card hoverable ml-2 mr-2 mt-1 full-height" *ngIf="hostgroup">
+          <div class="text-center mb-2" [ngClass]="{
+              'status-hosts': hostgroup.check_state == 0,
+              'status-hosts-off': hostgroup.check_state == 1
+            }">
+            <div class="row">
+              <div class="col-md-7 text-right pr-4 ">
+                <p class="card-item-title" style="margin-bottom: 0;">Notifiche</p>
+              </div>
+              <div class="col-md-5 text-right pr-3" *ngIf="services_change != undefined">          
+                <pagination-controls id="service_change_paginate" class="my-pagination-t" (pageChange)="page_service_change = $event"
+                                      autoHide="true"
+                                      previousLabel="Indietro"
+                                      nextLabel="Avanti"
+                                      directionLinks="false"
+                >
+                </pagination-controls>               
+              </div>
+            </div>
+          </div>
+          <div id="notify" class="card-body" style="padding-bottom: 0;">           
+            <table class="table table-responsive w-100 d-block d-md-table table-sm table-hover" style="margin-bottom: 0;">
+              <thead class="card-item-title">
+                <tr class="d-flex">
+                  <td class="align-middle col-1 text-center">Stato</td>
+                  <td class="align-middle col-1">Data</td>
+                  <td class="align-middle col-1">Ora</td>
+                  <td class="align-middle col-3">Cliente</td>
+                  <td class="align-middle col-3">Host</td>
+                  <td class="align-middle col-3">Servizio</td>             
+                </tr>                         
+              </thead>
+              <tbody class="text-left" *ngIf="services_change != undefined" [@slideInOut]>
+                <tr *ngFor="let service_change of services_change | paginate: { id: 'service_change_paginate', itemsPerPage: 5, currentPage: page_service_change };" class="item-clickable d-flex">
+                    <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 0"><i class="fa fa-check-circle hostgroup-up no-clickable" aria-hidden="true"></i></td>       
+                    <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 1"><i class="fa fa-exclamation-circle hostgroup-warning no-clickable" aria-hidden="true"></i></td>
+                    <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 2"><i class="fa fa-times-circle hostgroup-critical no-clickable" aria-hidden="true"></i></td>
+                    <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 3"><i class="fa fa-question-circle hostgroup-unknown no-clickable" aria-hidden="true"></i></td>    
+
+                    <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 4"><i class="fa fa-check-circle hostgroup-up no-clickable" aria-hidden="true"></i></td>    
+                    <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle text-center col-1" *ngIf="service_change.plugin_output === 5"><i class="fa fa-times-circle hostgroup-critical no-clickable" aria-hidden="true"></i></td>
+
+                  <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-1 item-text">{{service_change.date}}</td>
+                  <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-1 item-text">{{service_change.time}}</td>
+                  <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-3 item-text">{{service_change.customer_name}}</td>
+                  <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-3 item-text">{{service_change.host_alias}}</td>
+                  <td data-toggle="modal" data-target="#serviceModal" (click)="getServices(service_change.host_group_id, service_change.host_alias)" class="align-middle col-3 item-text">{{service_change.service_name}}</td>
+                </tr>                  
+              </tbody>
+              <tbody *ngIf="services_change == undefined">
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+                <tr class="d-flex">
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-1">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                  <td class="col-3">&#160;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>  
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-2 mt-2 d-none d-lg-block">
+        <div class="card hoverable ml-2 mr-2 mt-1 full-height">
+          <div *ngIf="hostgroup">
+            <div class="text-center mb-2" [ngClass]="{
+              'status-hosts': hostgroup.check_state == 0,
+              'status-hosts-off': hostgroup.check_state == 1
+            }">
+              <p class="card-item-title" style="margin-bottom: 0;">Servizi</p>
+            </div>
+          </div>
+          <div id="serviceGraph" class="card-body" style="display: flex; overflow: hidden;">    
+            <span #btnServiceModalOpen data-toggle="modal" data-target="#serviceStateModal" (click)="resetServicePage()"></span>
+            <jqxChart #myServiceChart style="float: left" (onClick)="clickServicesGraph($event)" *ngIf="servicesDataSource"
+                [width]="myServiceChartWidth" [height]="myServiceChartHeight"
+                [title]="''"
+                [description]="servicesDataSource.title"
+                [showLegend]="true" [enableAnimations]="false" [padding]="padding"
+                [titlePadding]="titlePadding" [source]="servicesDataSource.dataSource" [showBorderLine]="false" 
+                [seriesGroups]="seriesGroups">
+            </jqxChart>  
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;">
+      <div id="left" class="col-md-3 col-sm-12 full-height">
+        <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;" *ngIf="hostgroup && hostgroup.referent_name">
+          <div class="col col-sm-12 mt-2">
+             <div class="card hoverable ml-2 mr-2 mt-1 d-none d-lg-block">
+              <div class="text-center mb-2" [ngClass]="{
+                'status-hosts': hostgroup.check_state == 0,
+                'status-hosts-off': hostgroup.check_state == 1
+              }">
+                <p class="card-item-title" style="margin-bottom: 0;">Referente</p>
+              </div>
+              <div class="card-body ml-1 mr-1 text-center">                
+                <div class="row">         
                   <div class="col-md-12 col-sm-12">
-                    <table class="table table-sm table-hover item-text">
-                      <tbody>
-                        <tr>
-                          <td>OK</td>
-                          <td class="service-ok"></td>
-                          <td class="text-right">{{tservices_ok}}</td>
-                        </tr>
-                        <tr>
-                          <td>Warning</td>
-                          <td class="service-warn"></td>
-                          <td class="text-right">{{tservices_warn}}</td>
-                        </tr>
-                        <tr>
-                          <td>Critical</td>
-                          <td class="service-crit"></td>
-                          <td class="text-right">{{tservices_crit}}</td>
-                        </tr>
-                        <tr>
-                          <td>Unknown</td>
-                          <td class="service-pending"></td>
-                          <td class="text-right">{{tservices_unknown}}</td>
-                        </tr>
-                        <tr>
-                          <td>ACK</td>
-                          <td></td>
-                          <td class="text-right">{{tservices_ack}}</td>
-                        </tr>
-                        <tr>
-                          <td>Totale</td>
-                          <td></td>
-                          <td class="text-right">{{services_count}}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <p class="item-text-big mt-1" style="margin-bottom: 0; color: #172559;">{{hostgroup.referent_name}}</p>
+                  </div>      
+                </div>
+
+                <div class="row mt-2 text-left" *ngIf="hostgroup.referent_mail">
+                  <div class="col-2 text-center item-text">
+                    <i class="fa fa-envelope" aria-hidden="true"></i> 
                   </div>
-                </div>-->
+                  <!--<div class="col-3 item-text" style="">E-Mail:</div>-->
+                  <div class="col-10 item-text-no">
+                    <span>{{hostgroup.referent_mail}}</span>
+                  </div>     
+                </div>
+
+                <div class="row mt-2 mb-3 text-left" *ngIf="hostgroup.referent_phone">
+                  <div class="col-2 text-center item-text">
+                    <i class="fa fa-phone" aria-hidden="true"></i> 
+                  </div>
+                  <!--<div class="col-3 item-text">Telefono:</div>-->
+                  <div class="col-10 item-text-no">
+                    <span>{{hostgroup.referent_phone}}</span>
+                  </div>     
+                </div>
               </div>
             </div>
           </div>
@@ -169,11 +280,27 @@
       </div>
 
       <div class="col-md-9 col-sm-12">
-        <div class="row" *ngIf="hostgroup">
+        <div class="row" style="margin-left: .0rem!important; margin-right: .0rem!important;" *ngIf="hostgroup">
           <div class="col col-sm-12 mb-2 mt-2" *ngIf="hosts">
-            <div class="card hoverable ml-1 mr-1 mt-1">
-              <div class="pl-3 mb-2 status-hosts">
-                <p class="card-item-title" style="margin-bottom: 0;">Elenco degli Hosts: {{viewMainTitle}}</p>
+            <div class="card hoverable ml-2 mr-2 mt-1">
+              <div class="pl-3 mb-2" [ngClass]="{
+                'status-hosts': hostgroup.check_state == 0,
+                'status-hosts-off': hostgroup.check_state == 1
+              }">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12">
+                    <p class="card-item-title" style="margin-bottom: 0;">Elenco degli Hosts: {{viewMainTitle}}</p>
+                  </div>
+                  <!--<div class="col-md-6 col-sm-6 text-right">                    
+                    <p class="card-item-title pr-3" style="margin-bottom: 0;" (click)="updateNotification(hostgroup.user_customer_site_id, hostgroup.notification)">
+                      <i class="fa fa-bell" aria-hidden="true"></i> Notifiche: <span class="item-clickable" *ngIf="hostgroup.notification == 0">OFF</span>
+                        <span class="item-clickable" *ngIf="hostgroup.notification == 1">ON</span>
+                       <i class="fa" [ngClass]="{
+                        'fa-toggle-off': hostgroup.notification == 0,
+                        'fa-toggle-on': hostgroup.notification == 1
+                      }"aria-hidden="true"></i></p>
+                  </div>-->
+                </div>
               </div>
 
               <div class="card-body ml-1 mr-1">
@@ -187,34 +314,36 @@
                     <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
                     <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
                     <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
+                    <td scope="col"><i class="fa fa-minus-circle hostgroup-ack" aria-hidden="true"></i> ACK</td>
                     <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>
-                    <td scope="col"><i class="fa fa-wrench hostgroup-ack" aria-hidden="true"></i> Ack</td>
+                    
                   </thead>
                   <tbody>
                     <tr *ngFor="let host of hosts;" class="item-text-big">
                       <td class="up-status item-clickable item" *ngIf="host.hard_state == 0" data-toggle="modal" data-target="#hostLogsModal" (click)="getHostLogs(host)" title="Visualizza storico">ONLINE</td>
                       <td class="down-status item-clickable item" *ngIf="host.hard_state == 1" data-toggle="modal" data-target="#hostLogsModal" (click)="getHostLogs(host)" title="Visualizza storico">OFFLINE</td>
-                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host.ip, host.port, host._id, host.alias)" title="Visualizza stato servizi">{{host.alias}}</td>
-                      <td>{{host.address}}</td>
-                      <td><i class="fa" [ngClass]="{
-        								'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0,
+                      <td class="item-clickable text-left" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)" title="Visualizza stato servizi">{{host.alias}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)">{{host.address}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)"><i class="fa" [ngClass]="{
+        								'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0 && host.ack_num == 0,
         								'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
         								'fa-times-circle hostgroup-critical':host.crit > 0,
-                        'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0
+                        'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0,
+                        'fa-minus-circle hostgroup-ack':host.crit == 0 && host.unknown == 0 && host.warn == 0 && host.ack_num > 0
         							}" aria-hidden="true"></i></td>
-                      <td>{{host.ok}}</td>
-                      <td>{{host.warn}}</td>
-                      <td>{{host.crit}}</td>
-                      <td>{{host.unknown}}</td>
-                      <td>{{host.acks}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)">{{host.ok}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)">{{host.warn}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)">{{host.crit}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)">{{host.acks}}</td>
+                      <td class="item-clickable" data-toggle="modal" data-target="#serviceModal" (click)="getServices(host._id, host.alias)">{{host.unknown}}</td>                      
                     </tr>
-                  </tbody>
+                  </tbody>                  
                 </table>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div>      
     </div>
   </div>
 
@@ -222,46 +351,92 @@
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}<br> Dettagli dell'host {{viewSecondaryTitle}}</h5>
+          <h5 class="modal-title" id="serviceModalLabel" *ngIf="services">{{hostgroup.name}}, {{viewMainTitle}}<br> Dettagli dell'host {{viewSecondaryTitle}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+
+        <div class="modal-body d-lg-block">
           <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-            <thead class="card-item-title">
-              <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato</td>
-              <td scope="col"><i class="fa fa-address-card-o" aria-hidden="true"></i> Attributo</td>
-              <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>
-              <!--<td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo cambiamento di Stato</td>-->
-              <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo check</td>
-              <td scope="col"><i class="fa fa-handshake-o"></i> ACK</td>
+            <thead class="card-item-title table-header">
+              <tr class="d-flex">
+                <td class="align-middle col-1">Stato</td>
+                <td class="align-middle col-2">Attributo</td>
+                <td class="align-middle col-7">Descrizione</td>          
+                <td class="align-middle col-1">Ultimo check</td>
+                <td class="align-middle col-1">ACK</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let service of services | paginate: { id: 'service', itemsPerPage: 10, currentPage: page_service };" class="item-text d-flex">
+                <td class="up-status item-clickable item_ex col-1 align-middle" *ngIf="service.state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">OK</td>
+                <td class="warn-status item-clickable item_ex col-1 align-middle" *ngIf="service.state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">WARN</td>
+                <td class="down-status item-clickable item_ex col-1 align-middle" *ngIf="service.state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">CRIT</td>
+                <td class="unknown-status item-clickable item_ex col-1 align-middle" *ngIf="service.state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">UNKN</td>
+                <td class="text-left col-2 align-middle" style="padding-left: .3rem">{{service.name}}</td>
+                <td class="text-left col-7 align-middle">{{service.status}}</td>
+                <td class="col-1 align-middle">{{service.last_check}} {{service.last_check_min}}</td>                   
+                <td class="col-1 align-middle" *ngIf="(service.ack | json) != '{}'">
+                  <h5>
+                    <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="item-clickable">
+                      <!--<i class="fa fa-file-text" aria-hidden="true"></i> Visualizza-->
+                      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAUCAYAAAAa2LrXAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+RJREFUeNrsWFtIVFEU3caMOKOljs/UytTUfKVZaSIplogZhSX2Z4MffvhRatiEQVIfhgVhfVQIhWk/QSFEKmGKQuYjwlfmu8bKdzMp2diHUGdvZ253XjZjDETdBWfuPWf2PWeftdfe9yGSFNbbA8AV1uSsyUCAJVCzdp+18yL2U85agcCJVUChFbJmt4H95Ah8rBs5IsO0bcrbDU4OYpPWcTc7ISvIGR6NLQrUaZUoMhzZH+q15hV3cvcB3OsSSNRig7UXSB1ERCIqUcA6CPwdibcygqgleUu5MTzXjeM1nafjbBIAnFdzPR3yotwh2ElE5agsZZtNCRRZY4xOSYsa9PqG8JVJIDXGj85b68bomBbmAfKDO6Cx+xOkhHhApL+MjrYsA1Hejr/KUfPE30Fgz+VUYzXyCEW8HFURgbGBbqy3SmBckBv3X4dygc4fvp7SU2iIpxRa3i3AyNIKqVMmFZvtI1BliMq+zyZ97Zv5BlVNo9DzcUHPng+cLznAxWhcN6epda0i0JAcHTBNzKH2zRyUZgOpDBWKC6MSNN9XoLxjitIY1YiYblVCTW4s2SLez36F8PIXUHw4lMYKql7BCNsMv795TgMN55K49crYvNeeDNDcfCAxuE6/Uk2EVMj3GvmKBOt84fbG5qvsa4SJ0mTwcJbo2eZrM8piAtciyhyQsPahWSItM8KTG28bnDGyLUjyJ2IwtY/V9FtUF1tnNFDx9C2UsLRE++r8BMhPCzYi0GgtRj7iZPxW8g3XrGAB1Cn0QmYEEVb5fGS1lj8bITEgGs8mEtGYNbi+TRVIxXxMRU5G+jnrpbZRSWDOY8Qx5TtdpXC3ZdyiILlIxDCgSITtXhupz1eKOaAKFfE+5Bcqvbh2kIKNCn+QtZPmQFJLePWSnx0ILDNWEbgeBZLcuyah4EgYxAS6cWlhSiG4qeG5NihKDSQSK+QyGL7auubcuhKAm73RMGQyNU0B1Vp8NJx8KX3cz9U0vEsfT/DnSNXVy9LsXTSGyj2THsoFy+Y10DCNKQXYZk0BHfV3d4S63mmIDnAjFXg4iWHmi4Yij44fCFbpq8B3Ex0n1csQvcXF4qeHSyci6fEL/cInAGzNw/OQdyiYbLrHVVRS+EA/XKX24LWGwm2iQH4aUyq0fzBpgwRk7PEj4uYXl6m24aPN/NI4BPk4c1HnB+N28zh4s3RHFeI4qsScOvg3FJ0NzsN/20JSEahCzq+LjRQotMO1epUqs29odpLC+h9/Qpo5lf63byJ427cU1tj+qxBpPw7K+F9cBFgMNSqwWuBh3ahGBSpYwzp4CoRP+hYrTys8xU8BBgCZ46Dd8AOdGwAAAABJRU5ErkJggg==">
+                    </span>
+                  </h5> 
+                </td>                
+                <td class="col-1 align-middle" *ngIf="(service.ack | json) == '{}'">
+                  <h5>
+                    <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="item-clickable">
+                      <!--<i class="fa fa-plus-circle" aria-hidden="true"></i>--> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAUCAYAAAAa2LrXAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAxlJREFUeNpikZ3dwMPK/+YAu8hTIybWH4wMo4Ag+Peb4//PN9Lnf38UsWcBBt4hTsm7hqPBQjwAJTRgmBkBmYeYgCnPYDRIyAOgsGMazbaUpUQWfAp0OJUZfEWcGAwFtMD88x+uMWx+s4/hyve7o6EHBYzahz3/Y5NoUyxg8JN2w6pp09NdDFX3J4yGHhBgTYGTVKsZnMSt4fyHX5+AaXluGTANClgeFm6GvNuteA234zVisBYwBrOf/HjBsPv9UYYXf94N7wCMFfVFCTwQ8D6fBqav2GyDi4HUxH7wZVj8ejOGoRIsQgyTNGsZtPjVUcTPn7027AKQCV3AUcSCaM241M7V7QAH3r6XRxkizuYy6BzxYsi6WAMuO0Gp0l/QHp5CQYGNnGJhcugpGSSOrHbQpkAzYUiTEOT5vW+OoMhVX+0E084iNuAUCFOLnoJBWf3ax5soWfzQ53NgOkchFhy4zi8hZoDMPPn5MkqKrf6bx1BypRWs54DpEgYRdkTALX24nqH98ezBmwJh4PmPVwwb3x8EYxiA8UFyuIAMhwS8xsYH9AQ0wYFx98cThirFTAYFHjlwKnU5EQMPaHBqfrASLAbCb36+Y4iWDwS3DgZtCgRVGKAUBHIoCIObM8AsiF4GIlcu2AAvsJLBB0ABAys/LUSMUAINBJDLT/TyVJlDZtA0pTBS4JE3p4nWjE3t0Q9nwbSLhC3eMuvTn08YYqBUC8Lrn+wAp05QuVeunsnADYwMUFbHF2GDJgWCyhcbEVN4kwXWJsSWUrGVRaByC1R+gsq3TaazGU68OQfO8qo8CgxJ16uxOgKkBqRekkMMXjyAmj1aPGpg9ssfrxn4WPgYRDmEh0Y7MPlyBbgmRW73oQceSA0uAKo8sr9EMtiLmMGbRKBKBVfZ1XZ/OjwrczFzMnz7+x2cCuc/XwsOeFBlJc4hynDlww2sFdeg7ImAQLYkJBBg5Q8oEA6+OcUw9fny0S4IMQE4CoioRECDg6PBQB4AhR3TzzfSF0aDgjwACjum3x9F7L4/Vz43mhJJS3nAMAMN6dsBBBgAh2VAeBcf2VAAAAAASUVORK5CYII=">
+                    </span>
+                  </h5>                    
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 mt-1 text-right">
+              <pagination-controls  id="service" class="my-pagination" (pageChange)="page_service = $event"
+                                    autoHide="true"
+                                    previousLabel="Indietro"
+                                    nextLabel="Avanti"
+                                    directionLinks="false"
+              >
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body d-lg-none d-xl-none">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
+            <thead class="card-item-title table-header">
+              <tr>
+                <td class="align-middle">Stato</td>
+                <td class="align-middle">Attributo</td>
+                <td class="align-middle">Descrizione</td>          
+                <td class="align-middle">Ultimo check</td>
+                <td class="align-middle">ACK</td>
+              </tr>
             </thead>
             <tbody>
               <tr *ngFor="let service of services | paginate: { id: 'service', itemsPerPage: 10, currentPage: page_service };" class="item-text">
-                <!--<td><i class="fa" [ngClass]="{
-                  'fa-check-circle hostgroup-up':service.state == 0,
-                  'fa-exclamation-circle hostgroup-warning':service.state == 1,
-                  'fa-times-circle hostgroup-critical':service.state == 2,
-                  'fa-question-circle hostgroup-unknown':service.state == 3
-                }" aria-hidden="true"></i></td>-->
-
-                <td class="up-status item-clickable item_ex" *ngIf="service.state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">OK</td>
-                <td class="warn-status item-clickable item_ex" *ngIf="service.state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">WARN</td>
-                <td class="down-status item-clickable item_ex" *ngIf="service.state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">CRIT</td>
-                <td class="unknown-status item-clickable item_ex" *ngIf="service.state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">UNKN</td>
-                <td class="text-left">{{service.name}}</td>
-                <td class="text-left">{{service.status}}</td>
-                <!--<td class="">{{service.age}} <br> {{service.age_min}}</td>-->
-                <td class="">{{service.last_check}} {{service.last_check_min}}</td>                   
-                <td *ngIf="(service.ack | json) != '{}'">
+                <td class="up-status item-clickable item_ex align-middle" *ngIf="service.state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">OK</td>
+                <td class="warn-status item-clickable item_ex align-middle" *ngIf="service.state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">WARN</td>
+                <td class="down-status item-clickable item_ex align-middle" *ngIf="service.state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">CRIT</td>
+                <td class="unknown-status item-clickable item_ex align-middle" *ngIf="service.state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)" title="Visualizza storico">UNKN</td>
+                <td class="text-left align-middle">{{service.name}}</td>
+                <td class="text-left align-middle">{{service.status}}</td>
+                <td class="align-middle">{{service.last_check}} {{service.last_check_min}}</td>                   
+                <td class="align-middle" *ngIf="(service.ack | json) != '{}'">
                   <h5>
                     <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-primary item-clickable">
                       <i class="fa fa-file-text" aria-hidden="true"></i> Visualizza
                     </span>
                   </h5> 
                 </td>                
-                <td *ngIf="(service.ack | json) == '{}'">
+                <td class="align-middle" *ngIf="(service.ack | json) == '{}'">
                   <h5>
                     <span data-toggle="modal" data-target="#showACKModal" (click)="refreshACK(service)" class="badge badge-success item-clickable">
                       <i class="fa fa-plus-circle" aria-hidden="true"></i> Crea
@@ -283,6 +458,9 @@
             </div>
           </div>
         </div>
+
+
+
       </div>
     </div>
   </div>
@@ -291,26 +469,26 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="serviceLogsModalLabel" *ngIf="services">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}, {{viewSecondaryTitle}}<br>Logs del servizio {{viewThirdTitle}}</h5>
+            <h5 class="modal-title" id="serviceLogsModalLabel" *ngIf="services">{{hostgroup.name}}, {{viewMainTitle}}, {{viewSecondaryTitle}}<br>Logs del servizio {{viewThirdTitle}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-              <thead class="card-item-title">
-                <td scope="col"><i class="fa fa-calendar-check-o"></i> Data</td>
-                <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato</td>              
-                <td scope="col"><i class="fa fa-list-alt"></i> Descrizione</td>       
-                <td scope="col"><i class="fa fa-calendar-check-o"></i> Ultimo check</td>           
+              <thead class="card-item-title table-header">
+                <td scope="col">Data</td>
+                <td scope="col">Stato</td>              
+                <td scope="col">Descrizione</td>       
+                <td scope="col">Ultimo check</td>           
               </thead>
               <tbody>
                 <tr *ngFor="let service of service_logs | paginate: { id: 'service_log', itemsPerPage: 10, currentPage: page_service_log };" class="item-text">    
                   <td>{{service.created_at}}</td>   
                   <td class="up-status item-clickable" *ngIf="service.service_state == 0" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">OK</td>
-                  <td class="warn-status item-clickable" *ngIf="service.service_state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">WARNING</td>
-                  <td class="down-status item-clickable" *ngIf="service.service_state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">CRITICO</td>
-                  <td class="unknown-status item-clickable" *ngIf="service.service_state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">UNKNOWN</td>
+                  <td class="warn-status item-clickable" *ngIf="service.service_state == 1" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">WARN</td>
+                  <td class="down-status item-clickable" *ngIf="service.service_state == 2" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">CRIT</td>
+                  <td class="unknown-status item-clickable" *ngIf="service.service_state == 3" data-toggle="modal" data-target="#serviceLogsModal" (click)="getServiceLogs(service)">UNKN</td>
                   <td class="text-left">{{service.plugin_output}}</td>             
                   <td>{{service.service_last_check}}</td>                
                 </tr>
@@ -336,37 +514,22 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="hostLogsModalLabel" *ngIf="host_logs">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}<br>Logs dell'host {{viewSecondaryTitle}}</h5>
+            <h5 class="modal-title" id="hostLogsModalLabel" *ngIf="host_logs">{{hostgroup.name}}, {{viewMainTitle}}<br>Logs dell'host {{viewSecondaryTitle}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">           
             <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover">
-                <thead class="card-item-title" style="color: #172559;">
-                  <td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Host</td>     
-                  <td scope="col"><i class="fa fa-calendar-check-o"></i> Data</td>                            
-                  <!--<td scope="col"><i class="fa fa-server" aria-hidden="true"></i> Stato Servizi</td>
-                  <td scope="col"><i class="fa fa-check-circle hostgroup-up"></i> OK</td>
-                  <td scope="col"><i class="fa fa-exclamation-circle hostgroup-warning"></i> Warning</td>
-                  <td scope="col"><i class="fa fa-times-circle hostgroup-critical"></i> Critical</td>
-                  <td scope="col"><i class="fa fa-question-circle hostgroup-unknown" aria-hidden="true"></i> Unknown</td>-->
+                <thead class="card-item-title table-header">
+                  <td scope="col">Stato Host</td>     
+                  <td scope="col">Data</td>                            
                 </thead>
                 <tbody>
                   <tr *ngFor="let host of host_logs | paginate: { id: 'host_log', itemsPerPage: 10, currentPage: page_host_log };" class="item-text">
                     <td class="up-status" *ngIf="host.hard_state == 0">ONLINE</td>
                     <td class="down-status" *ngIf="host.hard_state == 1">OFFLINE</td>         
-                    <td>{{host.created_at}}</td>                               
-                    <!--<td><i class="fa" [ngClass]="{
-                      'fa-check-circle hostgroup-up':host.host_num_services_crit == 0 && host.host_num_services_warn == 0 && host.host_num_services_unknown == 0,
-                      'fa-exclamation-circle hostgroup-warning':host.host_num_services_crit == 0 && host.host_num_services_warn > 0 && host.host_num_services_unknown == 0,
-                      'fa-times-circle hostgroup-critical':host.host_num_services_crit > 0,
-                      'fa-question-circle hostgroup-unknown':host.host_num_services_crit == 0 && host.host_num_services_unknown > 0
-                    }" aria-hidden="true"></i></td>
-                    <td>{{host.host_num_services_ok}}</td>
-                    <td>{{host.host_num_services_warn}}</td>
-                    <td>{{host.host_num_services_crit}}</td>
-                    <td>{{host.host_num_services_unknown}}</td>-->
+                    <td>{{host.created_at}}</td>  
                   </tr>
                 </tbody>
               </table>
@@ -390,37 +553,128 @@
     <div class="modal-dialog modal-ack" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="showACKModalLabel" *ngIf="refreshedACK">{{hostgroup.name}} - {{hostgroup.description}}, {{viewMainTitle}}, {{viewSecondaryTitle}}<br>ACK del servizio {{refreshedACK.name}}</h5>
+          <h5 class="modal-title" id="showACKModalLabel" *ngIf="refreshedACK">{{hostgroup.name}}, {{viewMainTitle}}, {{viewSecondaryTitle}}<br>ACK del servizio {{refreshedACK.name}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">  
           <div *ngIf="(refreshedACK.ack | json) != '{}'" class="card hoverable ml-1 mr-1 mt-1">
-            <div class="pl-3 mb-2 status-hosts">
+            <div class="pl-3 mb-2" [ngClass]="{
+              'status-hosts': hostgroup.check_state == 0,
+              'status-hosts-off': hostgroup.check_state == 1
+            }">
               <p class="card-item-title text-center" style="margin-bottom: 0;"><i class="fa fa-file-text" aria-hidden="true"></i> Visualizza ACK</p>
             </div>
 
             <div class="card-body ml-1 mr-1 item-text-big"> 
-              <p><i class="fa fa-calendar-check-o"></i> Data: {{refreshedACK.ack.created_at}}</p>
-              <p><i class="fa fa-address-card-o"></i> Autore: {{refreshedACK.ack.creator_name}}</p>
-              <p><i class="fa fa-list-alt"></i> Descrizione: {{refreshedACK.ack.message}}</p>
-              <p class="item-clickable text-center" data-toggle="modal" data-target="#deleteACKModal"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></p>
+              <form name="form" (ngSubmit)="ackForm.form.valid && updateACK(ackForm, refreshedACK.ack)" #ackForm="ngForm" novalidate>
+                <div class="row d-flex align-items-center h-100 mt-1">
+                  <div class="col-4 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">Codice chiamata:</div>
+                  <div class="col-3 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">                    
+                    <div [ngClass]="{ 'has-error': ackForm.submitted && !code.valid }">                      
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-code" style="font-size: 0.9rem" aria-hidden="true"></i></div>
+                        </div>
+                        <input type="text" class="form-control" name="code" autocomplete="code" [(ngModel)]="ackModel.code" #code="ngModel" />
+                        <div *ngIf="ackForm.submitted && !code.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row d-flex align-items-center h-100 mt-1">
+                  <div class="col-4 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">Data creazione:</div>
+                  <div class="col-5 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">            
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-calendar-check-o" style="font-size: 0.97rem" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="created_at" autocomplete="created_at" [(ngModel)]="ackModel.created_at" #created_at="ngModel" value="{{refreshedACK.ack.created_at}}" placeholder="{{refreshedACK.ack.created_at}}" readonly/>                    
+                    </div>        
+                  </div>
+                </div>
+
+                <div class="row d-flex align-items-center h-100 mt-1">
+                  <div class="col-4 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">Data modifica:</div>
+                  <div class="col-5 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">            
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-calendar-check-o" style="font-size: 0.97rem" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="updated_at" autocomplete="updated_at" [(ngModel)]="ackModel.updated_at" #updated_at="ngModel" value="{{refreshedACK.ack.updated_at}}" placeholder="{{refreshedACK.ack.updated_at}}" readonly/>                    
+                    </div>        
+                  </div>
+                </div>
+
+                <div class="row d-flex align-items-center h-100 mt-1">
+                  <div class="col-4 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">Autore:</div>
+                  <div class="col-5 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">            
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-address-card-o" style="font-size:0.89rem" aria-hidden="true"></i></div>
+                      </div>
+                      <input type="text" class="form-control" name="creator_name" autocomplete="creator_name" [(ngModel)]="ackModel.creator_name" #creator_name="ngModel" value="{{refreshedACK.ack.creator_name}}" placeholder="{{refreshedACK.ack.creator_name}}" readonly/>                    
+                    </div>        
+                  </div>
+                </div>
+
+                <div class="row d-flex align-items-center h-100 mt-1">
+                  <div class="col-4 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">Motivazione:</div>
+                  <div class="col-8 col-sm-12 align-middle" style="margin-left: .0rem!important; margin-right: .0rem!important;">                    
+                    <div [ngClass]="{ 'has-error': ackForm.submitted && !message.valid }">                      
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text"><i class="fa fa-list-alt" style="font-size: 1rem" aria-hidden="true"></i></div>
+                        </div>
+                        <textarea class="form-control" name="message" autocomplete="message" [(ngModel)]="ackModel.message" #message="ngModel" rows="6"></textarea>
+                        <div *ngIf="ackForm.submitted && !message.valid" class="help-block">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+                <div class="text-center mt-2">
+                  <alert></alert>
+                </div>
+                <div class="row d-flex align-items-center h-100 mt-2">
+                  <div class="col-2"></div>
+                  <div class="col-4 text-right ml-1 mr-1">                
+                      <button [disabled]="loading" class="btn badge-warning card-item-title" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva</button>
+                      <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                  </div>
+                  <div class="col-4 ml-1 mr-1">                
+                      <button class="btn badge-danger card-item-title" type="button" data-toggle="modal" data-target="#deleteACKModal"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
+                  </div>
+                </div>
+              </form>
             </div>        
           </div>
 
-          <form *ngIf="(refreshedACK.ack | json) == '{}'" name="form" (ngSubmit)="f.form.valid && createACK(refreshedACK, currentUser.id, f)" #f="ngForm" novalidate>                         
-            <p class="item-text-big"><i class="fa fa-asterisk" aria-hidden="true"></i>Motivazione dell'ACK:</p>        
+          <form *ngIf="(refreshedACK.ack | json) == '{}'" name="form" (ngSubmit)="f.form.valid && createACK(refreshedACK, currentUser.id, f)" #f="ngForm" novalidate>       
+          <p class="item-text-big"><i class="fa fa-code" aria-hidden="true"></i> Codice chiamata:</p>        
+            <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !code.valid }">
+              <div class="input-group mb-2">                                
+                <input type="text" class="form-control" name="code" autocomplete="code" [(ngModel)]="model.code" #code="ngModel" />                    
+              </div>
+            </div>
+
+            <p class="item-text-big"><i class="fa fa-list-alt" aria-hidden="true"></i> Motivazione:</p>        
             <div class="mb-3" [ngClass]="{ 'has-error': f.submitted && !message.valid }">
               <div class="input-group mb-2">                                
-                <input type="text" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required />                    
+                <textarea rows="3" class="form-control" name="message" autocomplete="message" [(ngModel)]="model.message" #message="ngModel" required>
+                </textarea>                    
               </div>
-              <div class="text-center">
-                <button [disabled]="loading" class="btn btn-success" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva
-                </button>
-                <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-              </div>                                 
-            </div>          
+            </div>
+            <div class="text-center">
+              <button [disabled]="loading" class="btn btn-success" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Salva
+              </button>
+              <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            </div>         
           </form>                
         </div>
       </div>
@@ -441,11 +695,226 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
-          <button type="button" class="btn btn-danger" (click)="deleteACK(refreshedACK._id, refreshedACK.ack._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
+          <button type="button" class="btn badge-danger card-item-title" (click)="deleteACK(refreshedACK._id, refreshedACK.ack._id)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<div class="modal fade" id="hostModal" tabindex="-1" role="dialog" aria-labelledby="hostModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="hostModalLabel" *ngIf="modalPanelTitle">Elenco Host, Stato: {{modalPanelTitle}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped">
+          <thead class="card-item-title table-header">
+            <td class="text-left" scope="col">Cliente</td>
+            <td class="text-left" scope="col">Sito</td>
+            <td class="text-left" scope="col">Nome</td>
+            <td scope="col">Indirizzo IP</td>
+            <td scope="col">Stato Servizi</td>
+            <td scope="col">OK</td>
+            <td scope="col">Warning</td>
+            <td scope="col">Critical</td>
+            <td scope="col">Unknown</td>
+            <td scope="col">ACK</td>
+          </thead>
+          <tbody *ngIf="hosts_modal == undefined">
+              <tr class="item-text-big-gray">
+                  <td colspan="10">
+                      <img *ngIf="host_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                    Caricamento in corso
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="hosts_modal != undefined">
+            <tr *ngFor="let host of hosts_modal | paginate: { id: 'host_paginate', itemsPerPage: 10, currentPage: page_host };" class="item-text">
+              <td class="text-left">{{host.name_ex}}</td>
+              <td class="text-left">{{host.site}}</td>
+              <td class="text-left">{{host.alias}}</td>
+              <td>{{host.address}}</td>
+              <td><i class="fa no-clickable" [ngClass]="{
+                'fa-check-circle hostgroup-up':host.crit == 0 && host.warn == 0 && host.unknown == 0 && host.ack_num == 0,
+                'fa-exclamation-circle hostgroup-warning':host.crit == 0 && host.warn > 0 && host.unknown == 0,
+                'fa-times-circle hostgroup-critical':host.crit > 0,
+                'fa-question-circle hostgroup-unknown':host.crit == 0 && host.unknown > 0,
+                'fa-minus-circle hostgroup-ack':host.crit == 0 && host.unknown == 0 && host.warn == 0 && host.ack_num > 0
+              }" aria-hidden="true"></i></td>
+              <td>{{host.ok}}</td>
+              <td>{{host.warn}}</td>
+              <td>{{host.crit}}</td>
+              <td>{{host.unknown}}</td>
+              <td>{{host.acks}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="hosts_modal != undefined" class="row">
+          <div class="col-md-12 col-sm-12 mt-1 text-right">
+            <pagination-controls id="host_paginate" class="my-pagination" (pageChange)="page_host = $event"
+                                 autoHide="true"
+                                 previousLabel="Indietro"
+                                 nextLabel="Avanti"
+                                 directionLinks="false"
+            >
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="serviceStateModal" tabindex="-1" role="dialog" aria-labelledby="serviceStateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="serviceStateModalLabel" *ngIf="modalPanelTitle">Elenco Servizi, Stato: {{modalPanelTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="services_state == undefined">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped">
+            <thead class="card-item-title table-header">
+              <td class="align-middle text-left">Cliente</td>
+              <td class="align-middle text-left">Sito</td>
+              <td class="align-middle text-left">Host</td>
+              <td class="align-middle text-left">Nome</td>
+              <td class="align-middle">Descrizione</td>
+              <td class="align-middle">Ultimo Log</td>             
+            </thead>
+            <tbody>
+                <tr class="item-text-big-gray">
+                    <td colspan="10">
+                        <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      Caricamento in corso
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-body" *ngIf="services_state != undefined">
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped" *ngIf="services_state[0]._id === ''">
+            <thead class="card-item-title table-header">
+              <td class="align-middle text-left">Cliente</td>
+              <td class="align-middle text-left">Sito</td>
+              <td class="align-middle text-left">Host</td>
+              <td class="align-middle text-left">Nome</td>
+              <td class="align-middle">Descrizione</td>
+              <td class="align-middle">Ultimo Log</td>             
+            </thead>
+            <tbody *ngIf="services_state == undefined">
+                <tr class="item-text-big-gray">
+                    <td colspan="10">
+                        <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      Caricamento in corso
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+              <tr *ngFor="let service_state of services_state | paginate: { id: 'service_paginate', itemsPerPage: 10, currentPage: page_service };" class="item-text">
+                <td class="align-middle text-left">{{service_state.customer_name}}</td>
+                <td class="align-middle text-left">{{service_state.customer_site_description}}</td>
+                <td class="align-middle text-left">{{service_state.host_alias}}</td>
+                <td class="align-middle text-left">{{service_state.service_name}}</td>
+                <td class="align-middle text-left">{{service_state.plugin_output}}</td>
+                <td class="align-middle">{{service_state.created_at}}</td>                
+              </tr>
+            </tbody>
+          </table>
+          <table class="table table-responsive w-100 d-block d-md-table table-sm text-center table-hover table-striped" *ngIf="services_state[0]._id !== ''">
+            <thead class="card-item-title table-header">
+              <td class="align-middle">Stato</td>
+              <td class="align-middle text-left">Cliente</td>
+              <td class="align-middle text-left">Sito</td>
+              <td class="align-middle text-left">Host</td>
+              <td class="align-middle text-left">Nome</td>
+              <td class="align-middle text-left">Codice chiamata</td>
+              <td class="align-middle text-left">Motivazione</td>
+              <td class="align-middle text-left">Autore</td>              
+              <td class="align-middle text-left">Data creazione</td>   
+              <td></td>          
+            </thead>
+            <tbody *ngIf="services_state == undefined">
+                <tr class="item-text-big-gray">
+                    <td colspan="10">
+                        <img *ngIf="service_loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                      Caricamento in corso
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>              
+              <tr *ngFor="let service_state of services_state | paginate: { id: 'service_paginate', itemsPerPage: 10, currentPage: page_service };" class="item-text">
+                <td class="align-middle up-status item_ex" *ngIf="service_state.state == 0">OK</td>
+                <td class="align-middle warn-status item_ex" *ngIf="service_state.state == 1">WARN</td>
+                <td class="align-middle down-status item_ex" *ngIf="service_state.state == 2">CRIT</td>
+                <td class="align-middle unknown-status item_ex" *ngIf="service_state.state == 3">UNKN</td>
+                <td class="align-middle text-left">{{service_state.customer_name}}</td>
+                <td class="align-middle text-left">{{service_state.customer_site_description}}</td>
+                <td class="align-middle text-left">{{service_state.host_alias}}</td>
+                <td class="align-middle text-left">{{service_state.service_name}}</td>    
+                <td class="align-middle text-left">{{service_state.code}}</td>            
+                <td class="align-middle text-left">{{service_state.plugin_output}}</td>
+                <td class="align-middle text-left">{{service_state.author}}</td>
+                <td class="align-middle text-left">{{service_state.created_at}}</td>   
+                <td class="align-middle"><p class="item-clickable text-center" (click)="refreshACKEx(service_state._id, service_state.service_id)" data-toggle="modal" data-target="#deleteACKModalEx"><span class="badge badge-danger"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</span></p></td>             
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="services_state != undefined" class="row">
+            <div class="col-md-12 col-sm-12 mt-1 text-right">
+              <pagination-controls id="service_paginate" class="my-pagination" (pageChange)="page_service = $event"
+                                   autoHide="true"
+                                   previousLabel="Indietro"
+                                   nextLabel="Avanti"
+                                   directionLinks="false"
+              >
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteACKModalEx" tabindex="-1" role="dialog" aria-labelledby="deleteACKLabelEx" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" *ngIf="refreshedACKEx">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteACKLabelEx">Elimina ACK</h5>
+          <button #btnACKCloseEx type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-bottom: 0">
+          <p class="item-text-big">Sei sicuro di voler eliminare definitivamente l'ACK?</p>     
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Indietro</button>
+          <button type="button" class="btn badge-danger card-item-title" (click)="deleteACKEx(refreshedACKEx, refreshedService)"><i class="fa fa-trash" aria-hidden="true"></i> Elimina</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <app-footer></app-footer>
+<!--</div>-->
+
+<!--<div class="fake-body" *ngIf="!fullyLoaded" [style.height.px]="monitorHeight">
+  <div class="loader">
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__bar"></div>
+    <div class="loader__ball"></div>
+    <p>Caricamento in corso</p>
+  </div>
+</div>-->
